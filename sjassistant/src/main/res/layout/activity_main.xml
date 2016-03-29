@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#F0F0F0"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/id_pager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="4"
+            android:flipInterval="30" />
+
+        <FrameLayout android:id="@+id/content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent">
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:paddingTop="9dp"
+            android:background="#ffffff"
+            android:layout_height="70dp"
+            android:layout_width="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/message_layout"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_width="0dp">
+
+                <LinearLayout
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/message_image"
+                        style="@style/bottom_iv"
+                        android:src="@drawable/message_unchecked"/>
+
+                    <TextView android:id="@+id/message_text"
+                        style="@style/bottom_text"
+                        android:text="@string/message"
+                        >
+                    </TextView>
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/myappication_layout"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_width="0dp">
+
+                <LinearLayout
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/myappication_image"
+                        style="@style/bottom_iv"
+                        android:src="@drawable/myapplication"/>
+                    <TextView
+                        android:id="@+id/myappication_text"
+                        style="@style/bottom_text"
+                        android:text="@string/myapplication"
+                        >
+                    </TextView>
+                </LinearLayout>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/contacts_layout"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_width="0dp">
+
+                <LinearLayout
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/contacts_image"
+                        style="@style/bottom_iv"
+                        android:src="@drawable/contacts_unchecked"/>
+                    <TextView
+                        android:id="@+id/contacts_text"
+                        style="@style/bottom_text"
+                        android:text="@string/contacts"
+                        >
+                    </TextView>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/mysetting_layout"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_width="0dp">
+
+                <LinearLayout
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/mysetting_image"
+                        style="@style/bottom_iv"
+                        android:src="@drawable/mysetting_unchecked"/>
+                    <TextView
+                        android:id="@+id/mysetting_text"
+                        style="@style/bottom_text"
+                        android:text="@string/mysetting"
+                        >
+                    </TextView>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

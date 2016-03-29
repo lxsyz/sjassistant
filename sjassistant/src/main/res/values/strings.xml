@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">sjassistant</string>
+    <string name="login">登 录</string>
+    <string name="serverConfig">服务器配置</string>
+    <string name="forgetPassword">忘记密码?</string>
+    <string name="confirm_config">确认配置</string>
+    <string name="validatecode">验证码</string>
+    <string name="email">邮箱号</string>
+    <string name="findPassword">找回密码</string>
+    <string name="confirm">确定</string>
+    <string name="message">消息</string>
+    <string name="myapplication">应用</string>
+    <string name="contacts">通讯录</string>
+    <string name="mysetting">个人设置</string>
+    <string name="unfinishedWork">待办工作</string>
+    <string name="message_inform">消息、通知</string>
+    <string name="gonggao">公告</string>
+    <string name="assistant">小助理</string>
+    <string name="deal">审批工作</string>
+    <string name="chat">多方通话</string>
+    <string name="company">公司</string>
+    <string name="group">小组</string>
+    <string name="customer">客户</string>
+    <string name="search">搜索联系人</string>
+    <string name="nickname">昵称</string>
+    <string name="sex">性别</string>
+    <string name="work">职务</string>
+    <string name="address">地址</string>
+    <string name="apartment">部门</string>
+    <string name="help">帮助反馈</string>
+</resources>

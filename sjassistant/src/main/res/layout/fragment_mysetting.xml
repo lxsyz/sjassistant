@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        android:id="@+id/title_layout"
+        layout="@layout/top_layout" />
+
+    <LinearLayout
+        android:background="@color/title"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:padding="12dp"
+        android:layout_height="0dp">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/customer_de"
+            android:layout_marginLeft="7dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_marginTop="30dp"
+                android:text="Jimmy(管理员)"
+                android:textColor="@color/white"
+                android:id="@+id/username"
+                style="@style/text1" />
+
+            <ImageView
+                android:layout_marginTop="32dp"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/administrator"
+                android:layout_toRightOf="@+id/username"
+                android:layout_width="13dp"
+                android:layout_height="13dp" />
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_below="@+id/username"
+                android:layout_alignStart="@+id/username"
+                android:layout_alignLeft="@+id/username"
+                android:text="社审事业部 部门经理"
+                style="@style/text2" />
+
+            <ImageView
+                android:src="@drawable/right_arrow2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_weight="2.5"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <LinearLayout
+            android:id="@+id/nickname_layout"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <ImageView
+                android:src="@drawable/nickname"
+                android:layout_width="56dp"
+                android:layout_height="56dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:textColor="@color/my_light_gray"
+                    android:layout_marginLeft="14dp"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:textSize="17sp"
+                    android:id="@+id/nickname"
+                    android:text="@string/nickname"
+                    />
+
+                <TextView
+                    android:text="Jimmy"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginEnd="13dp"
+                    android:textColor="@color/my_black"
+                    android:textSize="16sp"
+                    android:layout_alignTop="@+id/nickname"
+                    android:layout_toLeftOf="@+id/right_arrow1"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/right_arrow1"
+                    style="@style/right_arrow"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sex_layout"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <ImageView
+                android:src="@drawable/sex"
+                android:layout_width="56dp"
+                android:layout_height="56dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:textColor="@color/my_light_gray"
+                    android:layout_marginLeft="14dp"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:textSize="17sp"
+                    android:id="@+id/sex"
+                    android:text="@string/sex"
+                    />
+
+                <TextView
+                    android:text="男"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginEnd="13dp"
+                    android:textColor="@color/my_black"
+                    android:textSize="16sp"
+                    android:layout_alignTop="@+id/sex"
+                    android:layout_toLeftOf="@+id/right_arrow2"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/right_arrow2"
+                    style="@style/right_arrow"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/apartment_layout"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <ImageView
+                android:src="@drawable/apartment"
+                android:layout_width="56dp"
+                android:layout_height="56dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:textColor="@color/my_light_gray"
+                    android:layout_marginLeft="14dp"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:textSize="17sp"
+                    android:id="@+id/apartment"
+                    android:text="@string/apartment"
+                    />
+
+                <TextView
+                    android:text="社审事业部"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginEnd="13dp"
+                    android:textColor="@color/my_black"
+                    android:textSize="16sp"
+                    android:layout_alignTop="@+id/apartment"
+                    android:layout_toLeftOf="@+id/right_arrow3"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/right_arrow3"
+                    style="@style/right_arrow"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/work_layout"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <ImageView
+                android:src="@drawable/work"
+                android:layout_width="56dp"
+                android:layout_height="56dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:textColor="@color/my_light_gray"
+                    android:layout_marginLeft="14dp"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:textSize="17sp"
+                    android:id="@+id/work"
+                    android:text="@string/work"
+                    />
+
+                <TextView
+                    android:text="部门经理"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginEnd="13dp"
+                    android:textColor="@color/my_black"
+                    android:textSize="16sp"
+                    android:layout_alignTop="@+id/work"
+                    android:layout_toLeftOf="@+id/right_arrow4"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/right_arrow4"
+                    style="@style/right_arrow"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/address_layout"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <ImageView
+                android:src="@drawable/address"
+                android:layout_width="56dp"
+                android:layout_height="56dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:textColor="@color/my_light_gray"
+                    android:layout_marginLeft="14dp"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:textSize="17sp"
+                    android:id="@+id/address"
+                    android:text="@string/address"
+                    />
+
+                <TextView
+                    android:text="软件园"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginEnd="13dp"
+                    android:textColor="@color/my_black"
+                    android:textSize="16sp"
+                    android:layout_alignTop="@+id/address"
+                    android:layout_toLeftOf="@+id/right_arrow5"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/right_arrow5"
+                    style="@style/right_arrow"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/help_layout"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <ImageView
+                android:src="@drawable/help"
+                android:layout_width="56dp"
+                android:layout_height="56dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:textColor="@color/my_light_gray"
+                    android:layout_marginLeft="14dp"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:textSize="17sp"
+                    android:id="@+id/help"
+                    android:text="@string/help"
+                    />
+
+                <TextView
+                    android:text=""
+                    android:layout_marginRight="13dp"
+                    android:layout_marginEnd="13dp"
+                    android:textColor="@color/my_black"
+                    android:textSize="16sp"
+                    android:layout_alignTop="@+id/help"
+                    android:layout_toLeftOf="@+id/right_arrow6"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/right_arrow6"
+                    style="@style/right_arrow"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

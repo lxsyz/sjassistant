@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        android:id="@+id/title_layout"
+        layout="@layout/top_layout" />
+
+    <LinearLayout
+        android:id="@+id/unfinishedwork_layout"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <ImageView
+            android:src="@drawable/unfinishedword"
+            android:layout_width="56dp"
+            android:layout_height="56dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/unfinishedWork"
+                android:id="@+id/unfinished"
+                style="@style/text1" />
+
+            <TextView
+                android:layout_below="@+id/unfinished"
+                android:layout_alignStart="@+id/unfinished"
+                android:layout_alignLeft="@+id/unfinished"
+                android:text="待办"
+                style="@style/text2" />
+
+            <TextView
+                android:text="2016-3-25"
+                style="@style/text3"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/message_inform_layout"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
+        android:layout_marginTop="14dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <ImageView
+            android:src="@drawable/message"
+            android:layout_width="56dp"
+            android:layout_height="56dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/message_inform"
+                android:id="@+id/message_inform"
+                style="@style/text1" />
+
+            <TextView
+                android:layout_below="@+id/message_inform"
+                android:layout_alignStart="@+id/message_inform"
+                android:layout_alignLeft="@+id/message_inform"
+                android:text="待办"
+                style="@style/text2" />
+
+            <TextView
+                android:text="2016-3-25"
+                style="@style/text3"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/gonggao_layout"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
+        android:layout_marginTop="14dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <ImageView
+            android:src="@drawable/gonggao"
+            android:layout_width="56dp"
+            android:layout_height="56dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/gonggao"
+                android:id="@+id/gonggao"
+                style="@style/text1" />
+
+            <TextView
+                android:layout_below="@+id/gonggao"
+                android:layout_alignStart="@+id/gonggao"
+                android:layout_alignLeft="@+id/gonggao"
+                android:text="待办"
+                style="@style/text2" />
+
+            <TextView
+                android:text="2016-3-25"
+                style="@style/text3"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/assistant_layout"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
+        android:layout_marginTop="14dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <ImageView
+            android:src="@drawable/assistant"
+            android:layout_width="56dp"
+            android:layout_height="56dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/assistant"
+                android:id="@+id/assistant"
+                style="@style/text1" />
+
+            <TextView
+                android:layout_below="@+id/assistant"
+                android:layout_alignStart="@+id/assistant"
+                android:layout_alignLeft="@+id/assistant"
+                android:text="新春佳节"
+                style="@style/text2" />
+
+            <TextView
+                android:text="2016-3-25"
+                style="@style/text3"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
