@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#f0f0f0"
     android:layout_height="match_parent">
     <include
         android:id="@+id/title_layout"
@@ -15,12 +16,12 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="80dp">
+        android:layout_height="70dp">
 
         <ImageView
             android:src="@drawable/unfinishedword"
-            android:layout_width="56dp"
-            android:layout_height="56dp" />
+            android:layout_width="46dp"
+            android:layout_height="46dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -55,12 +56,12 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="80dp">
+        android:layout_height="70dp">
 
         <ImageView
             android:src="@drawable/message"
-            android:layout_width="56dp"
-            android:layout_height="56dp" />
+            android:layout_width="46dp"
+            android:layout_height="46dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -95,12 +96,12 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="80dp">
+        android:layout_height="70dp">
 
         <ImageView
             android:src="@drawable/gonggao"
-            android:layout_width="56dp"
-            android:layout_height="56dp" />
+            android:layout_width="46dp"
+            android:layout_height="46dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -135,12 +136,12 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="80dp">
+        android:layout_height="70dp">
 
         <ImageView
             android:src="@drawable/assistant"
-            android:layout_width="56dp"
-            android:layout_height="56dp" />
+            android:layout_width="46dp"
+            android:layout_height="46dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"

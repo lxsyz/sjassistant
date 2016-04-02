@@ -87,6 +87,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.forgetPassword:
                 Intent intent = new Intent(LoginActivity.this,ForgetPasswordActivity.class);
+                intent.putExtra("from",1);
                 startActivity(intent);
                 break;
             case R.id.serverConfig:

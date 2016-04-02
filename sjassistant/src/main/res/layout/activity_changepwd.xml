@@ -3,119 +3,13 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:background="@color/white"
     android:layout_height="match_parent">
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="60dp"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:paddingLeft="15dp"
-            android:paddingRight="20dp">
-
-            <ImageView
-                android:id="@+id/email_iv"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/email" />
-
-            <EditText
-                android:id="@+id/email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="23dp"
-                android:layout_toRightOf="@id/email_iv"
-                android:text=""
-                android:hint="@string/email"
-                android:textColor="@color/black"
-                android:background="@drawable/border"
-                android:textSize="17sp"
-                />
-
-            <ImageView
-                android:id="@+id/prompt"
-                android:src="@drawable/right"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/app_name" />
-
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="60dp"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:paddingLeft="15dp"
-            >
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.8dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignLeft="@+id/validate_iv"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:background="@color/line" />
-            <ImageView
-                android:id="@+id/validate_iv"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/validate" />
-
-            <EditText
-                android:id="@+id/validateCode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="23dp"
-                android:layout_toRightOf="@id/validate_iv"
-                android:text=""
-                android:hint="@string/validatecode"
-                android:textColor="@color/black"
-                android:background="@drawable/border"
-                android:textSize="17sp"
-                />
-
-            <TextView
-                android:id="@+id/getCode"
-                android:gravity="center"
-                android:layout_alignParentRight="true"
-                android:background="@color/my_gray"
-                android:text="免费获取验证码"
-                android:paddingLeft="9dp"
-                android:textColor="@color/white"
-                android:paddingRight="9dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.8dp"
-                android:layout_alignBottom="@+id/getCode"
-                android:layout_alignLeft="@+id/validate_iv"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:background="@color/line" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="60dp"
+            android:layout_height="70dp"
             android:background="@color/white"
             android:orientation="horizontal"
             android:paddingLeft="15dp"
@@ -130,7 +24,7 @@
                 android:src="@drawable/password" />
 
             <EditText
-                android:id="@+id/password"
+                android:id="@+id/oldPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -138,20 +32,10 @@
                 android:layout_toRightOf="@id/password_iv"
                 android:inputType="textPassword"
                 android:text="155262"
-                android:hint="输入6-12位新密码"
+                android:hint="输入原密码"
                 android:textColor="@color/black"
                 android:background="@drawable/border"
                 android:textSize="17sp"
-                />
-
-            <ImageView
-                android:id="@+id/eye"
-                android:src="@drawable/showpassword"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/app_name"
                 />
 
             <View
@@ -162,24 +46,101 @@
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp"
                 android:background="@color/line" />
-
         </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="20dp">
+
+            <ImageView
+                android:id="@+id/newPassword_iv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/password" />
+
+            <EditText
+                android:id="@+id/newPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="23dp"
+                android:layout_toRightOf="@id/newPassword_iv"
+                android:inputType="textPassword"
+                android:text="155262"
+                android:hint="输入6-12位密码"
+                android:textColor="@color/black"
+                android:background="@drawable/border"
+                android:textSize="17sp"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignLeft="@+id/newPassword_iv"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:background="@color/line" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="20dp">
+
+            <ImageView
+                android:id="@+id/sureNewPassword_iv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/password" />
+
+            <EditText
+                android:id="@+id/sureNewPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="23dp"
+                android:layout_toRightOf="@id/sureNewPassword_iv"
+                android:inputType="textPassword"
+                android:text=""
+                android:hint="确定输入6-12位密码"
+                android:textColor="@color/black"
+                android:background="@drawable/border"
+                android:textSize="17sp"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignLeft="@+id/sureNewPassword_iv"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:background="@color/line" />
+        </RelativeLayout>
+
     </LinearLayout>
 
-    <RelativeLayout
+    <Button
         android:layout_marginTop="50dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="20dp"
+        android:background="@drawable/yuanjiao"
+        android:id="@+id/confirm"
+        android:textColor="@color/white"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="20dp"
+        android:text="确定更换"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:background="@drawable/yuanjiao"
-            android:id="@+id/confirm"
-            android:textColor="@color/white"
-            android:text="@string/confirm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </RelativeLayout>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

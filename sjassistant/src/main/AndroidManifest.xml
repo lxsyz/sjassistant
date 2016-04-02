@@ -21,6 +21,25 @@
             android:screenOrientation="portrait"
             >
         </activity>
+        <activity android:name=".activity.SettingActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity android:name=".activity.NoDisturbActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity android:name=".activity.PromptActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".activity.HelpActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".activity.ReportActivity">
+        </activity>
+        <activity android:name=".activity.ChangePwdActivity"
+            android:screenOrientation="portrait">
+        </activity>
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -76,7 +76,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         viewPager.setCurrentItem(0);
         message_iv.setImageResource(R.drawable.message_checked);
         message_tv.setTextColor(Color.rgb(103, 197, 170));
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -147,10 +147,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         myapplication_iv.setImageResource(R.drawable.myapplication);
         mysetting_iv.setImageResource(R.drawable.mysetting_unchecked);
         contacts_iv.setImageResource(R.drawable.contacts_unchecked);
-        message_tv.setTextColor(Color.BLACK);
-        myapplication_tv.setTextColor(Color.BLACK);
-        mysetting_tv.setTextColor(Color.BLACK);
-        contacts_tv.setTextColor(Color.BLACK);
+        message_tv.setTextColor(Color.parseColor("#5e5e5e"));
+        myapplication_tv.setTextColor(Color.parseColor("#5e5e5e"));
+        mysetting_tv.setTextColor(Color.parseColor("#5e5e5e"));
+        contacts_tv.setTextColor(Color.parseColor("#5e5e5e"));
     }
 
     @Override

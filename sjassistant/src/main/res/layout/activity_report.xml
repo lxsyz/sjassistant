@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/title_layout"
+        layout="@layout/top_layout_text" />
+
+    <EditText
+        android:padding="10dp"
+        android:id="@+id/report_ed"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/report_border"
+        android:textColor="@color/my_black"
+        android:textSize="15sp"
+        android:gravity="top"
+        android:textCursorDrawable="@null"
+        android:lineSpacingExtra="10dp"
+        android:hint="请输入您宝贵的意见或建议(800字以内)" />
+
+    <TextView
+        android:text="@string/thank"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

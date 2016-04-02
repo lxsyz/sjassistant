@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#40000000"
+    android:padding="10dp" >
+
+    <Button
+        android:id="@+id/realAuth_cancel_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="25dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/select_photo_bg_bottom"
+        android:gravity="center"
+        android:padding="17dp"
+        android:text="取消"
+        android:textColor="@color/my_black"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:id="@+id/pop_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/realAuth_cancel_btn"
+        android:background="@drawable/photo_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/realAuth_toCamera_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="17dp"
+            android:text="拍照"
+            android:textColor="@color/my_black"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_width="fill_parent"
+            android:layout_height="0.4px"
+            android:background="@color/line" />
+
+        <TextView
+            android:id="@+id/realAuth_toPhotos_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="17dp"
+            android:text="相册"
+            android:textColor="@color/my_black"
+            android:textSize="15sp" />
+
+        <!--<View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/line" />
+
+        <Button
+            android:id="@+id/realAuth_delete_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="20dip"
+            android:layout_marginTop="5dip"
+            android:background="@drawable/btn_style_alert_dialog_button"
+            android:text="删除已选图片"
+            android:textStyle="bold"
+            android:visibility="gone" />-->
+    </LinearLayout>
+
+</RelativeLayout>

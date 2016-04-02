@@ -28,4 +28,7 @@
     <string name="address">地址</string>
     <string name="apartment">部门</string>
     <string name="help">帮助反馈</string>
+    <string name="clear">清除后,消息、公告、审批单据、通讯录等文件需要重新加载,确定清除？</string>
+    <string name="disturb">开启后,在设定时间段内收到新消息时不会响铃或震动</string>
+    <string name="thank">欢迎您对我们提出宝贵的意见和建议,您留下的任何信息都用来改善我们的软件</string>
 </resources>

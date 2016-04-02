@@ -24,6 +24,12 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
     private TextView tv_getcode;
     private int flag = 1;
 
+    /*
+     * 从忘记密码进入   from = 1
+     * 从更换邮箱进入   from = 2
+     */
+    private int from;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +39,15 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
     protected void initView() {
         super.initView();
         setCenterView(R.layout.activty_forgetpassword);
-        setTopText(R.string.findPassword);
 
+
+        from = getIntent().getIntExtra("from",-1);
+
+        if (from == 1) {
+            setTopText(R.string.findPassword);
+        } else if(from == 2) {
+            setTopText("更换绑定邮箱");
+        }
         et_validate = (EditText)findViewById(R.id.validateCode);
         et_password = (EditText)findViewById(R.id.password);
         et_username = (EditText)findViewById(R.id.email);
@@ -74,6 +87,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
 
                 break;
             case R.id.eye:
+                //设置密码可见或隐藏
                 if (flag == 1) {
                     eye.setImageResource(R.drawable.noshowpassword);
                     flag = 0;
@@ -84,7 +98,6 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                     flag = 1;
                     et_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
-                    //et_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }
                 //设置光标在最后一行
                 CharSequence charSequence = et_password.getText();

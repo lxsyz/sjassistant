@@ -1,32 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#f0f0f0"
     android:layout_height="match_parent">
 
     <include
         android:id="@+id/title_layout"
         layout="@layout/top_layout" />
 
-    <LinearLayout
-        android:paddingLeft="12dp"
-        android:background="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="60dp">
-
-        <ImageView
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/search"
-            android:layout_width="22dp"
-            android:layout_height="22dp" />
-
-        <EditText
-            android:paddingLeft="15dp"
-            android:textSize="15sp"
-            android:hint="@string/search"
-            android:background="@drawable/border"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+    <include android:id="@+id/search_layout"
+        layout="@layout/search_contacts" />
 
     <LinearLayout
         android:layout_marginTop="18dp"
@@ -38,12 +21,12 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="80dp">
+        android:layout_height="70dp">
 
         <ImageView
             android:src="@drawable/company"
-            android:layout_width="56dp"
-            android:layout_height="56dp" />
+            android:layout_width="46dp"
+            android:layout_height="46dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -70,12 +53,17 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <View
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:background="@color/line"
-        android:layout_width="match_parent"
-        android:layout_height="0.8dp"/>
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/line"
+            android:layout_width="match_parent"
+            android:layout_height="1.2dp"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/group_layout"
@@ -86,12 +74,12 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="80dp">
+        android:layout_height="70dp">
 
         <ImageView
             android:src="@drawable/group"
-            android:layout_width="56dp"
-            android:layout_height="56dp" />
+            android:layout_width="46dp"
+            android:layout_height="46dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -118,12 +106,17 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <View
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:background="@color/line"
-        android:layout_width="match_parent"
-        android:layout_height="0.8dp"/>
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/line"
+            android:layout_width="match_parent"
+            android:layout_height="1.2dp"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/customer_layout"
@@ -134,12 +127,12 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="80dp">
+        android:layout_height="70dp">
 
         <ImageView
             android:src="@drawable/customer"
-            android:layout_width="56dp"
-            android:layout_height="56dp" />
+            android:layout_width="46dp"
+            android:layout_height="46dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"

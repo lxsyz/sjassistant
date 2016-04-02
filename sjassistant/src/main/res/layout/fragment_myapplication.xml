@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#f0f0f0"
     android:layout_height="match_parent">
 
     <include
@@ -16,12 +17,12 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="80dp">
+        android:layout_height="70dp">
 
         <ImageView
             android:src="@drawable/deal"
-            android:layout_width="56dp"
-            android:layout_height="56dp" />
+            android:layout_width="46dp"
+            android:layout_height="46dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -44,12 +45,17 @@
                 />
         </RelativeLayout>
     </LinearLayout>
-    <View
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:background="@color/line"
-        android:layout_width="match_parent"
-        android:layout_height="0.8dp"/>
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/line"
+            android:layout_width="match_parent"
+            android:layout_height="1.2dp"/>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/chat_layout"
         android:paddingLeft="12dp"
@@ -59,12 +65,12 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="80dp">
+        android:layout_height="70dp">
 
         <ImageView
             android:src="@drawable/chat"
-            android:layout_width="56dp"
-            android:layout_height="56dp" />
+            android:layout_width="46dp"
+            android:layout_height="46dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"

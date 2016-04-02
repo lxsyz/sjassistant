@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,8 +25,8 @@ import com.example.administrator.sjassistant.R;
 public class BaseActivity extends Activity {
 
     private TextView tv_title;
-    private TextView btn_left;
-    private TextView btn_right;
+    private ImageView btn_left;
+    private ImageView btn_right;
     protected View layout_top;
     private LinearLayout centerLayout;
     private long exitTime = 0;
@@ -51,8 +52,8 @@ public class BaseActivity extends Activity {
         layout_top = findViewById(R.id.title_layout);
         centerLayout = (LinearLayout)findViewById(R.id.centerlayout);
         tv_title = (TextView)layout_top.findViewById(R.id.tv_center);
-        btn_left = (TextView)layout_top.findViewById(R.id.bt_left);
-        btn_right = (TextView)layout_top.findViewById(R.id.bt_right);
+        btn_left = (ImageView)layout_top.findViewById(R.id.bt_left);
+        btn_right = (ImageView)layout_top.findViewById(R.id.bt_right);
 
         btn_left.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,10 +100,10 @@ public class BaseActivity extends Activity {
 
     protected void setRightButton(String text) {
         btn_right.setVisibility(View.VISIBLE);
-        btn_right.setText(text);
-        btn_right.setTextColor(Color.WHITE);
-        btn_right.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        btn_right.setBackgroundColor(Color.TRANSPARENT);
+        //btn_right.setText(text);
+        //btn_right.setTextColor(Color.WHITE);
+        //btn_right.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        //btn_right.setBackgroundColor(Color.TRANSPARENT);
     }
     /**
      *
