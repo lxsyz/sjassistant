@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_marginTop="7dp"
+        android:textSize="10sp"
+        android:text="3月10日 下午15:49"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/assistant_time"
+        android:background="@drawable/yuanjiao_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_marginTop="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginTop="18dp"
+            android:layout_marginLeft="12dp"
+            android:textColor="@color/my_black"
+            android:textSize="20sp"
+            android:text="@string/address"
+
+            android:ellipsize="end"
+            android:id="@+id/assistant_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+
+            android:text="3月8日"
+            android:id="@+id/assistant_subtime"
+            android:textColor="@color/my_light_gray"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="12dp"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:visibility="gone"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:text="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
+            android:textColor="#757575"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:lineSpacingExtra="4dp"
+            android:textSize="12sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:id="@+id/assistant_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+
+        <View
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="@color/line" />
+
+        <RelativeLayout
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="6dp"
+            android:id="@+id/watch_paper"
+            android:layout_width="match_parent"
+            android:layout_height="38dp">
+
+            <TextView
+                android:textColor="@color/my_black"
+                android:text="查看全文"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+
+                style="@style/right_arrow" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/assistant_title"
+            android:layout_marginTop="18dp"
+            android:layout_marginLeft="12dp"
+            android:textColor="@color/my_black"
+            android:textSize="20sp"
+            android:text="@string/address"
+            android:ellipsize="end"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/flag"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginBottom="3dp"
+            android:layout_below="@+id/assistant_title"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/ic_postman"
+                android:layout_width="15dp"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/assistant_postman"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/my_light_gray"
+                android:textSize="12sp"
+                android:text="发布人:   张三"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginBottom="8dp"
+            android:layout_below="@+id/flag"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/type"
+                android:layout_width="15dp"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/type"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/my_light_gray"
+                android:textSize="12sp"
+                android:text="公告类型: 员工天地"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_below="@+id/assistant_title"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/ic_posttime"
+                android:layout_width="15dp"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/assistant_posttime"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/my_light_gray"
+                android:textSize="12sp"
+                android:text="时间: 2016-03-19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <WebView
+        android:id="@+id/wv"
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp">
+
+    </WebView>
+
+</LinearLayout>

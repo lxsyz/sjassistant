@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/background"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/search_contacts"
+        android:id="@+id/search_layout" />
+
+    <LinearLayout
+        android:layout_marginTop="14dp"
+        android:background="@color/white"
+        android:layout_width="fill_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="38dp">
+
+            <TextView
+
+                android:textSize="13sp"
+                android:layout_marginLeft="12dp"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:textColor="#979797"
+                android:text="我可以查看的客户"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent" />
+
+            <View
+                android:layout_marginRight="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_alignParentBottom="true"
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/line" />
+        </RelativeLayout>
+
+        <!--<ListView
+            android:id="@+id/lv_result"
+            android:padding="15dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+        </ListView>-->
+    </LinearLayout>
+
+
+</LinearLayout>

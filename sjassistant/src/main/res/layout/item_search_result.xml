@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:textColor="@color/my_black"
+            android:text="张三"
+
+            android:layout_alignParentLeft="true"
+            android:gravity="center_vertical"
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/group"
+            android:text="北京分所"
+            android:textColor="#979797"
+            android:textSize="13sp"
+            android:layout_toRightOf="@+id/username"
+            android:layout_alignTop="@+id/username"
+            android:layout_marginLeft="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_marginRight="17dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/phone"
+            android:src="@drawable/contacts_unchecked"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+    </RelativeLayout>
+    
+</LinearLayout>

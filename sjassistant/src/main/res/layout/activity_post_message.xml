@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#f0f0f0"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/top_layout_text" />
+
+    <LinearLayout
+        android:paddingLeft="12dp"
+        android:background="@color/white"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:text="接收人"
+            android:textColor="@color/my_light_gray"
+            android:textSize="13sp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/search_content"
+            android:paddingLeft="15dp"
+            android:textSize="15sp"
+            android:background="@drawable/border"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/add_contacts"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/add_contacts"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="12dp"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:padding="12dp"
+        android:layout_width="fill_parent"
+        android:layout_height="96dp">
+
+        <TextView
+            android:text="消息主题"
+            android:textColor="@color/my_light_gray"
+            android:textSize="13sp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_marginTop="12dp"
+            android:background="@color/line"
+            android:layout_width="fill_parent"
+            android:layout_height="0.8dp" />
+
+        <EditText
+            android:id="@+id/message_title"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/border"
+            android:textSize="15sp"
+            android:hint="消息主题"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="12dp"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:padding="12dp"
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp">
+
+        <TextView
+            android:text="消息内容"
+            android:textColor="@color/my_light_gray"
+            android:textSize="13sp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_marginTop="12dp"
+            android:background="@color/line"
+            android:layout_width="fill_parent"
+            android:layout_height="0.8dp" />
+
+        <EditText
+            android:id="@+id/message_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/border"
+            android:textSize="15sp"
+            android:hint="消息内容"
+            android:text="各位同事,本所在2016-3-30收到一批预付款，情况如下，届时查收"
+            android:lineSpacingExtra="4dp"
+            android:gravity="top"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
