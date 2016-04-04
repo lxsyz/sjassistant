@@ -24,7 +24,7 @@
     </style>
 
     <style name="text1">
-        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_marginTop">2dp</item>
         <item name="android:layout_marginLeft">12dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -42,7 +42,6 @@
 
     <style name="text3">
         <item name="android:textSize">12sp</item>
-        <item name="android:layout_marginTop">6dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
@@ -62,6 +61,15 @@
         <item name="android:layout_height">20dp</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="choose_contacts">
+        <item name="android:layout_marginRight">13dp</item>
+        <item name="android:textColor">@color/my_light_gray</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
     </style>
 
     <style name="dialog_style" parent="@android:style/Theme.Dialog">
@@ -84,5 +92,10 @@
     <style name="AnimBottom" parent="@android:style/Animation">
         <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
         <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
+    </style>
+
+    <style name="AnimContacts" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/push_in</item>
+        <item name="android:windowExitAnimation">@anim/push_out</item>
     </style>
 </resources>

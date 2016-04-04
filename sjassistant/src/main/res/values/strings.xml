@@ -31,4 +31,19 @@
     <string name="clear">清除后,消息、公告、审批单据、通讯录等文件需要重新加载,确定清除？</string>
     <string name="disturb">开启后,在设定时间段内收到新消息时不会响铃或震动</string>
     <string name="thank">欢迎您对我们提出宝贵的意见和建议,您留下的任何信息都用来改善我们的软件</string>
+
+
+    <string-array name="test">
+        <item>钊钊</item>
+        <item>张三</item>
+        <item>李四</item>
+        <item>哈哈</item>
+        <item>么么</item>
+        <item>啊啊</item>
+        <item>北京</item>
+        <item>北边</item>
+        <item>Jimmy</item>
+        <item>Jokn</item>
+        <item>Jokn</item><item>Jokn</item><item>Jokn</item>
+    </string-array>
 </resources>

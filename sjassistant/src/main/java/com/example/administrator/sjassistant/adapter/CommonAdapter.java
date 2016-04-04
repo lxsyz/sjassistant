@@ -1,6 +1,7 @@
 package com.example.administrator.sjassistant.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public abstract class CommonAdapter<T> extends BaseAdapter
 	@Override
 	public long getItemId(int position)
 	{
+
 		return position;
 	}
 
@@ -46,7 +48,9 @@ public abstract class CommonAdapter<T> extends BaseAdapter
 	{
 		ViewHolder holder = ViewHolder.get(mContext, convertView, parent,
 				layoutId, position);
+
 		convert(holder, getItem(position));
+		//Log.d("tag",getItem(position) + "  "+position);
 		return holder.getConvertView();
 	}
 

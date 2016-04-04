@@ -2,15 +2,19 @@ package com.example.administrator.sjassistant.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by Administrator on 2016/4/2.
@@ -23,10 +27,12 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
     private RelativeLayout layout_top;
 
     private LinearLayout person_work_layout,person_apartment_layout,customer_type_layout;
-
+    private TextView customer_type,person_work,person_apartment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_choosecontacts);
+        initWindow();
         initView();
     }
 
@@ -39,6 +45,11 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
         customer_type_layout = (LinearLayout)findViewById(R.id.customer_type_layout);
         person_work_layout = (LinearLayout)findViewById(R.id.person_work_layout);
         person_apartment_layout = (LinearLayout)findViewById(R.id.person_apartment_layout);
+
+        person_work = (TextView)findViewById(R.id.person_work);
+        customer_type = (TextView)findViewById(R.id.customer_type);
+        person_apartment = (TextView)findViewById(R.id.person_apartment);
+
         customer_type_layout.setOnClickListener(this);
         person_apartment_layout.setOnClickListener(this);
         person_work_layout.setOnClickListener(this);
@@ -60,6 +71,9 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
                 onBackPressed();
                 break;
             case R.id.bt_right:
+                intent = new Intent(ChooseContactsActivity.this,SearchResultActivity.class);
+                intent.putExtra("type","筛选结果");
+                startActivity(intent);
                 break;
             case R.id.customer_type_layout:
                 intent = new Intent(ChooseContactsActivity.this,EditActivity.class);
@@ -82,10 +96,31 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("tag",requestCode+"  "+resultCode+"  ");
-
+        String result = "";
+        switch (resultCode) {
+            case 1:
+                result = data.getStringExtra("result");
+                customer_type.setText(result);
+                break;
+            case 2:
+                result = data.getStringExtra("result");
+                person_apartment.setText(result);
+                break;
+            case 3:
+                result = data.getStringExtra("result");
+                person_work.setText(result);
+                break;
+        }
 
 
         super.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    protected void initWindow() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
     }
 }

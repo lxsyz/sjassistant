@@ -35,6 +35,8 @@
             android:layout_centerVertical="true"
             android:id="@+id/phone"
             android:src="@drawable/contacts_unchecked"
+            android:clickable="true"
+            android:focusable="false"
             android:layout_width="20dp"
             android:layout_height="20dp" />
     </RelativeLayout>

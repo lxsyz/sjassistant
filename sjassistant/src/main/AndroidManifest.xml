@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.administrator.sjassistant" >
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -40,6 +42,56 @@
         <activity android:name=".activity.ChangePwdActivity"
             android:screenOrientation="portrait">
         </activity>
+
+        <activity android:name=".activity.SearchResultActivity"
+            android:screenOrientation="portrait"
+        />
+
+        <activity android:name=".activity.CustomerContactsActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.MessageActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.GonggaoActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.MessageDetailActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.ChooseContactsActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.AssistantActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.AssistantDetail"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.PostInformActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.PostMessageActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.ChooseApartmentActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.ChooseGonggaoType"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.CompanyActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.ContactsDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.AddContactsActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.EditActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.PersonDetail"
+            android:screenOrientation="portrait" />
+
+
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>

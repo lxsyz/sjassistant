@@ -46,4 +46,6 @@ public class Assitant {
     public void setType(String type) {
         this.type = type;
     }
+
+
 }

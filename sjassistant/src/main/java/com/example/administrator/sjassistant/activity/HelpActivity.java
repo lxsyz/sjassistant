@@ -2,8 +2,10 @@ package com.example.administrator.sjassistant.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -28,6 +30,7 @@ public class HelpActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
 
+        initWindow();
         initView();
     }
 
@@ -74,6 +77,13 @@ public class HelpActivity extends Activity implements View.OnClickListener {
                 Intent intent = new Intent(HelpActivity.this,ReportActivity.class);
                 startActivity(intent);
                 break;
+        }
+    }
+
+    protected void initWindow() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
 }

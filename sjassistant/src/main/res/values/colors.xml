@@ -11,7 +11,9 @@
     <color name="black">#000000</color>
     <color name="my_gray">#969696</color>
     <color name="my_light_gray">#67C5AA</color>
+    <color name="my_more_light_gray">#b3b3b3</color>
     <color name="my_black">#414141</color>
     <color name="blueviolet">#8A2BE2</color>
     <color name="my_font_gray">#A7A7A7</color>
+    <color name="background">#F0F0F0</color>
 </resources>

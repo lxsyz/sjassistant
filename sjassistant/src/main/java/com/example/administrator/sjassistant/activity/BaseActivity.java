@@ -98,12 +98,8 @@ public class BaseActivity extends Activity {
         btn_right.setVisibility(visibility);
     }
 
-    protected void setRightButton(String text) {
-        btn_right.setVisibility(View.VISIBLE);
-        //btn_right.setText(text);
-        //btn_right.setTextColor(Color.WHITE);
-        //btn_right.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        //btn_right.setBackgroundColor(Color.TRANSPARENT);
+    protected void setRightButtonRes(int resId) {
+        btn_right.setImageResource(resId);
     }
     /**
      *

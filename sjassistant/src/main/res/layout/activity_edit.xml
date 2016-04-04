@@ -4,59 +4,48 @@
     android:background="@color/background"
     android:layout_height="match_parent">
 
-    <include layout="@layout/search_contacts"
-        android:id="@+id/search_layout" />
-
-    <LinearLayout
-        android:layout_marginTop="14dp"
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
-        android:layout_width="fill_parent"
         android:orientation="vertical"
-        android:layout_height="wrap_content">
-
+        >
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="38dp">
 
             <TextView
-
+                android:id="@+id/tip"
                 android:textSize="13sp"
-                android:layout_marginLeft="12dp"
                 android:layout_centerVertical="true"
-                android:gravity="center_vertical"
                 android:textColor="#979797"
-                android:text="我可以查看的客户"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:text="选择部门"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent" />
 
             <View
-                android:layout_marginRight="12dp"
-                android:layout_marginLeft="12dp"
                 android:layout_alignParentBottom="true"
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/line" />
         </RelativeLayout>
 
-        <!--<ListView
-            android:id="@+id/lv_result"
-            android:padding="15dp"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-        </ListView>-->
     </LinearLayout>
 
     <ListView
-        android:id="@+id/customer_list"
+        android:id="@+id/edit_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fadingEdge="none"
         android:listSelector="#00000000"
         android:cacheColorHint="@android:color/transparent"
         android:scrollbars="none"
+        android:divider="@drawable/list_item_divider"
+        android:dividerHeight="0.5dp"
         >
 
     </ListView>
+
 
 </LinearLayout>
