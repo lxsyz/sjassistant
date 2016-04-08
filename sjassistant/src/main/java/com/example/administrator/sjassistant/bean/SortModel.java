@@ -13,6 +13,16 @@ public class SortModel {
 
     private String phoneNumber;     //电话号码
 
+    private int checked;
+
+    public void setChecked(int checked) {
+        this.checked = checked;
+    }
+
+    public int getChecked() {
+        return checked;
+    }
+
     public String getName() {
         return name;
     }

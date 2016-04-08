@@ -24,6 +24,11 @@ public abstract class CommonAdapter<T> extends BaseAdapter
 		this.layoutId = layoutId;
 	}
 
+	public void removeItem(int position) {
+		mDatas.remove(position);
+		notifyDataSetChanged();
+	}
+
 	@Override
 	public int getCount()
 	{

@@ -1,6 +1,7 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.Selection;
@@ -54,10 +55,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
 
-                    if (!OperatorUtil.isEmail(et_username.getText().toString())) {
+                    if (!OperatorUtil.isPhoneNumber(et_username.getText().toString())) {
                         tv_prompt.setVisibility(View.VISIBLE);
+                        btn_login.setClickable(false);
                     } else {
                         tv_prompt.setVisibility(View.GONE);
+                        btn_login.setClickable(true);
                     }
                 }
             }
@@ -96,6 +99,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.login:
                 login();
+
+                SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("phonenumber",et_username.getText().toString());
+
                 intent = new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(intent);
                 break;

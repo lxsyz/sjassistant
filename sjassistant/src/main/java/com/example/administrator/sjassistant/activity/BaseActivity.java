@@ -16,8 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.Toast;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.util.AppManager;
 
 /**
  * Created by Administrator on 2016/3/27.
@@ -26,7 +28,7 @@ public class BaseActivity extends Activity {
 
     private TextView tv_title;
     private ImageView btn_left;
-    private ImageView btn_right;
+    protected ImageView btn_right,bt_right2;
     protected View layout_top;
     private LinearLayout centerLayout;
     private long exitTime = 0;
@@ -37,7 +39,7 @@ public class BaseActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_base);
-
+        AppManager.getInstance().addActivity(this);
         initProcess();
     }
 
@@ -54,6 +56,7 @@ public class BaseActivity extends Activity {
         tv_title = (TextView)layout_top.findViewById(R.id.tv_center);
         btn_left = (ImageView)layout_top.findViewById(R.id.bt_left);
         btn_right = (ImageView)layout_top.findViewById(R.id.bt_right);
+        bt_right2 = (ImageView)layout_top.findViewById(R.id.bt_right2);
 
         btn_left.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +104,14 @@ public class BaseActivity extends Activity {
     protected void setRightButtonRes(int resId) {
         btn_right.setImageResource(resId);
     }
+
+    protected void setRightButton2(int visibility) {
+        bt_right2.setVisibility(visibility);
+    }
+
+    protected void setRightButtonRes2(int resId) {
+        bt_right2.setImageResource(resId);
+    }
     /**
      *
      * 设置标题内容
@@ -114,5 +125,7 @@ public class BaseActivity extends Activity {
     protected void setTopText(int stringID) {
         tv_title.setText(getString(stringID));
     }
+
+
 
 }

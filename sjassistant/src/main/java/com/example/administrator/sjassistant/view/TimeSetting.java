@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -16,7 +17,7 @@ import android.view.WindowManager;
  */
 public class TimeSetting extends View {
 
-    //第一次进来
+    //状态标识
     private int count = 1;
 
 
@@ -30,10 +31,15 @@ public class TimeSetting extends View {
     private int height;
     private int width;
 
+    //线的宽
+    private float lineWidth;
+
     private float mScreenWidth = 0;
     private float mScreenHeight = 0;
 
-    private float textSize = 15.0f;
+    //字体大小
+    private float textSize = 26.0f;
+    private float textHeight;
 
     private float padding;
     private float margin;
@@ -80,7 +86,7 @@ public class TimeSetting extends View {
         if (heightMode == MeasureSpec.EXACTLY) {
             height = heightSize;
         } else {
-            height = (int)(2 * radius);
+            height = (int)(2 * radius) + 150;
         }
 
         if (widthMode == MeasureSpec.EXACTLY) {
@@ -89,18 +95,41 @@ public class TimeSetting extends View {
             width =(int)(mScreenWidth - 2 * getPaddingLeft());
         }
 
+
         setMeasuredDimension(width,height);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //Log.d("tag","tafdsfsdf");
+        Log.d("tag", "count:  " + count);
         drawLine(canvas);
         if(count != 1) {
             drawCircle(canvas, startX, startY);
             drawRedLine(canvas,offsetX,startX);
             drawEndCircle(canvas,endX,endY);
+        }
+        //抬起
+        if (count == 3) {
+            Log.d("tag","draw");
+            if (endX - startX > 100) {
+                //小球在最左边防止文字出界
+                if (startX < 40) {
+                    drawText(canvas, startX + 20, startY, 3);
+                    //drawEndText(canvas, endX + 40, startY, 3);
+                } else {
+                    drawText(canvas, startX, startY, 3);
+
+                }
+                drawEndText(canvas, endX, startY, 3);
+
+            } else {
+                if (startX < 40) {
+                    drawText(canvas, startX + 40, startY, 3);
+                } else
+                    drawText(canvas, startX, startY,3);
+                drawEndText(canvas,endX,startY,4);
+            }
         }
     }
 
@@ -109,7 +138,9 @@ public class TimeSetting extends View {
         paint.setStrokeWidth(15);
         paint.setAntiAlias(true);
         paint.setColor(Color.parseColor("#e3e3e3"));
-        canvas.drawLine(padding, (float) height / 2, (float) width - padding, (float) height / 2, paint);
+        canvas.drawLine(padding, radius, (float) width - padding, radius, paint);
+
+        lineWidth = width - 2 * padding;
     }
 
     @Override
@@ -135,6 +166,7 @@ public class TimeSetting extends View {
             case MotionEvent.ACTION_UP:
                 endX = event.getX();
                 endY = event.getY();
+                count = 3;
                 invalidate();
                 break;
         }
@@ -146,7 +178,7 @@ public class TimeSetting extends View {
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.parseColor("#2EB690"));
         if (startY < height / 2 + 15 || startY > height / 2 - 15) {
-            canvas.drawCircle(startX, height/2, radius, mPaint);
+            canvas.drawCircle(startX,radius , radius, mPaint);
         }
     }
 
@@ -154,9 +186,9 @@ public class TimeSetting extends View {
         Paint mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.parseColor("#2EB690"));
-        if (endX > startX) {
+        if (endX > startX && endX < width - 2 * padding) {
 
-            canvas.drawCircle(endX, height/2, radius, mPaint);
+            canvas.drawCircle(endX, radius, radius, mPaint);
         }
     }
 
@@ -166,22 +198,45 @@ public class TimeSetting extends View {
         mPaint.setStrokeWidth(16);
         mPaint.setColor(Color.parseColor("#2EB690"));
         if (offsetX > startX) {
-            canvas.drawLine(startX, (float) height / 2, offsetX, (float) height / 2, mPaint);
+            canvas.drawLine(startX, radius, offsetX, radius, mPaint);
         }
     }
 
-    private void drawText(Canvas canvas,float startX,float startY) {
+    private void drawText(Canvas canvas,float startX,float startY,int n) {
         Paint mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.parseColor("#6D6D6D"));
         mPaint.setTextSize(textSize);
+
+
+        Paint.FontMetrics fm = mPaint.getFontMetrics();
+        textHeight = fm.descent-fm.ascent;
+
+        percent = (startX-padding) / lineWidth;
+
+        int value = (int)(percent * 24);
+        RectF rect = new RectF();
+        rect.set(startX - 20, startY, startX + 20, startY + n * textHeight);
+
+        canvas.drawText(String.valueOf(value)+"点开始",startX - 40,rect.bottom - fm.descent,mPaint);
 
     }
 
-    private void drawEndText(Canvas canvas,float endX,float endY) {
+    private void drawEndText(Canvas canvas,float endX,float startY,int n) {
         Paint mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.parseColor("#6D6D6D"));
         mPaint.setTextSize(textSize);
+
+        Paint.FontMetrics fm = mPaint.getFontMetrics();
+        textHeight = fm.descent-fm.ascent;
+
+        percent = (endX-padding) / lineWidth;
+
+        int value = (int)(percent * 24);
+        RectF rect = new RectF();
+        rect.set(endX - 20, startY, endX + 20, startY + n * textHeight);
+
+        canvas.drawText(String.valueOf(value) + "点结束", endX - 40, rect.bottom - fm.descent, mPaint);
     }
 }

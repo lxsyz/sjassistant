@@ -79,6 +79,12 @@ public class OperatorUtil {
     }
 
     /*
-     *
+     * 验证是否是手机号
+     * @param String
      */
+    public static boolean isPhoneNumber(String number) {
+        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$");
+        Matcher m = p.matcher(number);
+        return m.matches();
+    }
 }

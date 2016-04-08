@@ -51,7 +51,7 @@ public class MyDialog extends Dialog implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.dialog);
-        this.setCanceledOnTouchOutside(false);
+        //this.setCanceledOnTouchOutside(false);
         okTextView = (TextView) findViewById(R.id.dialog_ok);
         cancelTextView = (TextView) findViewById(R.id.dialog_cancel);
         main_text = (TextView)findViewById(R.id.main_text);

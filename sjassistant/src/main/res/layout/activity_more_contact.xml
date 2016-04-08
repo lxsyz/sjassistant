@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:padding="15dp"
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/my_light_gray"
+            android:text="主持人:"/>
+
+        <TextView
+            android:id="@+id/master"
+            android:text="155"
+            android:textColor="@color/my_black"
+            android:layout_toRightOf="@+id/text"
+            android:layout_marginLeft="12dp"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:id="@+id/change_layout"
+            android:layout_alignParentRight="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/change"
+                android:layout_toLeftOf="@+id/text2"
+                android:layout_marginRight="10dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp" />
+
+            <TextView
+                android:layout_marginRight="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/text2"
+                android:textColor="@color/my_light_gray"
+                android:text="更换号码"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:background="@color/background"
+        android:layout_width="match_parent"
+        android:layout_height="13dp" />
+    <!--<ScrollView
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">-->
+            <com.example.administrator.sjassistant.view.MyListView
+                android:layout_weight="1"
+                android:id="@+id/person"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fadingEdge="none"
+                android:listSelector="#00000000"
+                android:cacheColorHint="@android:color/transparent"
+                android:scrollbars="none"
+                android:divider="@drawable/list_item_divider"
+                android:dividerHeight="0.5dp">
+
+            </com.example.administrator.sjassistant.view.MyListView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line"
+        />
+            <RelativeLayout
+                android:padding="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/canyu_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/my_light_gray"
+                    android:textSize="13sp"
+                    android:text="参与人:"/>
+
+                <EditText
+                    android:id="@+id/number"
+                    android:background="@drawable/border"
+                    android:text=""
+                    android:hint="手动输入手机号"
+                    android:textColorHint="@color/my_black"
+                    android:textColor="@color/my_black"
+                    android:layout_toRightOf="@+id/canyu_text"
+                    android:layout_marginLeft="12dp"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+
+                    <ImageView
+                        android:id="@+id/add"
+                        android:src="@drawable/add_chat"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp" />
+
+            </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line"
+        />
+            <LinearLayout
+                android:padding="12dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="欢迎使用电话会议"
+                    android:textColorHint="@color/my_black"
+                    android:textSize="13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text=""
+                        android:textColorHint="@color/my_black"
+                        android:textSize="13sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <TextView
+                    android:text="欢迎使用电话会议"
+                    android:textColorHint="@color/my_black"
+                    android:textSize="13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="欢迎使用电话会议"
+                    android:textColorHint="@color/my_black"
+                    android:textSize="13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+      <!--  </LinearLayout>
+    </ScrollView>-->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line"
+        />
+
+
+
+    <LinearLayout
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <RelativeLayout
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:text="发起电话会议"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_start"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/start"
+            android:layout_width="0dp"
+            android:layout_height="48dp" />
+        <RelativeLayout
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:text="最多添加八人"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

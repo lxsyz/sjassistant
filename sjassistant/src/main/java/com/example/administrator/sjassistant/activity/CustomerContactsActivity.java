@@ -63,6 +63,9 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
         search = (ImageView)findViewById(R.id.search);
         ed_name = (EditText)findViewById(R.id.search_content);
         delete = (ImageView)findViewById(R.id.delete_word);
+        search.setOnClickListener(this);
+        delete.setOnClickListener(this);
+
 
         bt_right = (ImageView) layout_top.findViewById(R.id.bt_right);
         setRightButtonRes(R.drawable.more);

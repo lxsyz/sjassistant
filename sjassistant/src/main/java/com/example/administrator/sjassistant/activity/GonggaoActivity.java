@@ -87,7 +87,8 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
                 // set item width
                 deleteItem.setWidth(dp2px(90));
                 // set a icon
-                deleteItem.setIcon(R.drawable.ic_delete);
+                deleteItem.setIcon(R.drawable.ic_delete2);
+                deleteItem.setIcon(deleteItem.zoomDrawable(100,100));
                 // add to menu
                 menu.addMenuItem(deleteItem);
             }

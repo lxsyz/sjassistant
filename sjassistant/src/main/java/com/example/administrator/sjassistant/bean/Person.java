@@ -20,6 +20,8 @@ public class Person implements Serializable{
 
     private String person_work;
 
+    private String imgPath;
+
     public String getApartment() {
         return apartment;
     }
@@ -73,7 +75,16 @@ public class Person implements Serializable{
     }
 
     public void setPhoneNumber(String phoneNumber) {
+
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
+
+    public String getImgPath() {
+        return imgPath;
     }
 }
 

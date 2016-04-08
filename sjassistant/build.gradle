@@ -24,4 +24,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile files('libs/pinyin4j-2.5.0.jar')
+    compile 'com.android.support:design:+'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
 }

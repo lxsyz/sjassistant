@@ -103,7 +103,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                 textDialog.setContentVisibility(View.VISIBLE);
                 textDialog.setHandler(handler);
                 textDialog.setFlag(1);
-                textDialog.show();
+                //textDialog.show();
                 break;
             case R.id.sex_layout:
                 SexDialog dialog = new SexDialog(getActivity());

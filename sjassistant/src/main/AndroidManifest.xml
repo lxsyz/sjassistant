@@ -3,7 +3,23 @@
     package="com.example.administrator.sjassistant" >
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
-
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -88,10 +104,30 @@
         <activity android:name=".activity.EditActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.PersonDetail"
+        <activity android:name=".activity.BillInspectActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".activity.InspectReasonActivity"
+            android:screenOrientation="portrait" />
 
+        <activity android:name=".activity.PersonDetail"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.UnfinishedWorkActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.BillDetailActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.MoreContact"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.InspectWorkActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.StartChattingActivity" android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.AddChatContact"
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -100,6 +136,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <service android:name=".service.MessageService"
+            android:process=":message" />
     </application>
 
 </manifest>

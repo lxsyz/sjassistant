@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.example.administrator.sjassistant.util.DataCleanManager;
+import com.example.administrator.sjassistant.view.ChangeNumberDialog;
 import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.R;
 
@@ -51,6 +54,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         MyDialog dialog = new MyDialog(SettingActivity.this,R.style.dialog_style);
+        ChangeNumberDialog dialog2 = new ChangeNumberDialog(SettingActivity.this,R.style.dialog_style);
         Intent intent = null;
         switch (v.getId()) {
             case R.id.changeEmail:
@@ -67,13 +71,25 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent);
                 break;
             case R.id.clearCache:
+                dialog2.show();
+                dialog2.setFlag(1);
+                dialog2.setContentText(getString(R.string.clear));
+                dialog2.setOnDeleteClickListener(new ChangeNumberDialog.OnDeleteClickListener() {
+                    @Override
+                    public void onDelete(int i) {
+                        if (i == 1) {
+                            DataCleanManager.cleanAppicationData(SettingActivity.this);
+                            Toast.makeText(SettingActivity.this,"清除成功",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 //                dialog = new MyDialog(SettingActivity.this,R.style.dialog_style);
-                dialog.show();
-                dialog.setCenterVisibility(View.GONE);
-
-                dialog.setVisibility(View.VISIBLE);
-                dialog.setMain_text(getString(R.string.clear));
-                dialog.show();
+//                dialog.show();
+//                dialog.setCenterVisibility(View.GONE);
+//
+//                dialog.setVisibility(View.VISIBLE);
+//                dialog.setMain_text(getString(R.string.clear));
+//                dialog.show();
                 break;
             case R.id.update:
 //                dialog =

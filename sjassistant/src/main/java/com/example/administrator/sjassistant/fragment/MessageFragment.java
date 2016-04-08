@@ -17,6 +17,7 @@ import com.example.administrator.sjassistant.activity.GonggaoActivity;
 import com.example.administrator.sjassistant.activity.MessageActivity;
 import com.example.administrator.sjassistant.activity.PostInformActivity;
 import com.example.administrator.sjassistant.activity.PostMessageActivity;
+import com.example.administrator.sjassistant.activity.UnfinishedWorkActivity;
 import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.view.AddContactsWin;
 
@@ -88,6 +89,8 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.unfinishedwork_layout:
+                intent = new Intent(getActivity(), UnfinishedWorkActivity.class);
+                startActivity(intent);
                 break;
             case R.id.assistant_layout:
                 intent = new Intent(getActivity(),AssistantActivity.class);

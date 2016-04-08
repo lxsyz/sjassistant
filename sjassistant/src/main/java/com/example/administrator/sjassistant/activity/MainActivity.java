@@ -1,5 +1,6 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
 import android.os.Build;
@@ -13,12 +14,15 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.fragment.ContactsFragment;
 import com.example.administrator.sjassistant.fragment.MessageFragment;
 import com.example.administrator.sjassistant.fragment.MyApplicationFragment;
 import com.example.administrator.sjassistant.fragment.MySettingFragment;
+import com.example.administrator.sjassistant.service.MessageService;
+import com.example.administrator.sjassistant.util.AppManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +39,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private List<Fragment> fragmentList = new ArrayList<Fragment>();
     private ViewPager viewPager;
-//    private
 
+    public static MainActivity instance;
     //当前位置
     private int mCurrentIndex = 0;
 
@@ -44,6 +48,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AppManager.getInstance().addActivity(this);
+
+        instance = MainActivity.this;
+        Intent intent = new Intent(MainActivity.this,MessageService.class);
+
+        startService(intent);
         initWindow();
         initView();
     }
@@ -184,6 +194,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        toastPlayForExit();
+    }
+
+    private long exitTime = 0;
+
+    public void toastPlayForExit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            AppManager.getInstance().AppExit(this);
         }
     }
 }

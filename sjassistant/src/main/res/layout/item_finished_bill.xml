@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="10dp" >
+
+    <ImageView
+        android:id="@+id/id_leftIcon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/ic_inspect"
+        android:scaleType="fitXY" />
+
+    <RelativeLayout
+
+        android:layout_marginRight="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/inspect_qipao_sec"
+        android:layout_marginLeft="16dp">
+
+        <TextView
+            android:id="@+id/id_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="jimmy的单据"
+            android:textColor="@color/my_black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/id_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/id_title"
+            android:paddingTop="5dp"
+            android:singleLine="true"
+            android:text="单据类型："
+            android:textColor="#88444444"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/id_type_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/id_title"
+            android:layout_toRightOf="@id/id_type"
+            android:paddingTop="5dp"
+            android:singleLine="true"
+            android:text="财务报表"
+            android:textColor="@color/my_black"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/id_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/id_type"
+            android:paddingTop="5dp"
+            android:singleLine="true"
+            android:text="提交时间:"
+            android:textColor="#88444444"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/id_time_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/id_type"
+            android:layout_toRightOf="@id/id_type"
+            android:paddingTop="5dp"
+            android:singleLine="true"
+            android:text="2016-03-02"
+            android:textColor="@color/my_black"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#15444444"
+            android:layout_below="@id/id_time"
+            android:layout_marginTop="10dp"
+            />
+
+        <ImageView
+            android:layout_marginRight="12dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/finished"
+            android:layout_above="@+id/line"
+            android:id="@+id/iv_inspect"
+            android:layout_width="58dp"
+            android:layout_height="58dp" />
+
+        <TextView
+            android:id="@+id/id_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line"
+            android:singleLine="true"
+            android:layout_marginTop="10dp"
+            android:text="查看详情"
+            android:textColor="@color/my_light_gray"
+            android:textSize="12sp" />
+        <ImageView
+            android:id="@+id/id_more_value"
+            android:layout_height="18dp"
+            android:layout_width="18dp"
+            android:src="@drawable/right_arrow"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:layout_below="@id/line"
+            android:layout_marginTop="10dp"
+            />
+    </RelativeLayout>
+
+</LinearLayout>

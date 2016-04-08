@@ -3,7 +3,9 @@ package com.example.administrator.sjassistant.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -66,10 +68,18 @@ public class AssistantActivity extends BaseActivity implements View.OnClickListe
                 holder.setText(R.id.assistant_time, assitant.getPostTime());
                 holder.setText(R.id.assistant_subtime, assitant.getPostTime());
 
-                holder.getView(R.id.watch_paper).setOnClickListener(AssistantActivity.this);
+                //holder.getView(R.id.watch_paper).setOnClickListener(AssistantActivity.this);
             }
         });
 
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("tag","assistant click");
+                Intent intent = new Intent(AssistantActivity.this,AssistantDetail.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -87,10 +97,7 @@ public class AssistantActivity extends BaseActivity implements View.OnClickListe
             case R.id.delete_word:
                 ed_name.setText("");
                 break;
-            case R.id.watch_paper:
-                intent = new Intent(AssistantActivity.this,AssistantDetail.class);
-                startActivity(intent);
-                break;
+
         }
     }
 }

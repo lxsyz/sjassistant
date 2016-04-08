@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#40000000"
+    android:orientation="vertical"
+     >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:id="@+id/other_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+    </LinearLayout>
+    <LinearLayout
+
+        android:id="@+id/pop_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="90dp"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:id="@+id/weixin_layout"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_weixin"
+                android:layout_centerInParent="true"
+                android:src="@drawable/weinxin"
+                android:layout_width="45dp"
+                android:layout_height="45dp" />
+            <TextView
+                android:text="微信好友"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/iv_weixin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/qq_layout"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_qq"
+                android:layout_centerInParent="true"
+                android:src="@drawable/tencent"
+                android:layout_width="45dp"
+                android:layout_height="45dp" />
+            <TextView
+                android:text="QQ好友"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/iv_qq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
