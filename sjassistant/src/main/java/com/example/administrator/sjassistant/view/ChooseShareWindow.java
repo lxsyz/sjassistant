@@ -2,6 +2,7 @@ package com.example.administrator.sjassistant.view;
 
 import android.content.Context;
 import android.text.Layout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,9 @@ import com.example.administrator.sjassistant.R;
  * Created by Administrator on 2016/4/5.
  */
 public class ChooseShareWindow implements View.OnClickListener {
+
+    private final int QQ_ITEM = 1;
+    private final int WEIXIN_ITEM = 2;
 
     private Context context;
     private View view;
@@ -48,9 +52,17 @@ public class ChooseShareWindow implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.qq_layout:
-
+                if (onItemClickListener != null) {
+                    Log.d("test2", "test2");
+                    onItemClickListener.onItemClick(QQ_ITEM);
+                }
+                closeWindow();
                 break;
             case R.id.weixin_layout:
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(WEIXIN_ITEM);
+                }
+                closeWindow();
                 break;
             case R.id.other_layout:
                 closeWindow();
@@ -72,5 +84,17 @@ public class ChooseShareWindow implements View.OnClickListener {
 
     public PopupWindow getChooseShareWindow() {
         return chooseShareWindow;
+    }
+
+    private OnItemClickListener onItemClickListener;
+
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+
+    public interface OnItemClickListener {
+        public void onItemClick(int flag);
     }
 }

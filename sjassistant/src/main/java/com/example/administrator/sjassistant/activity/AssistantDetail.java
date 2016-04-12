@@ -6,6 +6,7 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.bean.Assitant;
 import com.example.administrator.sjassistant.bean.MessageInform;
 
 /**
@@ -14,12 +15,15 @@ import com.example.administrator.sjassistant.bean.MessageInform;
 public class AssistantDetail extends BaseActivity{
     private TextView assistant_title,assistant_postman,assistant_posttime,type;
     private WebView wv;
+
+    private Assitant assitant;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getIntent().getExtras();
-
+        assitant = (Assitant) bundle.getSerializable("assistant");
+        setTopText(assitant.getTitle());
     }
 
 

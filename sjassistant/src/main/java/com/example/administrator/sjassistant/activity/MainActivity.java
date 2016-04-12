@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/3/28.
  */
-public class MainActivity extends FragmentActivity implements View.OnClickListener {
+public class MainActivity extends FragmentActivity implements View.OnClickListener,MySettingFragment.BackHandlerInterface {
 
     private RelativeLayout message_layout,myapplication_layout,
                             mysetting_layout,contacts_layout;
@@ -50,6 +51,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
         AppManager.getInstance().addActivity(this);
 
+        Log.d("tag", "activity" + android.os.Process.myPid());
+        Log.d("tag"," main id  "+Thread.currentThread().getId()+"main   thread"+ Thread.currentThread().getName());
         instance = MainActivity.this;
         Intent intent = new Intent(MainActivity.this,MessageService.class);
 
@@ -121,26 +124,25 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             }
         });
+
+        Fragment fragment = new MessageFragment();
+
+        fragmentList.add(fragment);
+        fragment = new MyApplicationFragment();
+        fragmentList.add(fragment);
+        fragment = new ContactsFragment();
+        fragmentList.add(fragment);
+        fragment = new MySettingFragment();
+        fragmentList.add(fragment);
     }
+
+
+
 
     private FragmentPagerAdapter adapter = new FragmentPagerAdapter(this.getSupportFragmentManager()) {
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = null;
-            switch (position) {
-                case 0:
-                    fragment = new MessageFragment();
-                    break;
-                case 1:
-                    fragment = new MyApplicationFragment();
-                    break;
-                case 2:
-                    fragment = new ContactsFragment();
-                    break;
-                case 3:
-                    fragment = new MySettingFragment();
-                    break;
-            }
+            Fragment fragment = fragmentList.get(position);
             return fragment;
         }
 
@@ -199,8 +201,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        toastPlayForExit();
+        if (settingFragment == null || !settingFragment.onBackPressed()) {
+            toastPlayForExit();
+        }
+        //super.onBackPressed();
+        MessageService.messageService.stopSelf();
+
     }
 
     private long exitTime = 0;
@@ -212,5 +218,28 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         } else {
             AppManager.getInstance().AppExit(this);
         }
+    }
+
+    MySettingFragment settingFragment;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        settingFragment = (MySettingFragment) fragmentList.get(3);
+        Log.d("tag",data+" ");
+        settingFragment.onActivityResult(requestCode,resultCode,data);
+
+    }
+
+
+
+    @Override
+    public void setSelectedFragment(MySettingFragment fragment) {
+        this.settingFragment = fragment;
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("tag"," main destroy");
+        super.onDestroy();
     }
 }

@@ -1,12 +1,14 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.DataCleanManager;
 import com.example.administrator.sjassistant.view.ChangeNumberDialog;
 import com.example.administrator.sjassistant.view.MyDialog;
@@ -71,8 +73,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent);
                 break;
             case R.id.clearCache:
-                dialog2.show();
                 dialog2.setFlag(1);
+                dialog2.show();
+
                 dialog2.setContentText(getString(R.string.clear));
                 dialog2.setOnDeleteClickListener(new ChangeNumberDialog.OnDeleteClickListener() {
                     @Override
@@ -108,11 +111,29 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent);
                 break;
             case R.id.quit:
-                new MyDialog(this,R.style.dialog_style);
-                dialog.show();
-                dialog.setMain_text("是否确定退出APP");
-                dialog.setCenterVisibility(View.GONE);
-                dialog.show();
+                dialog2.setFlag(1);
+                dialog2.show();
+
+                dialog2.setContentText("是否确定退出APP");
+                dialog2.setOnDeleteClickListener(new ChangeNumberDialog.OnDeleteClickListener() {
+                    @Override
+                    public void onDelete(int i) {
+                        if (i == 1) {
+                            //确定退出清掉所有信息
+                            SharedPreferences.Editor editor = getSharedPreferences("userinfo",MODE_PRIVATE).edit();
+                            editor.putString("phonenumber",null);
+                            editor.putString("password",null);
+                            editor.putString("imgPath",null);
+                            editor.commit();
+                            AppManager.getInstance().AppExit(SettingActivity.this);
+                        }
+                    }
+                });
+//                new MyDialog(this,R.style.dialog_style);
+//                dialog.show();
+//                dialog.setMain_text("是否确定退出APP");
+//                dialog.setCenterVisibility(View.GONE);
+//                dialog.show();
                 break;
         }
     }

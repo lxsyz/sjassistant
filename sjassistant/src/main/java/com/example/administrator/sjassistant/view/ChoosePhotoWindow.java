@@ -202,6 +202,7 @@ public class ChoosePhotoWindow implements OnClickListener {
 	 * 转跳到本地相簿
 	 */
 	public void toPhotos() {
+		Log.d("tag","asdasd");
 		Intent i = new Intent(Intent.ACTION_GET_CONTENT, null);
 		i.setType("image/*");
 		((Activity) context).startActivityForResult(i, REQUESTCODE_IMAGE);
@@ -244,15 +245,17 @@ public class ChoosePhotoWindow implements OnClickListener {
 				imageUri = Uri.parse(path);
 			}
 			startPhotoZoom(imageUri);
-            upload(upload);
+            //upload(upload);
 		} else if (requestCode == REQUESTCODE_CAMERA) {
 			startPhotoZoom(imageUri);
             upload(upload);
 		} else if (requestCode == CROP_IMAGE) {
 			// 调用图片剪切程序返回数据
 			path = data.getStringExtra("path");
-			upload(upload);
+			//upload(upload);
 		}
+		path = imageUri.getPath();
+		upload(upload);
 	}
 
 	/**

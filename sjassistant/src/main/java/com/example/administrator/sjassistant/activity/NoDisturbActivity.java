@@ -1,5 +1,6 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
@@ -28,7 +29,17 @@ public class NoDisturbActivity extends BaseActivity implements View.OnClickListe
         setTopText("勿扰模式");
         toggle = (ImageView)findViewById(R.id.toggle);
         timeSetting = (TimeSetting)findViewById(R.id.time_setting);
-
+        timeSetting.setOnHandUpListener(new TimeSetting.OnHandUpListener() {
+            @Override
+            public void onHandUp(int beginTime, int endTime) {
+                if (beginTime != -1 && endTime != -1) {
+                    SharedPreferences.Editor editor = getSharedPreferences("disturb",MODE_PRIVATE).edit();
+                    editor.putInt("beginTime",-1);
+                    editor.putInt("endTime",-1);
+                    editor.commit();
+                }
+            }
+        });
         toggle.setOnClickListener(this);
     }
 
@@ -39,10 +50,11 @@ public class NoDisturbActivity extends BaseActivity implements View.OnClickListe
                 if (flag == 0) {
                     flag = 1;
                     toggle.setImageResource(R.drawable.toggle_btn_checked);
-
+                    timeSetting.setVisibility(View.VISIBLE);
                 } else {
                     flag = 0;
                     toggle.setImageResource(R.drawable.toggle_btn_unchecked);
+                    timeSetting.setVisibility(View.GONE);
                 }
                 break;
         }

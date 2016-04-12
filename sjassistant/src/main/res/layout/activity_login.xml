@@ -87,7 +87,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="23dp"
                 android:layout_toRightOf="@id/password_iv"
-                android:inputType="textPassword"
+                android:password="true"
                 android:text="155262"
                 android:hint="密码"
                 android:textColor="@color/black"

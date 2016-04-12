@@ -56,7 +56,7 @@ public class AssistantActivity extends BaseActivity implements View.OnClickListe
 
         Assitant assitant = new Assitant();
         assitant.setPostman("张三");
-        assitant.setPostTime("2016-04-03");
+        assitant.setPostTime("3月5日 下午12:49");
         assitant.setTitle("关于开展什么什么什么的通知");
         assitant.setType("员工天地");
         datalist.add(assitant);
@@ -68,15 +68,17 @@ public class AssistantActivity extends BaseActivity implements View.OnClickListe
                 holder.setText(R.id.assistant_time, assitant.getPostTime());
                 holder.setText(R.id.assistant_subtime, assitant.getPostTime());
 
-                //holder.getView(R.id.watch_paper).setOnClickListener(AssistantActivity.this);
             }
         });
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("tag","assistant click");
                 Intent intent = new Intent(AssistantActivity.this,AssistantDetail.class);
+                Assitant a = (Assitant)lv.getItemAtPosition(position);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("assistant",a);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

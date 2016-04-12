@@ -20,8 +20,15 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/type_list"
+    <View
+
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
+        android:background="@color/line" />
+
+    <ListView android:id="@+id/type_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

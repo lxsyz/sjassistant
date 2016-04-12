@@ -1,16 +1,30 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.TimeAxisAdapter;
 import com.example.administrator.sjassistant.view.ChooseShareWindow;
+import com.tencent.connect.share.QQShare;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXTextObject;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +35,13 @@ import java.util.List;
  */
 public class BillInspectActivity extends BaseActivity implements View.OnClickListener {
 
+    private final int QQ_ITEM = 1;
+    private final int WEIXIN_ITEM = 2;
+
+    private String APP_ID = "1105323970";
+    private static final String WEIXIN_ID = "wx979b127e5ff62391";
+    private IWXAPI api;
+
     private ListView list;
     private RelativeLayout bill_detail_layout,pass_layout,cancel_layout;
     private ChooseShareWindow chooseShareWindow;
@@ -29,6 +50,8 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
     private TimeAxisAdapter mTimeAxisAdapter;
 
     private List<HashMap<String,Object>> datalist;
+
+    private Tencent mTencent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +67,16 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
                 }
             });
         }
+
+        api = WXAPIFactory.createWXAPI(this,WEIXIN_ID,true);
+
+
+        if (!api.isWXAppInstalled()) {
+            Toast.makeText(this, "没有安装微信", Toast.LENGTH_LONG).show();
+
+        }
+        api.registerApp(WEIXIN_ID);
+        mTencent = Tencent.createInstance(APP_ID, this.getApplicationContext());
     }
 
     @Override
@@ -80,9 +113,9 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("content", "Jimmy");
         listChild.add(map);
-//        HashMap<String, Object> map1 = new HashMap<String, Object>();
-//        map1.put("content", "john");
-//        listChild.add(map1);
+        HashMap<String, Object> map1 = new HashMap<String, Object>();
+        map1.put("content", "john");
+        listChild.add(map1);
 //        HashMap<String, Object> map2 = new HashMap<String, Object>();
 //        map2.put("content", "hhh");
 //        listChild.add(map2);
@@ -105,8 +138,29 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.bt_right:
                 chooseShareWindow.showChooseShareWindow(root);
+
+                chooseShareWindow.setOnItemClickListener(new ChooseShareWindow.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int flag) {
+                        if (flag == QQ_ITEM) {
+                            Log.d("test", "test");
+                            shareQQ(BillInspectActivity.this);
+//                            Bundle params = new Bundle();
+//                            params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
+//                            params.putString(QQShare.SHARE_TO_QQ_TITLE, "标题");
+//                            params.putString(QQShare.SHARE_TO_QQ_SUMMARY, "张三 经理");
+//                            params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, null);
+//                            //params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,"");
+//                            params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "审计助手");
+//                            mTencent.shareToQQ(BillInspectActivity.this, params, new BaseUiListener());
+                        } else if (flag == WEIXIN_ITEM) {
+                            share(SendMessageToWX.Req.WXSceneSession);
+                        }
+                    }
+                });
                 break;
             case R.id.bt_right2:
+
                 break;
             case R.id.pass_layout:
                 break;
@@ -123,5 +177,74 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
         chooseShareWindow.closeWindow();
+    }
+
+    private class BaseUiListener implements IUiListener {
+
+
+
+        protected void doComplete(JSONObject values) {
+        }
+
+        @Override
+        public void onComplete(Object o) {
+            Log.d("onComplete",o.toString()+"  ");
+        }
+
+        @Override
+        public void onError(UiError uiError) {
+            Log.d("onError","code:"+uiError.errorCode+"  msg:"+uiError.errorMessage);
+        }
+
+        @Override
+        public void onCancel() {
+            Log.d("onCacncle","cancel");
+        }
+    }
+
+    public void share(int request) {
+        String text = "测试一下";
+        WXTextObject textObj = new WXTextObject();
+        textObj.text = text;
+        WXMediaMessage msg = new WXMediaMessage();
+        msg.mediaObject = textObj;
+        msg.description = text;
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = buildTransaction("text");
+        req.message = msg;
+        req.scene = request;
+
+        api.sendReq(req);
+        //finish();
+    }
+
+    private String buildTransaction(final String type) {
+        return (type == null) ? String.valueOf(System.currentTimeMillis())
+                : type + System.currentTimeMillis();
+    }
+
+    /*
+     * QQ分享纯文本
+     */
+    public void shareQQ(Context mContext) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "测试一下");
+        sendIntent.setType("text/plain");
+        try {
+            sendIntent.setClassName("com.tencent.mobileqq","com.tencent.mobileqq.activity.JumpActivity");
+            //Intent chooseIntent = Intent.createChooser(sendIntent,)
+            mContext.startActivity(sendIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (chooseShareWindow.getChooseShareWindow().isShowing()) {
+            chooseShareWindow.closeWindow();
+        } else
+            super.onBackPressed();
     }
 }

@@ -52,6 +52,9 @@ public class TimeSetting extends View {
     private float offsetX;
     private float offsetY;
 
+    //勿扰模式开始结束时间
+    private int beginTime = -1,endTime = -1;
+
     //圆半径
     private float radius = 20.0f;
 
@@ -168,6 +171,10 @@ public class TimeSetting extends View {
                 endY = event.getY();
                 count = 3;
                 invalidate();
+
+                if (onHandUpListener != null) {
+                    onHandUpListener.onHandUp(beginTime,endTime);
+                }
                 break;
         }
         return true;
@@ -218,6 +225,7 @@ public class TimeSetting extends View {
         RectF rect = new RectF();
         rect.set(startX - 20, startY, startX + 20, startY + n * textHeight);
 
+        beginTime = value;
         canvas.drawText(String.valueOf(value)+"点开始",startX - 40,rect.bottom - fm.descent,mPaint);
 
     }
@@ -237,6 +245,18 @@ public class TimeSetting extends View {
         RectF rect = new RectF();
         rect.set(endX - 20, startY, endX + 20, startY + n * textHeight);
 
+        endTime = value;
+
         canvas.drawText(String.valueOf(value) + "点结束", endX - 40, rect.bottom - fm.descent, mPaint);
+    }
+
+    public interface OnHandUpListener {
+        public void onHandUp(int beginTime,int endTime);
+    }
+
+    private OnHandUpListener onHandUpListener;
+
+    public void setOnHandUpListener(OnHandUpListener onHandUpListener) {
+        this.onHandUpListener = onHandUpListener;
     }
 }

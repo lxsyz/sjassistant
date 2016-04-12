@@ -15,7 +15,7 @@
         android:padding="12dp"
         android:layout_height="0dp">
 
-        <ImageView
+        <com.example.administrator.sjassistant.view.CircleImageView
             android:id="@+id/user_photo"
             android:layout_marginTop="3dp"
             android:layout_gravity="center_vertical"
@@ -39,6 +39,7 @@
                 style="@style/text1" />
 
             <ImageView
+                android:id="@+id/iv_admin"
                 android:layout_alignTop="@+id/username"
                 android:layout_marginTop="1dp"
                 android:layout_marginLeft="8dp"
@@ -48,11 +49,21 @@
                 android:layout_height="13dp" />
 
             <TextView
+                android:id="@+id/apartment_top"
                 android:textColor="@color/white"
                 android:layout_below="@+id/username"
                 android:layout_alignStart="@+id/username"
                 android:layout_alignLeft="@+id/username"
-                android:text="社审事业部 部门经理"
+                android:text="社审事业部"
+                style="@style/text2" />
+
+            <TextView
+                android:id="@+id/work_top"
+                android:textColor="@color/white"
+                android:layout_toRightOf="@+id/apartment_top"
+                android:layout_marginLeft="6dp"
+                android:layout_below="@+id/username"
+                android:text="部门经理"
                 style="@style/text2" />
 
             <ImageView

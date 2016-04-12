@@ -1,11 +1,14 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.util.AppManager;
+import com.example.administrator.sjassistant.view.ChangeNumberDialog;
 import com.example.administrator.sjassistant.view.MyDialog;
 
 /**
@@ -39,13 +42,26 @@ public class ChangePwdActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        MyDialog dialog = new MyDialog(ChangePwdActivity.this,R.style.dialog_style);
+        //MyDialog dialog = new MyDialog(ChangePwdActivity.this,R.style.dialog_style);
+        ChangeNumberDialog dialog = new ChangeNumberDialog(ChangePwdActivity.this,R.style.dialog_style);
         switch (v.getId()) {
             case R.id.confirm:
+                //修改成功
+                dialog.setFlag(2);
                 dialog.show();
-                dialog.setMain_text("密码修改完请重新登录");
-                dialog.setCenterVisibility(View.VISIBLE);
-                dialog.setVisibility(View.GONE);
+
+                dialog.setContentText("密码修改完请重新登录");
+                dialog.setOnDeleteClickListener(new ChangeNumberDialog.OnDeleteClickListener() {
+                    @Override
+                    public void onDelete(int i) {
+                        if (i == 1) {
+                            AppManager.getInstance().finishAllActivity();
+                            Intent intent = new Intent(ChangePwdActivity.this,LoginActivity.class);
+                            startActivity(intent);
+                            ChangePwdActivity.this.finish();
+                        }
+                    }
+                });
                 break;
         }
     }

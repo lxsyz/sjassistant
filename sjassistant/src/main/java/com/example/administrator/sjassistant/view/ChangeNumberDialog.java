@@ -20,10 +20,10 @@ public class ChangeNumberDialog extends Dialog implements View.OnClickListener {
     //private BluetoothDialogListener bluetoothDialogListener = null;
     private static int theme = R.style.dialog_style;
     private TextView okTextView;
-    private TextView cancelTextView,content,title;
+    private TextView cancelTextView,content,title,confirm;
     private EditText main_text;
 
-    //0 为删除联系人对话框  1 为更换号码
+    //0 为更换号码对话框  1 为删除联系人  2 为显示一个确定按钮
     int flag = 0;
 
     OnItemClickListener onItemClickListener;
@@ -47,6 +47,7 @@ public class ChangeNumberDialog extends Dialog implements View.OnClickListener {
         main_text = (EditText)findViewById(R.id.content);
         content = (TextView)findViewById(R.id.main_text);
         title = (TextView)findViewById(R.id.title);
+        confirm = (TextView)findViewById(R.id.confirm);
 
         if (flag == 0) {
             main_text.setVisibility(View.VISIBLE);
@@ -57,8 +58,16 @@ public class ChangeNumberDialog extends Dialog implements View.OnClickListener {
             content.setVisibility(View.VISIBLE);
 
             main_text.setVisibility(View.GONE);
+        } else if (flag == 2) {
+            title.setVisibility(View.GONE);
+            content.setVisibility(View.VISIBLE);
+            okTextView.setVisibility(View.GONE);
+            cancelTextView.setVisibility(View.GONE);
+            main_text.setVisibility(View.GONE);
+            confirm.setVisibility(View.VISIBLE);
         }
 
+        confirm.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
         okTextView.setOnClickListener(this);
     }
@@ -81,6 +90,12 @@ public class ChangeNumberDialog extends Dialog implements View.OnClickListener {
                 break;
             case R.id.dialog_cancel:
 
+                this.dismiss();
+                break;
+            case R.id.confirm:
+                if (onDeleteClickListener != null) {
+                    onDeleteClickListener.onDelete(1);
+                }
                 this.dismiss();
                 break;
         }

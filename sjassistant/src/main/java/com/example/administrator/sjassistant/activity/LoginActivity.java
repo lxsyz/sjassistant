@@ -16,7 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.MD5;
 import com.example.administrator.sjassistant.util.OperatorUtil;
+import com.example.administrator.sjassistant.util.WatcherUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +31,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private ImageView iv_eye;
     private Button btn_login;
     private String username,password;
+
+    WatcherUtil watcherUtil;
 
     private int flag = 1;
     @Override
@@ -66,6 +71,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
         });
 
+        watcherUtil = new WatcherUtil(et_password,"password");
+
+        et_password.addTextChangedListener(watcherUtil);
+
         btn_login.setOnClickListener(this);
         tv_serverConfig.setOnClickListener(this);
         tv_forgetPassword.setOnClickListener(this);
@@ -102,10 +111,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                 SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
-                editor.putString("phonenumber",et_username.getText().toString());
 
+                editor.putString("phonenumber",et_username.getText().toString());
+                editor.putString("password", MD5.MD5Encode(et_password.getText().toString()));
+                //Log.d("tag","password"+ MD5.MD5Encode(et_password.getText().toString()));
+                editor.commit();
                 intent = new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(intent);
+                LoginActivity.this.finish();
                 break;
             case R.id.eye:
                 if (flag == 1) {
