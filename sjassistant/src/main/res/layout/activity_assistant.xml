@@ -8,7 +8,7 @@
         />
 
     <ListView
-
+        android:layout_marginTop="6dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:dividerHeight="8dp"

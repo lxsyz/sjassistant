@@ -47,8 +47,14 @@
         <item>Jokn</item><item>Jokn</item><item>Jokn</item>
     </string-array>
 
-    <string name="register_name">
-        ._0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ
+    <string name="warn1">
+        该审批环节有必填字段，请在pc端审批
+    </string>
+    <string name="warn2">
+        审批环节需报告盖章，请在Pc端审批
+    </string>
+    <string name="warn3">
+        审批环节需报告贴标，请在pc端审批
     </string>
 
 </resources>

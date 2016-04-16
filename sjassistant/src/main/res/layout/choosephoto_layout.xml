@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="17dp"
+            android:background="@drawable/select_photo_bg_bottom"
             android:text="拍照"
             android:textColor="@color/my_black"
             android:textSize="15sp" />
@@ -51,6 +52,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="17dp"
+            android:background="@drawable/select_photo_bg_bottom"
             android:text="相册"
             android:textColor="@color/my_black"
             android:textSize="15sp" />

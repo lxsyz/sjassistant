@@ -1,5 +1,6 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.TabAdapter;
 import com.example.administrator.sjassistant.fragment.FinishedBillFragment;
 import com.example.administrator.sjassistant.fragment.UnfinishedBillFragment;
+import com.example.administrator.sjassistant.util.AppManager;
 
 import org.w3c.dom.Text;
 
@@ -45,6 +47,7 @@ public class InspectWorkActivity extends FragmentActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspect_work);
+        AppManager.getInstance().addActivity(this);
         initWindow();
 
         initView();
@@ -88,11 +91,15 @@ public class InspectWorkActivity extends FragmentActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
+        Intent intent = null;
         switch (v.getId()) {
             case R.id.bt_left:
                 onBackPressed();
                 break;
-
+            case R.id.bt_right:
+                intent = new Intent(InspectWorkActivity.this,SearchBillActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 

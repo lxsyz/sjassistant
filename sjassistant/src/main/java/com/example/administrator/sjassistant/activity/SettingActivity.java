@@ -73,7 +73,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent);
                 break;
             case R.id.clearCache:
-                dialog2.setFlag(1);
+                dialog2.setFlag(3);
                 dialog2.show();
 
                 dialog2.setContentText(getString(R.string.clear));
@@ -111,7 +111,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent);
                 break;
             case R.id.quit:
-                dialog2.setFlag(1);
+                dialog2.setFlag(3);
                 dialog2.show();
 
                 dialog2.setContentText("是否确定退出APP");

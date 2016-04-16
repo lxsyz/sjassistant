@@ -6,7 +6,7 @@
 
     <TextView
         android:layout_marginTop="7dp"
-        android:textSize="10sp"
+        android:textSize="12sp"
         android:text="3月10日 下午15:49"
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
@@ -78,7 +78,6 @@
         <RelativeLayout
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:layout_marginTop="6dp"
             android:id="@+id/watch_paper"
             android:layout_width="match_parent"
             android:layout_height="38dp">
@@ -86,13 +85,15 @@
             <TextView
                 android:textColor="@color/my_black"
                 android:text="查看全文"
+                android:textSize="12sp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <ImageView
-
+                android:layout_width="12dp"
+                android:layout_height="12dp"
                 style="@style/right_arrow" />
         </RelativeLayout>
     </LinearLayout>

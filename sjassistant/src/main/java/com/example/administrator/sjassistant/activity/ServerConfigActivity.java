@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.util.WatcherUtil;
 
 /**
  * Created by Administrator on 2016/3/28.
@@ -16,9 +17,11 @@ public class ServerConfigActivity extends BaseActivity implements View.OnClickLi
     private EditText et_server_port;
     private Button btn_confirm;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
     }
 
@@ -30,6 +33,8 @@ public class ServerConfigActivity extends BaseActivity implements View.OnClickLi
         et_server_address = (EditText)findViewById(R.id.server_address);
         et_server_port = (EditText)findViewById(R.id.server_port);
         btn_confirm = (Button)findViewById(R.id.confirm);
+
+
 
         btn_confirm.setOnClickListener(this);
     }

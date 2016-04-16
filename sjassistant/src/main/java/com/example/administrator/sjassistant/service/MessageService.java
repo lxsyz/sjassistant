@@ -40,7 +40,7 @@ public class MessageService extends Service {
     @Override
     public void onCreate() {
         Log.d("tag","oncreate");
-        messageService = MessageService.this;
+        //messageService = MessageService.this;
         super.onCreate();
     }
 
@@ -102,8 +102,8 @@ public class MessageService extends Service {
 //        notification.flags = Notification.FLAG_AUTO_CANCEL;
 //
 //        notificationManager.notify(0,notification);
-
-        notifier.notify("10","111","111","sad");
+        if(notifier != null)
+            notifier.notify("10","111","111","sad");
 
 
 
@@ -118,10 +118,10 @@ public class MessageService extends Service {
     public void onDestroy() {
         Log.d("tag","service destroy");
         this.flag = false;
-        Intent i = new Intent(this,MessageService.class);
-        startService(i);
+        //Intent i = new Intent(this,MessageService.class);
+        //startService(i);
         super.onDestroy();
     }
 
-    public static MessageService messageService;
+    //public static MessageService messageService;
 }

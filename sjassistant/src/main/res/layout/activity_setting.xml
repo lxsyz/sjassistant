@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:background="@drawable/layout_select"
         android:id="@+id/changeEmail"
         android:padding="12dp"
         android:orientation="vertical"
@@ -49,6 +50,7 @@
         android:layout_height="0.8dp"/>
 
     <LinearLayout
+        android:background="@drawable/layout_select"
         android:id="@+id/changePwd"
         android:padding="12dp"
         android:layout_width="match_parent"
@@ -85,6 +87,7 @@
         android:layout_height="13dp"
         android:background="@color/background" />
     <LinearLayout
+        android:background="@drawable/layout_select"
         android:id="@+id/prompt"
         android:padding="12dp"
         android:layout_width="match_parent"
@@ -123,6 +126,7 @@
         android:layout_height="0.8dp"/>
 
     <LinearLayout
+        android:background="@drawable/layout_select"
         android:id="@+id/noDisturb"
         android:padding="12dp"
         android:layout_width="match_parent"
@@ -149,6 +153,7 @@
         android:layout_height="0.8dp"/>
 
     <LinearLayout
+        android:background="@drawable/layout_select"
         android:id="@+id/clearCache"
         android:padding="12dp"
         android:layout_width="match_parent"
@@ -173,6 +178,7 @@
         android:background="@color/background" />
 
     <LinearLayout
+        android:background="@drawable/layout_select"
         android:id="@+id/changeServer"
         android:padding="12dp"
         android:layout_width="match_parent"
@@ -199,8 +205,9 @@
         android:layout_height="0.8dp"/>
 
     <LinearLayout
+
         android:id="@+id/update"
-        android:background="@color/white"
+        android:background="@drawable/layout_select"
         android:padding="12dp"
         android:layout_width="match_parent"
         android:layout_height="55dp">

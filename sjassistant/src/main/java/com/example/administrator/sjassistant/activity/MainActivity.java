@@ -28,6 +28,8 @@ import com.example.administrator.sjassistant.util.AppManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
+
 /**
  * Created by Administrator on 2016/3/28.
  */
@@ -205,7 +207,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             toastPlayForExit();
         }
         //super.onBackPressed();
-        MessageService.messageService.stopSelf();
+        //MessageService.messageService.stopSelf();
 
     }
 
@@ -242,4 +244,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Log.d("tag"," main destroy");
         super.onDestroy();
     }
+
+
 }

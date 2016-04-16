@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -13,7 +14,9 @@ import android.widget.Toast;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.TimeAxisAdapter;
+import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.view.ChooseShareWindow;
+import com.example.administrator.sjassistant.view.ConfirmPopWin;
 import com.tencent.connect.share.QQShare;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
@@ -44,7 +47,9 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
 
     private ListView list;
     private RelativeLayout bill_detail_layout,pass_layout,cancel_layout;
+
     private ChooseShareWindow chooseShareWindow;
+    private ConfirmPopWin confirmPopWin;
     private LinearLayout root;
 
     private TimeAxisAdapter mTimeAxisAdapter;
@@ -67,6 +72,20 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
                 }
             });
         }
+
+        if (confirmPopWin == null) {
+            confirmPopWin = new ConfirmPopWin(BillInspectActivity.this, OperatorUtil.dp2px(BillInspectActivity.this,80));
+
+            confirmPopWin.getContentView().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        confirmPopWin.dismiss();
+                    }
+                }
+            });
+        }
+        confirmPopWin.setFocusable(true);
 
         api = WXAPIFactory.createWXAPI(this,WEIXIN_ID,true);
 
@@ -163,11 +182,18 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
 
                 break;
             case R.id.pass_layout:
+                int[] location = new int[2];
+                pass_layout.getLocationOnScreen(location);
+
+                confirmPopWin.setContentText(getString(R.string.warn1));
+                confirmPopWin.showAtLocation(pass_layout, Gravity.NO_GRAVITY, location[0] + pass_layout.getWidth() / 2, location[1] - confirmPopWin.getPopHeight());
+
                 break;
             case R.id.cancel_layout:
                 break;
             case R.id.bill_detail_layout:
                 intent = new Intent(BillInspectActivity.this,BillDetailActivity.class);
+                intent.putExtra("flag",2);
                 startActivity(intent);
                 break;
         }
@@ -176,7 +202,12 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        chooseShareWindow.closeWindow();
+        if (chooseShareWindow.getChooseShareWindow().isShowing()) {
+            chooseShareWindow.closeWindow();
+        }
+        if (confirmPopWin.isShowing()) {
+            confirmPopWin.dismiss();
+        }
     }
 
     private class BaseUiListener implements IUiListener {
@@ -202,6 +233,9 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    /*
+     * 分享到微信
+     */
     public void share(int request) {
         String text = "测试一下";
         WXTextObject textObj = new WXTextObject();
@@ -244,6 +278,8 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
     public void onBackPressed() {
         if (chooseShareWindow.getChooseShareWindow().isShowing()) {
             chooseShareWindow.closeWindow();
+        } else if (confirmPopWin.isShowing()) {
+            confirmPopWin.dismiss();
         } else
             super.onBackPressed();
     }

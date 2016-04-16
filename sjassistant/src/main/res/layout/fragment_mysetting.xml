@@ -92,7 +92,7 @@
             android:paddingRight="12dp"
             android:paddingBottom="12dp"
             android:paddingTop="12dp"
-            android:background="@color/white"
+            android:background="@drawable/layout_select"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="58dp">
@@ -161,7 +161,7 @@
             android:paddingRight="12dp"
             android:paddingBottom="12dp"
             android:paddingTop="12dp"
-            android:background="@color/white"
+            android:background="@drawable/layout_select"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="58dp">
@@ -229,7 +229,7 @@
             android:paddingRight="12dp"
             android:paddingBottom="12dp"
             android:paddingTop="12dp"
-            android:background="@color/white"
+            android:background="@drawable/layout_select"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="58dp">
@@ -295,7 +295,7 @@
             android:paddingRight="12dp"
             android:paddingBottom="12dp"
             android:paddingTop="12dp"
-            android:background="@color/white"
+            android:background="@drawable/layout_select"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="58dp">
@@ -361,7 +361,7 @@
             android:paddingRight="12dp"
             android:paddingBottom="12dp"
             android:paddingTop="12dp"
-            android:background="@color/white"
+            android:background="@drawable/layout_select"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="58dp">
@@ -418,7 +418,7 @@
             android:paddingRight="12dp"
             android:paddingBottom="12dp"
             android:paddingTop="12dp"
-            android:background="@color/white"
+            android:background="@drawable/layout_select"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="58dp">

@@ -2,6 +2,7 @@ package com.example.administrator.sjassistant.view;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -65,6 +66,15 @@ public class ChangeNumberDialog extends Dialog implements View.OnClickListener {
             cancelTextView.setVisibility(View.GONE);
             main_text.setVisibility(View.GONE);
             confirm.setVisibility(View.VISIBLE);
+        } else if (flag == 3) {
+            title.setVisibility(View.GONE);
+            content.setVisibility(View.VISIBLE);
+
+            main_text.setVisibility(View.GONE);
+
+            content.setTextColor(Color.parseColor("#414141"));
+            content.setLineSpacing(1.0f,1.0f);
+
         }
 
         confirm.setOnClickListener(this);
@@ -146,4 +156,6 @@ public class ChangeNumberDialog extends Dialog implements View.OnClickListener {
     public void setFlag(int flag) {
         this.flag = flag;
     }
+
+
 }

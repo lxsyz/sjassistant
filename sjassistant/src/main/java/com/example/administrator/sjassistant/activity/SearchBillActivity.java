@@ -5,10 +5,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+
+import com.example.administrator.sjassistant.R;
 
 import junit.framework.Test;
 
@@ -18,20 +24,18 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/4/5.
  */
-public class SearchBillActivity extends BaseActivity {
+public class SearchBillActivity extends BaseActivity implements View.OnClickListener {
 
     //private TabLayout tabLayout;
-    private ViewPager vp;
-    private FragmentPagerAdapter fAdapter;
 
-    private List<Fragment> list_fragment;
     private List<String> list_title;
 
+    private ImageView search,delete;
+    private EditText ed_name;
 
-    private void initView(View view) {
+    private TextView bt_right_text;
 
-
-    }
+    private ImageView bt_right;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,22 +45,42 @@ public class SearchBillActivity extends BaseActivity {
     @Override
     protected void initView() {
         super.initView();
+        setCenterView(R.layout.activity_search_bill);
+        setTopText("搜索审批单据");
 
-//        tabLayout = (TabLayout) view.findViewById(R.id.my_tab);
-//        vp = (ViewPager)view.findViewById(R.id.vp);
-//
-//        tabLayout.setTabMode(TabLayout.MODE_FIXED);
-//
-//        tabLayout.addTab(tabLayout.newTab().setText("哈哈"));
-//        tabLayout.addTab(tabLayout.newTab().setText("哈哈"));
-//        tabLayout.addTab(tabLayout.newTab().setText("哈哈"));
-//
-//        fAdapter = new My_TabAdapter(getActivity().getSupportFragmentManager(),list_fragment,list_title);
-//
-//        vp.setAdapter(fAdapter);
-//        //tabLayout.setBackgroundColor();
-//        tabLayout.setSelectedTabIndicatorColor(Color.GRAY);
-//        tabLayout.setTabTextColors(Color.WHITE,Color.BLACK);
-//        tabLayout.setupWithViewPager(vp);
+        search = (ImageView)findViewById(R.id.search);
+        ed_name = (EditText)findViewById(R.id.search_content);
+        delete = (ImageView)findViewById(R.id.delete_word);
+
+        ed_name.setHint("输入搜索关键字");
+        search.setOnClickListener(this);
+        ed_name.setOnClickListener(this);
+        delete.setOnClickListener(this);
+
+        bt_right.setVisibility(View.INVISIBLE);
+        bt_right_text.setVisibility(View.VISIBLE);
+
+        bt_right_text.setText("搜索");
+
+        bt_right_text.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.search:
+                if (!TextUtils.isEmpty(ed_name.getText().toString())) {
+                    //intent = new Intent(getActivity(), SearchResultActivity.class);
+                    //intent.putExtra("name",ed_name.getText().toString());
+                    //startActivity(intent);
+                }
+                break;
+            case R.id.delete_word:
+                ed_name.setText("");
+                break;
+            case R.id.bt_right_text:
+                break;
+
+        }
     }
 }

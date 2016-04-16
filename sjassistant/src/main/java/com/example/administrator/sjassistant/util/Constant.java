@@ -10,7 +10,9 @@ public class Constant {
     public static String nickname;  //昵称
     public static String address;   //地址
 
-    public static String imgPath;   //图片
+    public static String imgPath;   //头像路径
+
+    public static String version;   //产品版本号
 
 
     public static final String SETTING_SP = "setting";

@@ -24,6 +24,8 @@ import com.example.administrator.sjassistant.util.WatcherUtil;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.jpush.android.api.JPushInterface;
+
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText et_username,et_password;
@@ -62,17 +64,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                     if (!OperatorUtil.isPhoneNumber(et_username.getText().toString())) {
                         tv_prompt.setVisibility(View.VISIBLE);
-                        btn_login.setClickable(false);
+
                     } else {
                         tv_prompt.setVisibility(View.GONE);
-                        btn_login.setClickable(true);
+
                     }
                 }
             }
         });
 
         watcherUtil = new WatcherUtil(et_password,"password");
-
+        //过滤中文空格
         et_password.addTextChangedListener(watcherUtil);
 
         btn_login.setOnClickListener(this);
@@ -81,11 +83,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         iv_eye.setOnClickListener(this);
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        JPushInterface.onPause(this);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-
-
+        JPushInterface.onResume(this);
     }
 
     @Override
@@ -93,6 +101,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onDestroy();
         Log.d("login destroy", "login destroy");
     }
+
+
 
     @Override
     public void onClick(View v) {

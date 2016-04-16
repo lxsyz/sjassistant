@@ -21,7 +21,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
     private EditText et_username,et_validate,et_password;
     private ImageView eye,success;
     private Button btn_confirm;
-    private TextView tv_getcode;
+    private TextView tv_getcode,prompt_tv;
     private int flag = 1;
 
     /*
@@ -54,6 +54,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
         eye = (ImageView)findViewById(R.id.eye);
         success = (ImageView)findViewById(R.id.prompt);
         tv_getcode = (TextView)findViewById(R.id.getCode);
+        prompt_tv = (TextView)findViewById(R.id.prompt_text);
         btn_confirm = (Button)findViewById(R.id.confirm);
 
 
@@ -61,11 +62,12 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-
                     if (!OperatorUtil.isEmail(et_username.getText().toString())) {
-                        success.setVisibility(View.VISIBLE);
-                    } else {
                         success.setVisibility(View.GONE);
+                        prompt_tv.setVisibility(View.VISIBLE);
+                    } else {
+                        success.setVisibility(View.VISIBLE);
+                        prompt_tv.setVisibility(View.GONE);
                     }
                 }
             }
