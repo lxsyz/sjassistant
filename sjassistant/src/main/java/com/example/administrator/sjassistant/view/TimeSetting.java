@@ -136,6 +136,9 @@ public class TimeSetting extends View {
         }
     }
 
+    /*
+     * 画时间线
+     */
     private void drawLine(Canvas canvas) {
         Paint paint = new Paint();
         paint.setStrokeWidth(15);
@@ -173,13 +176,16 @@ public class TimeSetting extends View {
                 invalidate();
 
                 if (onHandUpListener != null) {
-                    onHandUpListener.onHandUp(beginTime,endTime);
+                    onHandUpListener.onHandUp(beginTime,endTime,startX,endX);
                 }
                 break;
         }
         return true;
     }
 
+    /*
+     * 画起始的圆
+     */
     private void drawCircle(Canvas canvas,float startX,float startY) {
         Paint mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -189,6 +195,9 @@ public class TimeSetting extends View {
         }
     }
 
+    /*
+     * 画松手的圆
+     */
     private void drawEndCircle(Canvas canvas,float endX,float endY) {
         Paint mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -199,6 +208,9 @@ public class TimeSetting extends View {
         }
     }
 
+    /*
+     * 画手指移动时的线
+     */
     private void drawRedLine(Canvas canvas,float offsetX,float startX) {
         Paint mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -209,6 +221,9 @@ public class TimeSetting extends View {
         }
     }
 
+    /*
+     * 画开始的文本
+     */
     private void drawText(Canvas canvas,float startX,float startY,int n) {
         Paint mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -230,6 +245,10 @@ public class TimeSetting extends View {
 
     }
 
+
+    /*
+     * 画结尾的文本
+     */
     private void drawEndText(Canvas canvas,float endX,float startY,int n) {
         Paint mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -251,12 +270,22 @@ public class TimeSetting extends View {
     }
 
     public interface OnHandUpListener {
-        public void onHandUp(int beginTime,int endTime);
+        public void onHandUp(int beginTime,int endTime,float startX,float endX);
     }
 
     private OnHandUpListener onHandUpListener;
 
     public void setOnHandUpListener(OnHandUpListener onHandUpListener) {
         this.onHandUpListener = onHandUpListener;
+    }
+
+    /*
+     * Resume后的设置值  并重绘
+     */
+    public void setValue (float startX,float endX) {
+        this.startX = startX;
+        this.endX = endX;
+        count = 3;
+        invalidate();
     }
 }

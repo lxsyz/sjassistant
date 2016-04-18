@@ -45,6 +45,7 @@
             android:textColor="@color/my_black"
             android:text="创建新联系人"
             android:textSize="15sp"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

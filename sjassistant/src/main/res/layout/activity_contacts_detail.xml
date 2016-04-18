@@ -29,9 +29,12 @@
 
         <com.example.administrator.sjassistant.view.SideBar
             android:id="@+id/sidebar"
+
             android:layout_width="30dp"
             android:layout_height="fill_parent"
-            android:layout_gravity="right|center" />
+            android:layout_gravity="right|center"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp" />
     </FrameLayout>
 
 </LinearLayout>

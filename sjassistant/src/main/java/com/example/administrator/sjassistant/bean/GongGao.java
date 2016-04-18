@@ -1,9 +1,11 @@
 package com.example.administrator.sjassistant.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2016/4/2.
  */
-public class GongGao {
+public class GongGao implements Serializable{
 
     private String time;
 
@@ -11,6 +13,15 @@ public class GongGao {
 
     private String title;
 
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getContent() {
         return content;

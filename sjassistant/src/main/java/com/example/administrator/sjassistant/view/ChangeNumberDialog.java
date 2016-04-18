@@ -91,7 +91,7 @@ public class ChangeNumberDialog extends Dialog implements View.OnClickListener {
                     if (onItemClickListener != null && !TextUtils.isEmpty(content)) {
                         onItemClickListener.onItemClick(content);
                     }
-                } else if (flag == 1) {
+                } else {
                     if (onDeleteClickListener != null) {
                         onDeleteClickListener.onDelete(1);
                     }

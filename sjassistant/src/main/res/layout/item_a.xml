@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/id_title"
-            android:paddingTop="5dp"
+            android:paddingTop="8dp"
             android:singleLine="true"
             android:text="单据类型："
             android:textColor="#88444444"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/id_title"
             android:layout_toRightOf="@id/id_type"
-            android:paddingTop="5dp"
+            android:paddingTop="8dp"
             android:singleLine="true"
             android:text="财务报表"
             android:textColor="@color/my_black"
@@ -60,7 +60,7 @@
             android:layout_below="@id/id_type"
             android:paddingTop="5dp"
             android:singleLine="true"
-            android:text="提交时间:"
+            android:text="提交时间："
             android:textColor="#88444444"
             android:textSize="12sp" />
 
@@ -92,19 +92,19 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/line"
             android:singleLine="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="12dp"
             android:text="查看详情"
             android:textColor="@color/my_light_gray"
             android:textSize="12sp" />
         <ImageView
             android:id="@+id/id_more_value"
-            android:layout_height="18dp"
-            android:layout_width="18dp"
+            android:layout_height="14dp"
+            android:layout_width="14dp"
             android:src="@drawable/right_arrow"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="8dp"
+            android:layout_marginRight="0dp"
             android:layout_below="@id/line"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="12dp"
             />
     </RelativeLayout>
 

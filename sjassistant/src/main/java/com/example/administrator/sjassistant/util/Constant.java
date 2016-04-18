@@ -20,7 +20,7 @@ public class Constant {
     public static final String SETTING_NEW_MESSAGE = "isChecked_message";
     public static final String SETTING_VIBRATE = "isChecked_vibrate";
     public static final String SETTING_VOICE = "isChecked_voice";
-
+    public static final String SETTING_DISTURB = "isDisturb";
 
 
 }

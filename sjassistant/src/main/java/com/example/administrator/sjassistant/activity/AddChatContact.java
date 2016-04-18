@@ -117,8 +117,9 @@ public class AddChatContact extends Activity implements View.OnClickListener {
         sortListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ImageView v = (ImageView)findViewById(R.id.add);
+                ImageView v = (ImageView)view.findViewById(R.id.add);
                 SortModel sm = (SortModel) sortListView.getItemAtPosition(position);
+                Log.d("position",position+" ");
                 if (sm.getChecked() == 0) {
                     v.setImageResource(R.drawable.radio_checked);
                     sm.setChecked(1);

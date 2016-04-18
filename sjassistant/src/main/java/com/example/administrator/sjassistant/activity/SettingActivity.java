@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.sjassistant.util.AppManager;
@@ -21,6 +22,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     private LinearLayout changeEmail,changePwd,changeServer,clearCache,update,noDisturb,prompt;
     private Button quit;
+
+    private TextView cache_size;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         noDisturb = (LinearLayout)findViewById(R.id.noDisturb);
         prompt = (LinearLayout)findViewById(R.id.prompt);
         quit = (Button)findViewById(R.id.quit);
+
+        cache_size = (TextView)findViewById(R.id.cache_size);
+
+
 
         changeEmail.setOnClickListener(this);
         changeServer.setOnClickListener(this);
@@ -81,7 +88,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void onDelete(int i) {
                         if (i == 1) {
-                            DataCleanManager.cleanAppicationData(SettingActivity.this);
+                            //DataCleanManager.cleanAppicationData(SettingActivity.this);
+                            DataCleanManager.clearAllCache(SettingActivity.this);
+                            cache_size.setText("0.0M");
                             Toast.makeText(SettingActivity.this,"清除成功",Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -125,6 +134,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                             editor.putString("password",null);
                             editor.putString("imgPath",null);
                             editor.commit();
+
                             AppManager.getInstance().AppExit(SettingActivity.this);
                         }
                     }
@@ -135,6 +145,16 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 //                dialog.setCenterVisibility(View.GONE);
 //                dialog.show();
                 break;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            cache_size.setText(DataCleanManager.getTotalCacheSize(SettingActivity.this));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

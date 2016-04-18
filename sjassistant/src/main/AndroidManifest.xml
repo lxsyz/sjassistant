@@ -146,6 +146,9 @@
         <activity android:name=".activity.SearchBillActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".activity.GonggaoDetailActivity"
+            android:screenOrientation="portrait" />
+
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>

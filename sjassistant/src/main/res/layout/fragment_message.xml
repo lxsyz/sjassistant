@@ -68,6 +68,7 @@
                 android:layout_height="46dp" />
             
             <TextView
+                android:id="@+id/num_unfinish"
                 android:layout_alignTop="@+id/iv_unfinish"
                 android:background="@drawable/red_circle"
                 android:layout_alignRight="@+id/iv_unfinish"

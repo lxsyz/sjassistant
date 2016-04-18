@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.util.AppManager;
+import com.example.administrator.sjassistant.view.MyPromptDialog;
 
 /**
  * Created by Administrator on 2016/3/27.
@@ -32,6 +33,8 @@ public class BaseActivity extends Activity {
     protected View layout_top;
     private LinearLayout centerLayout;
     private long exitTime = 0;
+
+    protected MyPromptDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,8 @@ public class BaseActivity extends Activity {
         btn_left = (ImageView)layout_top.findViewById(R.id.bt_left);
         btn_right = (ImageView)layout_top.findViewById(R.id.bt_right);
         bt_right2 = (ImageView)layout_top.findViewById(R.id.bt_right2);
+
+        pd = new MyPromptDialog(this);
 
         btn_left.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -117,6 +117,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(intent);
                 break;
             case R.id.login:
+                if (pd != null) pd.createDialog("登录中...").show();
                 login();
 
                 SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
@@ -128,6 +129,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 editor.commit();
                 intent = new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(intent);
+
                 LoginActivity.this.finish();
                 break;
             case R.id.eye:

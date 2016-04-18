@@ -57,6 +57,9 @@ public class SearchBillActivity extends BaseActivity implements View.OnClickList
         ed_name.setOnClickListener(this);
         delete.setOnClickListener(this);
 
+        bt_right_text = (TextView)findViewById(R.id.bt_right_text);
+        bt_right = (ImageView)findViewById(R.id.bt_right);
+
         bt_right.setVisibility(View.INVISIBLE);
         bt_right_text.setVisibility(View.VISIBLE);
 

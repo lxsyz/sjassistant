@@ -202,7 +202,6 @@ public class ChoosePhotoWindow implements OnClickListener {
 	 * 转跳到本地相簿
 	 */
 	public void toPhotos() {
-		Log.d("tag","asdasd");
 		Intent i = new Intent(Intent.ACTION_GET_CONTENT, null);
 		i.setType("image/*");
 		((Activity) context).startActivityForResult(i, REQUESTCODE_IMAGE);

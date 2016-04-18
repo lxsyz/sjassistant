@@ -30,6 +30,8 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     private TextView title;
     private LinearLayout message_inform_layout,gonggao_layout,unfinishedwork_layout,assistant_layout;
 
+    private TextView num_unfinish;
+
     private AddContactsWin popwindow;
     
     @Nullable
@@ -73,6 +75,8 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         gonggao_layout = (LinearLayout)rootView.findViewById(R.id.gonggao_layout);
         unfinishedwork_layout = (LinearLayout)rootView.findViewById(R.id.unfinishedwork_layout);
         assistant_layout = (LinearLayout)rootView.findViewById(R.id.assistant_layout);
+        num_unfinish = (TextView)rootView.findViewById(R.id.num_unfinish);
+
 
         message_inform_layout.setOnClickListener(this);
         gonggao_layout.setOnClickListener(this);

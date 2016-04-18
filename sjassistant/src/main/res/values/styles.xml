@@ -98,4 +98,11 @@
         <item name="android:windowEnterAnimation">@anim/push_in</item>
         <item name="android:windowExitAnimation">@anim/push_out</item>
     </style>
+
+    <style name="dialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">#40000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
 </resources>

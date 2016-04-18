@@ -1,6 +1,9 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.media.Image;
 import android.os.Build;
@@ -24,6 +27,7 @@ import com.example.administrator.sjassistant.fragment.MyApplicationFragment;
 import com.example.administrator.sjassistant.fragment.MySettingFragment;
 import com.example.administrator.sjassistant.service.MessageService;
 import com.example.administrator.sjassistant.util.AppManager;
+import com.example.administrator.sjassistant.util.ExampleUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +51,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     //当前位置
     private int mCurrentIndex = 0;
 
+    public static boolean isForeground = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +62,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Log.d("tag", "activity" + android.os.Process.myPid());
         Log.d("tag"," main id  "+Thread.currentThread().getId()+"main   thread"+ Thread.currentThread().getName());
         instance = MainActivity.this;
+
         Intent intent = new Intent(MainActivity.this,MessageService.class);
 
         startService(intent);
         initWindow();
         initView();
+
+        registerMessageReceiver();
     }
 
 
@@ -222,6 +231,55 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+    @Override
+    protected void onPause() {
+        isForeground = false;
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        isForeground = true;
+        super.onResume();
+    }
+
+
+    /*
+     * 接收自定义消息的广播
+     */
+    public void registerMessageReceiver() {
+        mMessageReceiver = new MessageReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        filter.addAction(MESSAGE_RECEIVED_ACTION);
+        registerReceiver(mMessageReceiver, filter);
+    }
+
+    private MessageReceiver mMessageReceiver;
+    public static final String MESSAGE_RECEIVED_ACTION ="com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
+    public static final String KEY_TITLE = "title";
+    public static final String KEY_MESSAGE = "message";
+    public static final String KEY_EXTRAS = "extras";
+
+    public class MessageReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
+                String messge = intent.getStringExtra(KEY_MESSAGE);
+                String extras = intent.getStringExtra(KEY_EXTRAS);
+                StringBuilder showMsg = new StringBuilder();
+                showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
+                if (!ExampleUtil.isEmpty(extras)) {
+                    showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
+                }
+            }
+        }
+    }
+
+    /*
+     * fragment中使用onActivityResult的处理
+     */
     MySettingFragment settingFragment;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -242,6 +300,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         Log.d("tag"," main destroy");
+        unregisterReceiver(mMessageReceiver);
         super.onDestroy();
     }
 
