@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,9 +18,23 @@ import android.widget.TextView;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
+import com.example.administrator.sjassistant.bean.Department;
+import com.example.administrator.sjassistant.bean.GonggaoType;
+import com.example.administrator.sjassistant.util.AppManager;
+import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/4/3.
@@ -35,12 +51,12 @@ public class ChooseApartmentActivity extends Activity implements View.OnClickLis
     private EditText ed_name;
 
     private ListView apartment_list;
-    private List<String> da = new ArrayList<String>();
+    private List<Department> datalist = new ArrayList<Department>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_apartment);
-
+        AppManager.getInstance().addActivity(this);
         initWindow();
         initView();
         initListeners();
@@ -67,17 +83,16 @@ public class ChooseApartmentActivity extends Activity implements View.OnClickLis
         ed_name = (EditText)search_layout.findViewById(R.id.search_content);
         delete = (ImageView)search_layout.findViewById(R.id.delete_word);
 
-
-
-
         apartment_list = (ListView)findViewById(R.id.apartment_list);
 
-        da.add("asdsd");
-        da.add("faff");
-        apartment_list.setAdapter(new CommonAdapter<String>(this,da,R.layout.item_choose_apartment) {
-            @Override
-            public void convert(ViewHolder holder, String s) {
 
+        apartment_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    Log.d("tag","header");
+
+                }
             }
         });
     }
@@ -110,6 +125,72 @@ public class ChooseApartmentActivity extends Activity implements View.OnClickLis
                 ed_name.setText("");
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getApartment();
+
+    }
+
+    /*
+     * 获取部门列表
+     */
+    private void getApartment() {
+        String url = Constant.SERVER_URL + "notes/showDepartment";
+
+        OkHttpUtils.get()
+                .url(url)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage() + " ");
+                        ErrorUtil.NetWorkToast(ChooseApartmentActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response + " ");
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            Log.d("statusCode",statusCode+" ");
+                            if (statusCode == 0) {
+                                JSONObject data = object.getJSONObject("data");
+                                JSONArray list = data.getJSONArray("list");
+
+                                int len = list.length();
+
+                                for (int i = 0;i < len;i++) {
+                                    JSONObject o = list.getJSONObject(i);
+                                    Department type = new Department();
+                                    type.setId(o.getInt("id"));
+                                    type.setCode(o.getString("code"));
+                                    type.setName(o.getString("name"));
+                                    datalist.add(type);
+                                }
+
+                                apartment_list.addHeaderView(getLayoutInflater().inflate(R.layout.item_choose_apartment,null));
+                                apartment_list.setAdapter(new CommonAdapter<Department>(ChooseApartmentActivity.this, datalist, R.layout.item_choose_apartment) {
+                                    @Override
+                                    public void convert(ViewHolder holder, Department apartment) {
+                                        holder.setText(R.id.apartment_name, apartment.getName());
+                                    }
+                                });
+
+
+                            } else {
+                                ToastUtil.show(ChooseApartmentActivity.this,"服务器异常");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     protected void initWindow() {

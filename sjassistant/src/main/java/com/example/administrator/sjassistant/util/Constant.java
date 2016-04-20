@@ -12,6 +12,8 @@ public class Constant {
 
     public static String imgPath;   //头像路径
 
+    public static String username;
+
     public static String version;   //产品版本号
 
 
@@ -22,5 +24,9 @@ public class Constant {
     public static final String SETTING_VOICE = "isChecked_voice";
     public static final String SETTING_DISTURB = "isDisturb";
 
+    public static final String SERVER_URL = "http://219.234.5.13:8080/app/";
+
+    public static final String TEST_EMAIL = "2945502169@qq.com";
+    public static final String TEST_PASSWORD = "1234@1234";
 
 }

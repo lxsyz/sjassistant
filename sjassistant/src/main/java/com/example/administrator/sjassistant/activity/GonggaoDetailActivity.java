@@ -53,7 +53,7 @@ public class GonggaoDetailActivity extends BaseActivity {
             if (new File(Environment.getExternalStorageDirectory()+"/test.doc").exists()) {
                 Log.d("savePath","存在");
                 Toast.makeText(this,"存在",Toast.LENGTH_LONG).show();
-                FileUtil.convert2Html(GonggaoDetailActivity.this,Environment.getExternalStorageDirectory()+"/test.doc",Environment.getExternalStorageDirectory()+"/result.html");
+                //FileUtil.convert2Html(GonggaoDetailActivity.this,Environment.getExternalStorageDirectory()+"/test.doc",Environment.getExternalStorageDirectory()+"/result.html");
             }
 
         } catch (Exception e) {

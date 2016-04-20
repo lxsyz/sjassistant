@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.bean.GonggaoType;
+import com.example.administrator.sjassistant.util.AppManager;
 
 /**
  * Created by Administrator on 2016/4/3.
@@ -32,7 +34,7 @@ public class PostInformActivity extends Activity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_inform);
-
+        AppManager.getInstance().addActivity(this);
         initWindow();
         initView();
         initListeners();
@@ -81,13 +83,30 @@ public class PostInformActivity extends Activity implements View.OnClickListener
                 break;
             case R.id.add_contacts:
                 intent = new Intent(PostInformActivity.this,ChooseApartmentActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
                 break;
             case R.id.gonggaotype_layout:
                 intent = new Intent(PostInformActivity.this,ChooseGonggaoType.class);
-                startActivity(intent);
+                startActivityForResult(intent, 2);
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String result = "";
+        switch (resultCode) {
+            case 1:
+                result = data.getStringExtra("result");
+
+                break;
+            case 2:
+                GonggaoType type = (GonggaoType) data.getSerializableExtra("result");
+                gonggao_type.setText(type.getName());
+                break;
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     protected void initWindow() {

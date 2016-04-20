@@ -1,12 +1,24 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.bean.MessageInform;
+import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/4/3.
@@ -21,6 +33,7 @@ public class MessageDetailActivity extends BaseActivity {
     private TextView message_postman;
     private TextView message_posttime;
 
+    private int id;
 
     private WebView wv;
     @Override
@@ -30,15 +43,12 @@ public class MessageDetailActivity extends BaseActivity {
         Bundle bundle = getIntent().getExtras();
         MessageInform messageInform = (MessageInform)bundle.get("detail");
 
-        title = messageInform.getTitle();
-        username = messageInform.getUsername();
-        time = messageInform.getTime();
+        id = messageInform.getId();
+        title = messageInform.getMessageTitle();
 
         setTopText(title);
 
-        message_title.setText(title);
-        message_postman.setText("发布人:  " + username);
-        message_posttime.setText("发布时间: "+time);
+
     }
 
 
@@ -51,6 +61,7 @@ public class MessageDetailActivity extends BaseActivity {
         message_title = (TextView)findViewById(R.id.message_title);
         message_postman = (TextView)findViewById(R.id.message_postman);
         message_posttime = (TextView)findViewById(R.id.message_posttime);
+
         wv = (WebView)findViewById(R.id.wv);
 
 
@@ -72,5 +83,50 @@ public class MessageDetailActivity extends BaseActivity {
                 // TODO Auto-generated method stub
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        showDetail(id);
+    }
+
+    /*
+     * 显示消息详情
+     */
+    private void showDetail(int id) {
+        String url = Constant.SERVER_URL + "message/showMessageDetail";
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("id",String.valueOf(id))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage() + " ");
+                        ErrorUtil.NetWorkToast(MessageDetailActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response",response+" ");
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            JSONObject detail = object.getJSONObject("detail");
+                            if (statusCode == 0) {
+                                message_title.setText(detail.getString("messageTitle"));
+                                message_postman.setText(detail.getString("messagePublisher"));
+                                message_posttime.setText(detail.getString("messagePublishtime"));
+                            } else {
+                                ToastUtil.show(MessageDetailActivity.this, "服务器异常");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 }

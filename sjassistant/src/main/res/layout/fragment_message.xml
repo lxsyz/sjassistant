@@ -88,6 +88,7 @@
                 style="@style/text1" />
 
             <TextView
+                android:id="@+id/unfinished_text"
                 android:layout_below="@+id/unfinished"
                 android:layout_alignStart="@+id/unfinished"
                 android:layout_alignLeft="@+id/unfinished"
@@ -95,6 +96,7 @@
                 style="@style/text2" />
 
             <TextView
+                android:id="@+id/unfinished_time"
                 android:text="2016-3-25"
                 style="@style/text3"
                 />
@@ -129,13 +131,15 @@
                 style="@style/text1" />
 
             <TextView
+                android:id="@+id/message_text"
                 android:layout_below="@+id/message_inform"
                 android:layout_alignStart="@+id/message_inform"
                 android:layout_alignLeft="@+id/message_inform"
-                android:text="待办"
+                android:text=""
                 style="@style/text2" />
 
             <TextView
+                android:id="@+id/message_time"
                 android:text="2016-3-25"
                 style="@style/text3"
                 />
@@ -170,13 +174,15 @@
                 style="@style/text1" />
 
             <TextView
+                android:id="@+id/gonggao_text"
                 android:layout_below="@+id/gonggao"
                 android:layout_alignStart="@+id/gonggao"
                 android:layout_alignLeft="@+id/gonggao"
-                android:text="待办"
+                android:text=""
                 style="@style/text2" />
 
             <TextView
+                android:id="@+id/gonggao_time"
                 android:text="2016-3-25"
                 style="@style/text3"
                 />
@@ -211,6 +217,7 @@
                 style="@style/text1" />
 
             <TextView
+                android:id="@+id/assistant_text"
                 android:layout_below="@+id/assistant"
                 android:layout_alignStart="@+id/assistant"
                 android:layout_alignLeft="@+id/assistant"
@@ -218,6 +225,7 @@
                 style="@style/text2" />
 
             <TextView
+                android:id="@+id/assistant_time"
                 android:text="2016-3-25"
                 style="@style/text3"
                 />

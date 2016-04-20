@@ -1,6 +1,9 @@
 package com.example.administrator.sjassistant.util;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -12,7 +15,14 @@ import java.util.regex.Pattern;
 
 /**
  * Created by syz on 2016/3/28.
- * 简单计算方法
+ * 功能封装库 包括功能：
+ * 1. 判断是否是email格式
+ * 2. 判断是否是手机号码
+ * 3. dp2px   px2dp
+ * 4. 获取汉字的首字母
+ * 5. 计算两段时间相差多少秒 例如 下午3点  下午5点  "下午HH点"
+ * 6. 判断是否联网
+ * 7. 判断是否是wifi  3g等等
  */
 public class OperatorUtil {
 
@@ -129,6 +139,64 @@ public class OperatorUtil {
             e.printStackTrace();
         }
         return  sec;
+    }
+
+    /*
+     * 判断是否联网
+     * 权限： access_network_state
+     * @param Context
+     * @return true 联网
+     *         false 未联网
+     */
+    public static boolean isNetWorkAvailable (Context context) {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm.getActiveNetworkInfo().isAvailable()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
+     * 判断是否是3G网络
+     * @param Context
+     * @return
+     */
+    public static boolean is3G(Context context) {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
+     * 判断是否是wifi
+     * @param Context
+     * @return
+     */
+    public static boolean isWifiEnabled(Context context) {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        TelephonyManager mgrTel = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        return ((cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().getState() == NetworkInfo.State.CONNECTED)
+                || mgrTel.getNetworkType() == TelephonyManager.NETWORK_TYPE_UMTS);
+    }
+
+    /*
+     * 判断是wifi还是3g网络
+     * @param Context
+     * @return
+     */
+    public static boolean isWifi(Context context) {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

@@ -18,7 +18,7 @@
                 android:textColor="@color/my_black"
                 android:textSize="16sp"
                 android:layout_centerVertical="true"
-                android:text="北京分所"
+                android:text="全部分所"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

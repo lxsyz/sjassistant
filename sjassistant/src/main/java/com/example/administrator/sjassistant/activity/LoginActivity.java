@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.text.Selection;
 import android.text.Spannable;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -17,14 +18,24 @@ import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.MD5;
 import com.example.administrator.sjassistant.util.OperatorUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.util.WatcherUtil;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.jpush.android.api.JPushInterface;
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -57,21 +68,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         tv_serverConfig = (TextView)findViewById(R.id.serverConfig);
         tv_forgetPassword = (TextView)findViewById(R.id.forgetPassword);
 
-        et_username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-
-                    if (!OperatorUtil.isPhoneNumber(et_username.getText().toString())) {
-                        tv_prompt.setVisibility(View.VISIBLE);
-
-                    } else {
-                        tv_prompt.setVisibility(View.GONE);
-
-                    }
-                }
-            }
-        });
+//        et_username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (!hasFocus) {
+//
+//                    if (!OperatorUtil.isEmail(et_username.getText().toString())) {
+//                        tv_prompt.setVisibility(View.VISIBLE);
+//                        btn_login.setClickable(false);
+//                    } else {
+//                        tv_prompt.setVisibility(View.GONE);
+//                        btn_login.setClickable(true);
+//                    }
+//                }
+//            }
+//        });
 
         watcherUtil = new WatcherUtil(et_password,"password");
         //过滤中文空格
@@ -117,20 +128,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(intent);
                 break;
             case R.id.login:
-                if (pd != null) pd.createDialog("登录中...").show();
+
                 login();
 
-                SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
 
-                editor.putString("phonenumber",et_username.getText().toString());
-                editor.putString("password", MD5.MD5Encode(et_password.getText().toString()));
-                //Log.d("tag","password"+ MD5.MD5Encode(et_password.getText().toString()));
-                editor.commit();
-                intent = new Intent(LoginActivity.this,MainActivity.class);
-                startActivity(intent);
-
-                LoginActivity.this.finish();
                 break;
             case R.id.eye:
                 if (flag == 1) {
@@ -161,6 +162,62 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      * 访问服务器登录
      */
     private void login() {
+        String url = Constant.SERVER_URL+"user/login";
+        if (TextUtils.isEmpty(et_username.getText().toString())) {
+            tv_prompt.setVisibility(View.VISIBLE);
+            return;
+        }
+        if (TextUtils.isEmpty(et_password.getText().toString())) {
+            ToastUtil.showShort(LoginActivity.this,"密码不能为空");
+            return;
+        }
+        if (pd != null) pd.createDialog().show();
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("userCode",et_username.getText().toString())
+                .addParams("password",et_password.getText().toString())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("response error",e.getMessage()+" ");
+                        pd.dismissDialog();
+                        ErrorUtil.NetWorkToast(LoginActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response + " ");
+                        pd.dismissDialog();
+
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            String statusCode = object.getString("statusCode");
+                            String message = object.getString("message");
+                            if (statusCode.equals("0")) {
+                                SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sp.edit();
+                                Constant.username = et_username.getText().toString();
+                                editor.putString("username",et_username.getText().toString());
+                                editor.putString("password", et_password.getText().toString());
+                                editor.commit();
+                                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                startActivity(intent);
+                                ToastUtil.showShort(LoginActivity.this,"登录成功");
+                                LoginActivity.this.finish();
+                            } else if (statusCode.equals("1")) {
+                                ToastUtil.show(LoginActivity.this,"用户名不存在");
+                            } else if (statusCode.equals("2")) {
+                                ToastUtil.show(LoginActivity.this,"密码错误");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
 
     }
 }

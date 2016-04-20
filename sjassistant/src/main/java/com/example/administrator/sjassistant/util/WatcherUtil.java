@@ -10,7 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by Administrator on 2016/4/11.
+ * Created by syz on 2016/4/11.
+ * 过滤密码输入框中的汉字及空格
  */
 public class WatcherUtil implements TextWatcher{
 
@@ -43,17 +44,14 @@ public class WatcherUtil implements TextWatcher{
         int index = 0;
         Pattern chinese = Pattern.compile("[\u0391-\uFFE5]+");
         if (!TextUtils.isEmpty(editText.getText())) {
-            Log.d("input",input+" ");
             for (int i = 0;i < input.length();i++) {
                 CharSequence target = input.subSequence(i,i+1);
                 if (" ".equals(input.subSequence(i,i+1)) || "\n".equals(input.subSequence(i, i+1))) {
                     editStart = editStart - 1;
-                    Log.d("tag",input.subSequence(i,i+1)+" ");
                     s.delete(i, i + 1);
 
                 }
                 if ("password".equals(type)) {
-                    Log.d("target",target+" ");
                     Matcher matcher = chinese.matcher(target);
                     if (matcher.matches()) {
                         if (index == 0) {

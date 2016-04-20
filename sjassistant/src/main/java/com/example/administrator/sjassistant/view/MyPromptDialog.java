@@ -23,15 +23,18 @@ public class MyPromptDialog {
         this.mContext = context;
     }
 
-    public Dialog createDialog(CharSequence str) {
+    public Dialog createDialog() {
         mDialog = new Dialog(mContext, R.style.dialog);
         View v = LayoutInflater.from(mContext).inflate(R.layout.dialog_prompt,null);
         TextView textView = (TextView)v.findViewById(R.id.textView);
-        textView.setText(str);
-        v.setBackgroundColor(Color.parseColor("#40000000"));
+        //textView.setText(str);
+        v.setBackgroundColor(Color.parseColor("#00000000"));
         mDialog.setContentView(v);
         mDialog.setCanceledOnTouchOutside(false);
         return mDialog;
     }
 
+    public void dismissDialog() {
+        this.mDialog.dismiss();
+    }
 }

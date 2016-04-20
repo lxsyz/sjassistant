@@ -88,7 +88,7 @@
                 android:layout_marginLeft="23dp"
                 android:layout_toRightOf="@id/password_iv"
                 android:password="true"
-                android:text="155262"
+                android:text=""
                 android:hint="密码"
                 android:textColor="@color/black"
                 android:background="@drawable/border"

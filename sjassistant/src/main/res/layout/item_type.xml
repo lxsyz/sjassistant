@@ -22,6 +22,7 @@
 
         <ImageView
             android:id="@+id/iv_checked"
+            android:visibility="gone"
             android:layout_marginRight="12dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
