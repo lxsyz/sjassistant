@@ -1,11 +1,14 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -17,15 +20,15 @@ import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
 import com.example.administrator.sjassistant.bean.GongGao;
-import com.example.administrator.sjassistant.bean.MessageInform;
+import com.example.administrator.sjassistant.bean.GongGao;
 import com.example.administrator.sjassistant.swipemenulistview.SwipeMenu;
 import com.example.administrator.sjassistant.swipemenulistview.SwipeMenuCreator;
 import com.example.administrator.sjassistant.swipemenulistview.SwipeMenuItem;
 import com.example.administrator.sjassistant.swipemenulistview.SwipeMenuListView;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
-import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
+import com.example.administrator.sjassistant.view.MyPromptDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -43,26 +46,38 @@ import okhttp3.Call;
  */
 public class GonggaoActivity extends BaseActivity implements View.OnClickListener {
 
-    private SwipeMenuListView gonggao_list;
+    private SwipeMenuListView GongGao_list;
 
     private ImageView search,delete;
     private EditText ed_name;
 
     private List<GongGao> datalist = new ArrayList<GongGao>();
+
+    private CommonAdapter<GongGao> commonAdapter;
+
+    private MyPromptDialog pd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        gonggao_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        if (TextUtils.isEmpty(Constant.username)) {
+            SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+            Constant.username = sp.getString("username", null);
+        }
+        Log.d("activity", "gonggao  oncreate");
+
+        GongGao_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(GonggaoActivity.this,GonggaoDetailActivity.class);
+                Intent intent = new Intent(GonggaoActivity.this, GonggaoDetailActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("detail",datalist.get(position));
+                bundle.putSerializable("detail", datalist.get(position));
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
+
+        pd = new MyPromptDialog(this);
     }
 
     @Override
@@ -80,7 +95,7 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
         ed_name.setOnClickListener(this);
         delete.setOnClickListener(this);
 
-        gonggao_list = (SwipeMenuListView)findViewById(R.id.gonggao_list);
+        GongGao_list = (SwipeMenuListView)findViewById(R.id.gonggao_list);
 
 
     }
@@ -133,17 +148,34 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
             }
         };
 
-        gonggao_list.setMenuCreator(creator);
+        GongGao_list.setMenuCreator(creator);
 
-        gonggao_list.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+        GongGao_list.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public void onMenuItemClick(int position, SwipeMenu menu, int index) {
 
                 if (index == 0) {
                     GongGao item = datalist.get(position);
                     // 调用服务器的方法delete
-                    //delete(item.getCarPlateNo());
+                    delete(item.getId(), position);
                 }
+            }
+        });
+
+        ed_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterGongGao(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }
@@ -156,6 +188,7 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
 
         String url = Constant.SERVER_URL + "notes/showNotes";
 
+
         OkHttpUtils.post()
                 .url(url)
                 .addParams("userCode",Constant.username)
@@ -163,13 +196,13 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error",e.getMessage()+" ");
+                        Log.d("error", e.getMessage() + " ");
                         ErrorUtil.NetWorkToast(GonggaoActivity.this);
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        Log.d("response",response+" ");
+                        Log.d("response", response + " ");
                         try {
                             JSONObject object = new JSONObject(response);
                             int statusCode = object.getInt("statusCode");
@@ -180,22 +213,89 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
                                 int len = list.length();
                                 for (int i = 0; i < len; i++) {
                                     JSONObject o = list.getJSONObject(i);
-                                    GongGao gongGao = new GongGao();
-                                    gongGao.setId(o.getInt("id"));
-                                    gongGao.setNoteTitle(o.getString("noteTitle"));
-                                    gongGao.setNoteDetail(o.getString("noteDetail"));
-                                    gongGao.setNotePublisher(o.getString("notePublisher"));
-                                    gongGao.setNotePublishtime(o.getString("notePublishtime"));
-                                    datalist.add(gongGao);
+                                    GongGao GongGao = new GongGao();
+                                    GongGao.setId(o.getInt("id"));
+                                    GongGao.setNoteTitle(o.getString("noteTitle"));
+                                    GongGao.setNoteDetail(o.getString("noteDetail"));
+                                    GongGao.setNotePublisher(o.getString("notePublisher"));
+                                    GongGao.setNotePublishtime(o.getString("notePublishtime"));
+                                    datalist.add(0,GongGao);
                                 }
 
-                                gonggao_list.setAdapter(new CommonAdapter<GongGao>(GonggaoActivity.this, datalist, R.layout.item_gonggao) {
+                                commonAdapter = new CommonAdapter<GongGao>(GonggaoActivity.this, datalist, R.layout.item_gonggao) {
                                     @Override
-                                    public void convert(ViewHolder holder, GongGao gongGao) {
-                                        holder.setText(R.id.gonggao_title, gongGao.getNoteTitle());
-                                        holder.setText(R.id.gonggao_time, gongGao.getNotePublishtime());
+                                    public void convert(ViewHolder holder, GongGao GongGao) {
+                                        holder.setText(R.id.gonggao_title, GongGao.getNoteTitle());
+                                        holder.setText(R.id.gonggao_time, GongGao.getNotePublishtime());
                                     }
-                                });
+                                };
+
+                                GongGao_list.setAdapter(commonAdapter);
+                            } else {
+                                ToastUtil.show(GonggaoActivity.this, "服务器异常");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+    
+    /*
+     * 搜素公告
+     */
+    private void filterGongGao(String text) {
+        List<GongGao> filterDataList = new ArrayList<GongGao>();
+
+        if (TextUtils.isEmpty(text)) {
+            filterDataList = datalist;
+        } else {
+            filterDataList.clear();
+            for (GongGao object : datalist) {
+                String title = object.getNoteTitle();
+                String time = object.getNotePublishtime();
+                String publisher = object.getNotePublisher();
+
+
+
+                if (title.indexOf(text) != -1
+                        || time.indexOf(text) != -1
+                        || publisher.indexOf(text) != -1) {
+                    filterDataList.add(object);
+                }
+            }
+        }
+
+        commonAdapter.updateListView(filterDataList);
+    }
+
+    /*
+     * 删除公告
+     */
+    private void delete(int id, final int position) {
+        String url = Constant.SERVER_URL + "notes/deleteNotes";
+
+
+        OkHttpUtils.get()
+                .url(url)
+                .addParams("id",String.valueOf(id))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage() + " ");
+                        ErrorUtil.NetWorkToast(GonggaoActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response",response+" ");
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            if (statusCode == 0) {
+                                datalist.remove(position);
+                                commonAdapter.updateListView(datalist);
                             } else {
                                 ToastUtil.show(GonggaoActivity.this, "服务器异常");
                             }

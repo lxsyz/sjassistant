@@ -25,6 +25,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/3/31.
  */
+@SuppressWarnings("ResourceType")
 public class SearchResultActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout search_layout;
@@ -89,6 +90,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                     public void onClick(View v) {
                         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
                                 + phonenumber));
+                        //noinspection ResourceType,ResourceType
                         startActivity(intent);
 
                         Toast.makeText(SearchResultActivity.this, "电话", Toast.LENGTH_SHORT).show();

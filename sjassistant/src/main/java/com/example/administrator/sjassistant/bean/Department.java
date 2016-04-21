@@ -10,6 +10,16 @@ public class Department {
 
     private String name;
 
+    private boolean checkState;
+
+    public void setCheckState(boolean checkState) {
+        this.checkState = checkState;
+    }
+
+    public boolean isCheckState() {
+        return checkState;
+    }
+
     public String getName() {
         return name;
     }

@@ -4,14 +4,11 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.GridView;
-import android.widget.SimpleAdapter;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.DetailExpandableAdapter;
-import com.example.administrator.sjassistant.bean.Bill;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Administrator on 2016/4/6.

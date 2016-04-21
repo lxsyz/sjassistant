@@ -5,13 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
-import com.example.administrator.sjassistant.activity.StartChattingActivity;
 import com.example.administrator.sjassistant.bean.Person;
-import com.example.administrator.sjassistant.view.ChangeNumberDialog;
 import com.example.administrator.sjassistant.view.CircleImageView;
 
 import java.util.ArrayList;

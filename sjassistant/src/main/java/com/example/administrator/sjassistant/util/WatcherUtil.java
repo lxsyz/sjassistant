@@ -3,7 +3,6 @@ package com.example.administrator.sjassistant.util;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.EditText;
 
 import java.util.regex.Matcher;

@@ -52,8 +52,6 @@
             android:layout_centerVertical="true"
             android:id="@+id/add"
             android:src="@drawable/radio_unchecked"
-            android:clickable="true"
-            android:focusable="false"
             android:layout_width="20dp"
             android:layout_height="20dp" />
 

@@ -20,8 +20,6 @@ import com.example.administrator.sjassistant.fragment.FinishedBillFragment;
 import com.example.administrator.sjassistant.fragment.UnfinishedBillFragment;
 import com.example.administrator.sjassistant.util.AppManager;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 

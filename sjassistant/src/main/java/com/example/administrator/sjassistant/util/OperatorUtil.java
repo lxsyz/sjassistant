@@ -4,12 +4,17 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
+
+import com.example.administrator.sjassistant.bean.MessageInform;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -146,15 +151,29 @@ public class OperatorUtil {
      * 权限： access_network_state
      * @param Context
      * @return true 联网
-     *         false 未联网
+     * @return false 未联网
      */
     public static boolean isNetWorkAvailable (Context context) {
-        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm.getActiveNetworkInfo().isAvailable()) {
-            return true;
-        } else {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        Log.d("cm", cm.getActiveNetworkInfo() + " ");
+        if (cm == null) {
             return false;
+        } else {
+            NetworkInfo[] info = cm.getAllNetworkInfo();
+            if (info != null) {
+                for (int i = 0; i < info.length; i++) {
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                        NetworkInfo netWorkInfo = info[i];
+                        if (netWorkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                            return true;
+                        } else if (netWorkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                            return true;
+                        }
+                    }
+                }
+            }
         }
+        return false;
     }
 
     /*
@@ -199,4 +218,5 @@ public class OperatorUtil {
         }
     }
 
+    
 }

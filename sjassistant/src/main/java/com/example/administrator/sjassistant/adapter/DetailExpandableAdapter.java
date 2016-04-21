@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
-import com.example.administrator.sjassistant.bean.Bill;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,6 @@
 package com.example.administrator.sjassistant.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,11 @@ public abstract class CommonAdapter<T> extends BaseAdapter
 
 	public void removeItem(int position) {
 		mDatas.remove(position);
+		notifyDataSetChanged();
+	}
+
+	public void updateListView(List<T> datalist) {
+		this.mDatas = datalist;
 		notifyDataSetChanged();
 	}
 

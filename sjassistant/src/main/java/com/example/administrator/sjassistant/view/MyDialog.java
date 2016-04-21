@@ -7,15 +7,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.util.Constant;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by Administrator on 2016/3/30.

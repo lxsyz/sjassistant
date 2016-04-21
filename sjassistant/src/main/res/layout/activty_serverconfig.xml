@@ -75,7 +75,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="23dp"
                 android:layout_toRightOf="@id/server_port_iv"
-                android:text="155262"
+                android:text=""
                 android:hint="请输入服务器端口"
                 android:textColor="@color/black"
                 android:background="@drawable/border"

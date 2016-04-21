@@ -9,7 +9,6 @@ import android.widget.EditText;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.view.ChangeNumberDialog;
-import com.example.administrator.sjassistant.view.MyDialog;
 
 /**
  * Created by Administrator on 2016/3/31.

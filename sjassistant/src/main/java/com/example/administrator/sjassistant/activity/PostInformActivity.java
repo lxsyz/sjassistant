@@ -2,8 +2,11 @@ package com.example.administrator.sjassistant.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -14,6 +17,16 @@ import android.widget.TextView;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.bean.GonggaoType;
 import com.example.administrator.sjassistant.util.AppManager;
+import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/4/3.
@@ -29,6 +42,8 @@ public class PostInformActivity extends Activity implements View.OnClickListener
     private TextView btn_right;
     private TextView btn_left,gonggao_type;
 
+
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +95,9 @@ public class PostInformActivity extends Activity implements View.OnClickListener
                 onBackPressed();
                 break;
             case R.id.bt_right:
+
+                send();
+
                 break;
             case R.id.add_contacts:
                 intent = new Intent(PostInformActivity.this,ChooseApartmentActivity.class);
@@ -98,10 +116,12 @@ public class PostInformActivity extends Activity implements View.OnClickListener
         switch (resultCode) {
             case 1:
                 result = data.getStringExtra("result");
-
+                search_content.setText(result);
+                search_content.setSelection(search_content.getText().length());
                 break;
             case 2:
                 GonggaoType type = (GonggaoType) data.getSerializableExtra("result");
+                id = type.getId();
                 gonggao_type.setText(type.getName());
                 break;
 
@@ -109,10 +129,77 @@ public class PostInformActivity extends Activity implements View.OnClickListener
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
+    /*
+     * 发送公告
+     */
+    private void send() {
+        String url = Constant.SERVER_URL +"notes/addNotes";
+
+        if (TextUtils.isEmpty(message_title.getText().toString())) {
+            ToastUtil.showShort(PostInformActivity.this,"公告标题不能为空");
+        }
+        if (TextUtils.isEmpty(message_content.getText().toString())) {
+            ToastUtil.showShort(PostInformActivity.this,"公告内容不能为空");
+        }
+
+        if(TextUtils.isEmpty(search_content.getText().toString())) {
+            ToastUtil.showShort(PostInformActivity.this,"接收部门不能为空");
+        }
+
+        if (TextUtils.isEmpty(gonggao_type.getText().toString())) {
+            ToastUtil.showShort(PostInformActivity.this,"公告类型不能为空");
+        }
+
+        SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
+        String username = sp.getString("username",null);
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("notePublisher",username)
+                .addParams("noteTitle", message_title.getText().toString())
+                .addParams("noteDetail",message_content.getText().toString())
+                .addParams("noteDepartment",search_content.getText().toString())
+                .addParams("notetypeId",String.valueOf(id))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage() + " ");
+                        ErrorUtil.NetWorkToast(PostInformActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response + " ");
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            Log.d("statusCode", statusCode + " ");
+                            if (statusCode == 0) {
+                                ToastUtil.showShort(PostInformActivity.this,"发布成功");
+                                PostInformActivity.this.finish();
+                            } else {
+                                ToastUtil.show(PostInformActivity.this, "服务器异常");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
     protected void initWindow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("activity",MainActivity.instance+" "+android.os.Process.myPid());
     }
 }

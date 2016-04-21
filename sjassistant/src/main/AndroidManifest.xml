@@ -96,9 +96,11 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.PostInformActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.PostMessageActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.ChooseApartmentActivity"

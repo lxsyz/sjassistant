@@ -1,11 +1,11 @@
 package com.example.administrator.sjassistant.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +31,6 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import okhttp3.Call;
 
@@ -68,6 +67,14 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     private String helperContent;
     private String messageDate;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        SharedPreferences sp = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        Constant.username = sp.getString("username", null);
+        Log.d("activity","messag e  oncreate");
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
@@ -122,6 +129,9 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         assistant_time = (TextView)rootView.findViewById(R.id.assistant_time);
 
 
+        if (num_unfinish.getText().toString().equals("0")) {
+            num_unfinish.setVisibility(View.GONE);
+        }
 
         message_inform_layout.setOnClickListener(this);
         gonggao_layout.setOnClickListener(this);
@@ -184,7 +194,12 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     private void showMessage() {
         String url = Constant.SERVER_URL + "message/show";
 
-        Log.d("username",Constant.username+" ");
+
+
+        Log.d("activity","url"+ Constant.SERVER_URL+" ");
+        Log.d("activity","username"+ Constant.username+" ");
+        //Constant.username = username;
+
         OkHttpUtils.post()
                 .url(url)
                 .addParams("userCode",Constant.username)
@@ -192,7 +207,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error",e.getMessage()+" ");
+                        Log.d("error", e.getMessage() + " ");
                         ErrorUtil.NetWorkToast(getActivity());
                     }
 
@@ -203,7 +218,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                             JSONObject object = new JSONObject(response);
                             int statusCode = object.getInt("statusCode");
                             JSONObject data = object.getJSONObject("data");
-                            Log.d("statusCode",statusCode+" ");
+                            Log.d("statusCode", statusCode + " ");
                             if (statusCode == 0) {
 
                                 gonggaoContent = data.getString("notesContent");
@@ -235,8 +250,9 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                                     num_unfinish.setVisibility(View.GONE);
                                     unfinished_text.setText("暂时没有待办工作");
                                 } else {
+                                    num_unfinish.setVisibility(View.VISIBLE);
                                     num_unfinish.setText(String.valueOf(workCount));
-                                    unfinished_text.setText(workCount+"个待审批单据暂未处理");
+                                    unfinished_text.setText(workCount + "个待审批单据暂未处理");
                                 }
                                 if (messageCount == 0) {
                                     message_text.setText("暂时没有新的消息、通知");
@@ -245,7 +261,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                                 }
 
                             } else {
-                                ToastUtil.show(getActivity(),"服务器异常");
+                                ToastUtil.show(getActivity(), "服务器异常");
                             }
 
                         } catch (JSONException e) {
@@ -253,5 +269,11 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onStop() {
+        Log.d("activity","message fragment stop");
+        super.onStop();
     }
 }

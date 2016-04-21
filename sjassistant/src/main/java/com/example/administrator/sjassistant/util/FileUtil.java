@@ -1,11 +1,8 @@
 package com.example.administrator.sjassistant.util;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.util.Log;
-import android.widget.Toast;
 
 //import org.apache.poi.hwpf.HWPFDocument;
 //import org.apache.poi.hwpf.converter.PicturesManager;
@@ -19,17 +16,8 @@ import android.widget.Toast;
 //import org.apache.poi.hwpf.usermodel.PictureType;
 //import org.w3c.dom.Document;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 //import javax.xml.parsers.DocumentBuilderFactory;
 //import javax.xml.parsers.ParserConfigurationException;

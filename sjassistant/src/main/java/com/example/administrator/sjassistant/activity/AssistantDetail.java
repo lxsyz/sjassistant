@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.bean.Assitant;
-import com.example.administrator.sjassistant.bean.MessageInform;
 
 /**
  * Created by Administrator on 2016/4/3.

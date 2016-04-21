@@ -1,19 +1,15 @@
 package com.example.administrator.sjassistant.fragment;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,13 +24,10 @@ import com.example.administrator.sjassistant.activity.HelpActivity;
 import com.example.administrator.sjassistant.activity.SettingActivity;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.FileUtil;
-import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.view.ChoosePhotoWindow;
 import com.example.administrator.sjassistant.view.CircleImageView;
 import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.view.SexDialog;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by Administrator on 2016/3/28.
@@ -273,7 +266,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
         if (imgPath != null) {
             Bitmap bitmap = FileUtil.getSmallBitmap(imgPath, 500, 500);
             if (bitmap == null) {
-                Toast.makeText(getActivity(), "头像文件不存在", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "头像文件不存在", Toast.LENGTH_SHORT).show();
                 user_photo.setImageResource(R.drawable.customer_de);
             } else
                 user_photo.setImageBitmap(bitmap);

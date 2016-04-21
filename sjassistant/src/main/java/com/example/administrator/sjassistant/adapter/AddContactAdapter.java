@@ -51,6 +51,7 @@ public class AddContactAdapter extends BaseAdapter implements SectionIndexer {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
+        Log.d("position",position+" ");
         SortModel sortModel = list.get(position);
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -72,6 +73,12 @@ public class AddContactAdapter extends BaseAdapter implements SectionIndexer {
             viewHolder.tvLetter.setText(sortModel.getSortLetter());
         } else {
             viewHolder.tvLetter.setVisibility(View.GONE);
+        }
+
+        if (sortModel.getChecked() == 0) {
+            viewHolder.add.setImageResource(R.drawable.radio_unchecked);
+        } else {
+            viewHolder.add.setImageResource(R.drawable.radio_checked);
         }
 
 //        final int pos = position;

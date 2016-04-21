@@ -14,7 +14,6 @@ import com.example.administrator.sjassistant.adapter.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * Created by Administrator on 2016/4/6.

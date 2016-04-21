@@ -7,8 +7,6 @@ import android.text.InputType;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextUtils;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,23 +17,16 @@ import android.widget.TextView;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
-import com.example.administrator.sjassistant.util.MD5;
-import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.util.WatcherUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
-import okhttp3.Response;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -110,7 +101,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("login destroy", "login destroy");
+        Log.d("activity", "login destroy");
     }
 
 
@@ -181,9 +172,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("response error",e.getMessage()+" ");
+
+                        Log.d("response error", e.getMessage() + " ");
                         pd.dismissDialog();
                         ErrorUtil.NetWorkToast(LoginActivity.this);
+
                     }
 
                     @Override

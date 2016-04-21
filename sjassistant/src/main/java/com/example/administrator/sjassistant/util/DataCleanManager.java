@@ -2,7 +2,6 @@ package com.example.administrator.sjassistant.util;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.math.BigDecimal;

@@ -4,14 +4,11 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.*;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.activity.MainActivity;
 import com.example.administrator.sjassistant.util.Notifier;
 

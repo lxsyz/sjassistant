@@ -1,6 +1,5 @@
 package com.example.administrator.sjassistant.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import com.example.administrator.sjassistant.adapter.TimeAxisAdapter;
 import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.view.ChooseShareWindow;
 import com.example.administrator.sjassistant.view.ConfirmPopWin;
-import com.tencent.connect.share.QQShare;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXTextObject;

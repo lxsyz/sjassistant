@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,14 +24,11 @@ import com.example.administrator.sjassistant.fragment.ContactsFragment;
 import com.example.administrator.sjassistant.fragment.MessageFragment;
 import com.example.administrator.sjassistant.fragment.MyApplicationFragment;
 import com.example.administrator.sjassistant.fragment.MySettingFragment;
-import com.example.administrator.sjassistant.service.MessageService;
 import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.ExampleUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.jpush.android.api.JPushInterface;
 
 /**
  * Created by Administrator on 2016/3/28.
@@ -59,13 +55,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
         AppManager.getInstance().addActivity(this);
 
-        Log.d("tag", "activity" + android.os.Process.myPid());
+        Log.d("activity", "activity" + android.os.Process.myPid());
         Log.d("tag"," main id  "+Thread.currentThread().getId()+"main   thread"+ Thread.currentThread().getName());
         instance = MainActivity.this;
 
-        Intent intent = new Intent(MainActivity.this,MessageService.class);
+//        Intent intent = new Intent(MainActivity.this,MessageService.class);
+//
+//        startService(intent);
 
-        startService(intent);
         initWindow();
         initView();
 
@@ -238,8 +235,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
     protected void onResume() {
         isForeground = true;
+        Log.d("activity","main onresume");
         super.onResume();
     }
 
@@ -299,10 +303,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     protected void onDestroy() {
-        Log.d("tag"," main destroy");
+        Log.d("activity"," main destroy");
         unregisterReceiver(mMessageReceiver);
         super.onDestroy();
     }
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.d("activity","onsave");
+        super.onSaveInstanceState(outState);
+    }
 }

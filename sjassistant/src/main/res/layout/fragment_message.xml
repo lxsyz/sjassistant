@@ -74,7 +74,7 @@
                 android:layout_alignRight="@+id/iv_unfinish"
                 android:textSize="9sp"
                 android:textColor="@color/white"
-                android:text="2"
+                android:text="0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>

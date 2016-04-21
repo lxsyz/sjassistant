@@ -1,12 +1,15 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -26,6 +29,7 @@ import com.example.administrator.sjassistant.swipemenulistview.SwipeMenuListView
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
+import com.example.administrator.sjassistant.view.MyPromptDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -52,10 +56,19 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
     private LinearLayout message_layout;
 
     private List<MessageInform> datalist = new ArrayList<MessageInform>();
+
+    private CommonAdapter<MessageInform> commonAdapter;
+
+
+    private MyPromptDialog pd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (TextUtils.isEmpty(Constant.username)) {
+            SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+            Constant.username = sp.getString("username", null);
+        }
 
         message_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -67,6 +80,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent);
             }
         });
+
     }
 
     @Override
@@ -81,30 +95,15 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
 
         ed_name.setHint("搜索消息通知");
         search.setOnClickListener(this);
-        ed_name.setOnClickListener(this);
         delete.setOnClickListener(this);
+
+
 
 
 
         message_list = (SwipeMenuListView)findViewById(R.id.message_list);
 
-//        MessageInform message1 = new MessageInform();
-//        message1.setTime("2016-04-02");
-//        message1.setTitle("关于开展平均工作的通知");
-//        message1.setUsername("张三");
-//        datalist.add(message1);
-//
-//        MessageInform message2 = new MessageInform();
-//        message2.setTime("2016-04-02");
-//        message2.setTitle("关于开展平均工作的通知");
-//        message2.setUsername("李四");
-//        datalist.add(message2);
-
-
-
-
-
-
+        pd = new MyPromptDialog(this);
     }
 
     @Override
@@ -131,7 +130,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onResume() {
         super.onResume();
-
+        Log.d("activity","mesage resume");
         getMessage();
 
 
@@ -164,9 +163,26 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                     case 0:
                         MessageInform item = datalist.get(position);
                         // 调用服务器的方法delete
-                        //delete(item.getCarPlateNo());
+                        delete(item.getId(), position);
                         break;
                 }
+            }
+        });
+
+        ed_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterMessage(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }
@@ -175,9 +191,12 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
      * 获取消息
      */
     private void getMessage() {
+        if (pd != null) pd.createDialog().show();
         datalist.clear();
 
         String url = Constant.SERVER_URL + "message/showMessage";
+
+
 
         OkHttpUtils.post()
                 .url(url)
@@ -186,13 +205,15 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error",e.getMessage()+" ");
+                        Log.d("error", e.getMessage() + " ");
+                        pd.dismissDialog();
+
                         ErrorUtil.NetWorkToast(MessageActivity.this);
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        Log.d("response",response+" ");
+                        Log.d("response", response + " ");
                         try {
                             JSONObject object = new JSONObject(response);
                             int statusCode = object.getInt("statusCode");
@@ -204,44 +225,128 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                                     JSONObject o = list.getJSONObject(i);
                                     MessageInform messageInform = new MessageInform();
                                     messageInform.setId(o.getInt("id"));
-                                    messageInform.setMessagePublishtime(o.getString("MessagePublishtime"));
-                                    messageInform.setMessagePublisher(o.getString("MessagePublisher"));
+                                    messageInform.setMessagePublishtime(o.getString("messagePublishtime"));
+                                    messageInform.setMessagePublisher(o.getString("messagePublisher"));
                                     messageInform.setMessageTitle(o.getString("messageTitle"));
                                     messageInform.setHeadImg(o.getString("headImg"));
-                                    datalist.add(messageInform);
+                                    datalist.add(0, messageInform);
                                 }
 
-                                message_list.setAdapter(new CommonAdapter<MessageInform>(MessageActivity.this, datalist, R.layout.item_message) {
+                                commonAdapter = new CommonAdapter<MessageInform>(MessageActivity.this, datalist, R.layout.item_message) {
                                     @Override
                                     public void convert(final ViewHolder holder, MessageInform message) {
 
-                                        holder.setText(R.id.username,message.getMessagePublisher());
+                                        holder.setText(R.id.username, message.getMessagePublisher());
                                         holder.setText(R.id.message_title, message.getMessageTitle());
                                         holder.setText(R.id.message_time, message.getMessagePublishtime());
-                                        OkHttpUtils.get()
-                                                .url(message.getHeadImg())
-                                                .build().execute(new BitmapCallback() {
-                                            @Override
-                                            public void onError(Call call, Exception e) {
-                                                ErrorUtil.NetWorkToast(MessageActivity.this);
-                                            }
 
-                                            @Override
-                                            public void onResponse(Bitmap response) {
-                                                holder.setImageBitmap(R.id.user_photo,response);
-                                            }
-                                        });
+                                        if (TextUtils.isEmpty(message.getHeadImg())) {
+                                            holder.setImageResource(R.id.user_photo, R.drawable.customer_de);
+                                        } else {
+                                            OkHttpUtils.get()
+                                                    .url(message.getHeadImg())
+                                                    .build().execute(new BitmapCallback() {
+                                                @Override
+                                                public void onError(Call call, Exception e) {
+                                                    ErrorUtil.NetWorkToast(MessageActivity.this);
+                                                }
 
+                                                @Override
+                                                public void onResponse(Bitmap response) {
+                                                    holder.setImageBitmap(R.id.user_photo, response);
+                                                }
+                                            });
+                                        }
                                     }
-                                });
+                                };
+                                message_list.setAdapter(commonAdapter);
+                                pd.dismissDialog();
 
                             } else {
-                                ToastUtil.show(MessageActivity.this,"服务器异常");
+                                ToastUtil.show(MessageActivity.this, "服务器异常");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 });
+    }
+
+
+    /*
+     * 搜索消息
+     */
+    private void filterMessage(String text) {
+        List<MessageInform> filterDataList = new ArrayList<MessageInform>();
+
+        if (TextUtils.isEmpty(text)) {
+            filterDataList = datalist;
+        } else {
+            filterDataList.clear();
+            for (MessageInform object : datalist) {
+                String title = object.getMessageTitle();
+                String time = object.getMessagePublishtime();
+                String publisher = object.getMessagePublisher();
+
+
+
+                if (title.indexOf(text) != -1
+                        || time.indexOf(text) != -1
+                        || publisher.indexOf(text) != -1) {
+                    filterDataList.add(object);
+                }
+            }
+        }
+        Log.d("activity","adapet"+commonAdapter+" ");
+        commonAdapter.updateListView(filterDataList);
+
+    }
+
+    /*
+     * 删除消息
+     */
+    private void delete(int id,final int position) {
+        String url = Constant.SERVER_URL + "message/deleteMessage";
+
+        OkHttpUtils.get()
+                .url(url)
+                .addParams("id",String.valueOf(id))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage() + " ");
+                        ErrorUtil.NetWorkToast(MessageActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response",response+" ");
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            if (statusCode == 0) {
+                                datalist.remove(position);
+                                commonAdapter.updateListView(datalist);
+                            } else {
+                                ToastUtil.show(MessageActivity.this, "服务器异常");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("activity","message destroy");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.d("activity","onnewIntent");
+        super.onNewIntent(intent);
     }
 }

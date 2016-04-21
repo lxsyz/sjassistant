@@ -1,5 +1,6 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
@@ -11,10 +12,10 @@ import com.example.administrator.sjassistant.bean.MessageInform;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
+import com.example.administrator.sjassistant.view.MyPromptDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,6 +37,11 @@ public class MessageDetailActivity extends BaseActivity {
     private int id;
 
     private WebView wv;
+
+    private String detail_text;
+
+    private MyPromptDialog pd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,10 +69,14 @@ public class MessageDetailActivity extends BaseActivity {
         message_posttime = (TextView)findViewById(R.id.message_posttime);
 
         wv = (WebView)findViewById(R.id.wv);
-
+        pd = new MyPromptDialog(this);
 
         wv.getSettings().setJavaScriptEnabled(true);//设置使用够执行JS脚本
-        wv.getSettings().setBuiltInZoomControls(true);//设置使支持缩放
+        wv.getSettings().setSupportZoom(true);
+        wv.getSettings().setBuiltInZoomControls(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            wv.getSettings().setDisplayZoomControls(false);
+        }
 
         wv.loadUrl("file:///android_asset/index.html");
         wv.setWebViewClient(new WebViewClient() {
@@ -96,6 +106,7 @@ public class MessageDetailActivity extends BaseActivity {
      * 显示消息详情
      */
     private void showDetail(int id) {
+        if (pd != null) pd.createDialog().show();
         String url = Constant.SERVER_URL + "message/showMessageDetail";
 
         OkHttpUtils.post()
@@ -107,6 +118,7 @@ public class MessageDetailActivity extends BaseActivity {
                     public void onError(Call call, Exception e) {
                         Log.d("error", e.getMessage() + " ");
                         ErrorUtil.NetWorkToast(MessageDetailActivity.this);
+                        pd.dismissDialog();
                     }
 
                     @Override
@@ -115,14 +127,27 @@ public class MessageDetailActivity extends BaseActivity {
                         try {
                             JSONObject object = new JSONObject(response);
                             int statusCode = object.getInt("statusCode");
-                            JSONObject detail = object.getJSONObject("detail");
+                            JSONObject data = object.getJSONObject("data");
+                            JSONObject detail = data.getJSONObject("detail");
                             if (statusCode == 0) {
                                 message_title.setText(detail.getString("messageTitle"));
                                 message_postman.setText(detail.getString("messagePublisher"));
-                                message_posttime.setText(detail.getString("messagePublishtime"));
+                                message_posttime.setText("时间:"+detail.getString("messagePublishtime"));
+                                detail_text = detail.getString("messageDetail");
+
+                                String html = "<!DOCTYPE html>"
+                                        + "<meta charset=\"UTF-8\">\n"
+                                        + "    <title></title>"
+                                        + "<html>"
+                                        + "<body>"
+                                        + detail_text
+                                        + "</body>" + "</html>";
+
+                                wv.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
                             } else {
                                 ToastUtil.show(MessageDetailActivity.this, "服务器异常");
                             }
+                            pd.dismissDialog();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

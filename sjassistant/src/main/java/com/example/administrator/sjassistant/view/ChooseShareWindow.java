@@ -1,7 +1,6 @@
 package com.example.administrator.sjassistant.view;
 
 import android.content.Context;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;

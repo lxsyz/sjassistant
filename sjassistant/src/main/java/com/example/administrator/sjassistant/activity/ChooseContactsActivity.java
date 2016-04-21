@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 
-import org.w3c.dom.Text;
-
 /**
  * Created by Administrator on 2016/4/2.
  */

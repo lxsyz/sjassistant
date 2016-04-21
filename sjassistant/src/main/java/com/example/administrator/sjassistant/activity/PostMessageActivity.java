@@ -1,7 +1,8 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.app.Activity;
-import android.media.Image;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,12 +18,12 @@ import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
+import com.example.administrator.sjassistant.view.MyPromptDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import okhttp3.Call;
 
@@ -37,6 +38,8 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
     private TextView tv_center;
     private TextView btn_right;
     private TextView btn_left;
+
+    private MyPromptDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,8 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
         btn_left.setText("取消");
         btn_left.setVisibility(View.VISIBLE);
         btn_right.setText("发送");
+
+        pd = new MyPromptDialog(this);
 
     }
 
@@ -98,25 +103,48 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
 
                 send();
 
+
                 break;
             case R.id.add_contacts:
 
+                Intent intent = new Intent(PostMessageActivity.this,AddChatContact.class);
+                intent.putExtra("from",1);
+                intent.putExtra("count",0);
+                startActivityForResult(intent, 1);
                 break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String result = "";
+        switch (resultCode) {
+            case 1:
+                result = data.getStringExtra("result");
+                message_reader.setText(result);
+                message_reader.setSelection(message_reader.getText().length());
+                break;
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
 
     /*
-     * 发布消息
-     */
+         * 发布消息
+         */
     private void send() {
         String url = Constant.SERVER_URL + "message/addMessage";
 
+        SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
+        String username = sp.getString("username", null);
+
         OkHttpUtils.post()
                 .url(url)
-                .addParams("messagePublisher",Constant.username)
+                .addParams("messagePublisher",username)
                 .addParams("messageTitle",message_title.getText().toString())
-                .addParams("messageContent",message_content.getText().toString())
+                .addParams("messageDetail",message_content.getText().toString())
                 .addParams("messageReader",message_reader.getText().toString())
                 .build().execute(new StringCallback() {
             @Override
@@ -134,6 +162,7 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
                     Log.d("statusCode",statusCode+" ");
                     if (statusCode == 0) {
                         ToastUtil.showShort(PostMessageActivity.this,"发布成功");
+                        PostMessageActivity.this.finish();
                     } else {
                         ToastUtil.showShort(PostMessageActivity.this,"服务器异常");
                     }

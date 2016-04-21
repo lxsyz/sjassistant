@@ -5,13 +5,11 @@ import android.os.Environment;
 import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.bean.GongGao;
-import com.example.administrator.sjassistant.util.FileUtil;
 
 import java.io.File;
 

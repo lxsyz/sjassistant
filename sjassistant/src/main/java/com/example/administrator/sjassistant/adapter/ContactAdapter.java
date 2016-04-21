@@ -13,7 +13,6 @@ import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.bean.Person;
 import com.example.administrator.sjassistant.view.ChangeNumberDialog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

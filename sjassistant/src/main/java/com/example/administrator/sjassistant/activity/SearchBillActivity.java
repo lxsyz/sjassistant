@@ -1,14 +1,8 @@
 package com.example.administrator.sjassistant.activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,9 +10,6 @@ import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 
-import junit.framework.Test;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
