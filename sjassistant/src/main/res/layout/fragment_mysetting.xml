@@ -9,6 +9,7 @@
         layout="@layout/top_layout" />
 
     <LinearLayout
+        android:id="@+id/photo_layout"
         android:background="@color/title"
         android:layout_weight="1"
         android:layout_width="match_parent"

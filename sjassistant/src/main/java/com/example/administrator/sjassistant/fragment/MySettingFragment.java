@@ -23,11 +23,18 @@ import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.activity.HelpActivity;
 import com.example.administrator.sjassistant.activity.SettingActivity;
 import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.FileUtil;
 import com.example.administrator.sjassistant.view.ChoosePhotoWindow;
 import com.example.administrator.sjassistant.view.CircleImageView;
 import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.view.SexDialog;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import java.io.File;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/3/28.
@@ -39,7 +46,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
     //显示在下面的内容
     private TextView title,nickname_text,sex_text,apartment_text,work_text,address_text;
     private LinearLayout nickname_layout,sex_layout,apartment_layout,work_layout,address_layout,
-                        help_layout,root;
+                        help_layout,root,photo_layout;
 
     //上面的小字内容
     private TextView username,apartment_top,work_top;
@@ -84,6 +91,8 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
         address_layout = (LinearLayout)rootView.findViewById(R.id.address_layout);
         help_layout = (LinearLayout)rootView.findViewById(R.id.help_layout);
         root = (LinearLayout)rootView.findViewById(R.id.root);
+        photo_layout = (LinearLayout)rootView.findViewById(R.id.photo_layout);
+
 
         nickname_text = (TextView)rootView.findViewById(R.id.nickname_text);
         sex_text = (TextView)rootView.findViewById(R.id.sex_text);
@@ -111,7 +120,8 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
         address_layout.setOnClickListener(this);
         help_layout.setOnClickListener(this);
         btn_right.setOnClickListener(this);
-        user_photo.setOnClickListener(this);
+        //user_photo.setOnClickListener(this);
+        photo_layout.setOnClickListener(this);
     }
 
     @Override
@@ -169,7 +179,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                 intent = new Intent(getActivity(),HelpActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.user_photo:
+            case R.id.photo_layout:
                 choosePhotoWindow.showChoosePhotoWindow2(root);
 
                 break;
@@ -235,12 +245,13 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                             if (bitmap1 == null) {
                                 Toast.makeText(getActivity(), "头像文件不存在", Toast.LENGTH_SHORT).show();
                                 user_photo.setImageResource(R.drawable.customer_de);
-                            } else
+                            } else {
                                 user_photo.setImageBitmap(bitmap1);
-
+                                uploadImg(new File(path));
+                            }
                         }
 
-                        //uploadImg(path);
+
                     }
 
                 });
@@ -256,7 +267,31 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
 
     }
 
+    /*
+     * 上传头像
+     */
+    private void uploadImg(File file) {
+        String url = Constant.SERVER_URL + "";
 
+//        OkHttpUtils.post()
+//                .url(url)
+//                .addParams()
+//                .build()
+//                .execute(new StringCallback() {
+//                    @Override
+//                    public void onError(Call call, Exception e) {
+//                        Log.d("error",e.getMessage()+" ");
+//                        ErrorUtil.NetWorkToast(getActivity());
+//                    }
+//
+//                    @Override
+//                    public void onResponse(String response) {
+//                        Log.d("response",response);
+//
+//
+//                    }
+//                });
+    }
 
     //初始化界面数据
     private void initUiData() {
@@ -271,6 +306,27 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
             } else
                 user_photo.setImageBitmap(bitmap);
         }
+
+        //获取用户信息
+
+        String url = Constant.SERVER_URL + "user/info";
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("userCode", Constant.username)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error",e.getMessage()+" ");
+                        ErrorUtil.NetWorkToast(getActivity());
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response",response);
+                    }
+                });
     }
 
     //fragment  回退控制

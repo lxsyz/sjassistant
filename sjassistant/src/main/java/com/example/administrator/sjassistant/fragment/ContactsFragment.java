@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,9 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
 
     private ImageView btn_left,btn_right;
     private TextView title;
+
+
+    private FragmentManager fm;
 
     @Nullable
     @Override
@@ -67,6 +72,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         Intent intent = null;
+        fm = getActivity().getSupportFragmentManager();
         switch (v.getId()) {
 
             case R.id.search:
@@ -80,6 +86,13 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
                 ed_name.setText("");
                 break;
             case R.id.company_layout:
+                CompanyFragment cf = new CompanyFragment();
+//                fm.beginTransaction().replace(R.id.content,cf)
+//                        .addToBackStack(null)
+//                        .commit();
+//                if (callBack != null)
+//                    callBack.showFragment(this,cf);
+
                 intent = new Intent(getActivity(), CompanyActivity.class);
                 startActivity(intent);
                 break;
@@ -90,7 +103,16 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
             case R.id.group_layout:
                 break;
         }
+    }
 
 
+    private CallBack callBack;
+
+    public void setCallBack(CallBack callBack) {
+        this.callBack = callBack;
+    }
+
+    public interface CallBack {
+        void showFragment(Fragment f1,Fragment f2);
     }
 }

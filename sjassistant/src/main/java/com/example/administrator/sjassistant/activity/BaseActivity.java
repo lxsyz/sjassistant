@@ -1,8 +1,12 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -14,6 +18,8 @@ import android.widget.RelativeLayout.LayoutParams;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.util.AppManager;
+import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ServerConfigUtil;
 import com.example.administrator.sjassistant.view.MyPromptDialog;
 
 /**
@@ -37,6 +43,16 @@ public class BaseActivity extends Activity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_base);
         AppManager.getInstance().addActivity(this);
+
+        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        Constant.username = sp.getString("username", null);
+
+        if (TextUtils.isEmpty(sp.getString("server_address", null))) {
+            Constant.SERVER_URL = Constant.TEST_SERVER_URL;
+        } else {
+            ServerConfigUtil.setServerConfig(this);
+        }
+        Log.d("activity","server"+Constant.SERVER_URL+" ");
         initProcess();
     }
 

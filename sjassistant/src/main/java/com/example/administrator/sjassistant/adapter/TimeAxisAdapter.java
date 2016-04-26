@@ -24,7 +24,6 @@ public class TimeAxisAdapter extends BaseAdapter {
 		private ImageView guiji;
 		private TextView text;
 		private View top_line;
-		//private View short_line;
 		private ImageView icon_image;
 	}
 
@@ -61,7 +60,6 @@ public class TimeAxisAdapter extends BaseAdapter {
 					.findViewById(R.id.name);
 			viewHolder.guiji = (ImageView)convertView.findViewById(R.id.guiji);
 			viewHolder.text = (TextView)convertView.findViewById(R.id.text);
-			//viewHolder.short_line = convertView.findViewById(R.id.shortline);
 			viewHolder.top_line = convertView.findViewById(R.id.top_line);
 			viewHolder.icon_image = (ImageView)convertView.findViewById(R.id.img_icon);
 

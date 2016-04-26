@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -67,6 +68,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         initView();
 
         registerMessageReceiver();
+
+
     }
 
 
@@ -121,7 +124,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         break;
                     case 3:
                         mysetting_iv.setImageResource(R.drawable.mysetting_checked);
-                        mysetting_tv.setTextColor(Color.rgb(103,197,170));
+                        mysetting_tv.setTextColor(Color.rgb(103, 197, 170));
                         break;
                 }
                 mCurrentIndex = position;
@@ -133,14 +136,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         });
 
-        Fragment fragment = new MessageFragment();
+        MessageFragment fragment1 = new MessageFragment();
 
-        fragmentList.add(fragment);
-        fragment = new MyApplicationFragment();
-        fragmentList.add(fragment);
-        fragment = new ContactsFragment();
-        fragmentList.add(fragment);
-        fragment = new MySettingFragment();
+        fragmentList.add(fragment1);
+        MyApplicationFragment fragment2 = new MyApplicationFragment();
+        fragmentList.add(fragment2);
+        ContactsFragment fragment3 = new ContactsFragment();
+        fragmentList.add(fragment3);
+        Fragment fragment = new MySettingFragment();
         fragmentList.add(fragment);
     }
 
@@ -151,6 +154,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         @Override
         public Fragment getItem(int position) {
             Fragment fragment = fragmentList.get(position);
+
             return fragment;
         }
 
@@ -217,6 +221,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
+
+    /*
+     * 点击两次退出程序
+     */
     private long exitTime = 0;
 
     public void toastPlayForExit() {
@@ -295,7 +303,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 
-
+    //设置fragment的点击返回
     @Override
     public void setSelectedFragment(MySettingFragment fragment) {
         this.settingFragment = fragment;
@@ -310,7 +318,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.d("activity","onsave");
+        Log.d("activity", "onsave");
         super.onSaveInstanceState(outState);
     }
+
+    /*
+     * fragment间的切换
+     */
+//    public void replaceFragment(Fragment from,Fragment to) {
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out);
+//        if (!to.isAdded()) {
+//            Log.d("tag","asd");
+//            transaction.hide(from).add(R.id.content,to).commit();
+//        } else {
+//            transaction.hide(from).show(to).commit();
+//        }
+//    }
+
 }

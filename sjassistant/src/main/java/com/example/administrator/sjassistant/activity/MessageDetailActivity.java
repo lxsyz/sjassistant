@@ -3,8 +3,10 @@ package com.example.administrator.sjassistant.activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
@@ -27,15 +29,12 @@ import okhttp3.Call;
 public class MessageDetailActivity extends BaseActivity {
 
     private String title;
-    private String username;
-    private String time;
 
     private TextView message_title;
     private TextView message_postman;
     private TextView message_posttime;
-
     private int id;
-
+    private LinearLayout post_type;
     private WebView wv;
 
     private String detail_text;
@@ -67,9 +66,12 @@ public class MessageDetailActivity extends BaseActivity {
         message_title = (TextView)findViewById(R.id.message_title);
         message_postman = (TextView)findViewById(R.id.message_postman);
         message_posttime = (TextView)findViewById(R.id.message_posttime);
+        post_type = (LinearLayout)findViewById(R.id.post_type_layout);
 
         wv = (WebView)findViewById(R.id.wv);
         pd = new MyPromptDialog(this);
+        post_type.setVisibility(View.GONE);
+
 
         wv.getSettings().setJavaScriptEnabled(true);//设置使用够执行JS脚本
         wv.getSettings().setSupportZoom(true);
@@ -78,7 +80,7 @@ public class MessageDetailActivity extends BaseActivity {
             wv.getSettings().setDisplayZoomControls(false);
         }
 
-        wv.loadUrl("file:///android_asset/index.html");
+        //wv.loadUrl("file:///android_asset/index.html");
         wv.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -130,20 +132,31 @@ public class MessageDetailActivity extends BaseActivity {
                             JSONObject data = object.getJSONObject("data");
                             JSONObject detail = data.getJSONObject("detail");
                             if (statusCode == 0) {
+                                String temp= "";
                                 message_title.setText(detail.getString("messageTitle"));
-                                message_postman.setText(detail.getString("messagePublisher"));
-                                message_posttime.setText("时间:"+detail.getString("messagePublishtime"));
+
+                                temp = "发布人: " + detail.getString("messagePublisher");
+                                message_postman.setText(temp);
+                                temp = "时间: "+detail.getString("messagePublishtime");
+                                message_posttime.setText(temp);
                                 detail_text = detail.getString("messageDetail");
 
-                                String html = "<!DOCTYPE html>"
+                                if (detail_text.contains(".htm")) {
+
+
+                                    String url = Constant.SERVER_URL + detail_text;
+
+                                    wv.loadUrl(url);
+                                } else {
+                                    String html = "<!DOCTYPE html>"
                                         + "<meta charset=\"UTF-8\">\n"
                                         + "    <title></title>"
                                         + "<html>"
                                         + "<body>"
                                         + detail_text
                                         + "</body>" + "</html>";
-
-                                wv.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
+                                    wv.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
+                                }
                             } else {
                                 ToastUtil.show(MessageDetailActivity.this, "服务器异常");
                             }

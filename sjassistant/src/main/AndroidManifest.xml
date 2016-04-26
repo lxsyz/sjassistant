@@ -151,6 +151,9 @@
         <activity android:name=".activity.GonggaoDetailActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".activity.AddPerson"
+            android:screenOrientation="portrait" />
+
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>

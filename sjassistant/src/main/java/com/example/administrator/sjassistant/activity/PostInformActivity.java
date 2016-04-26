@@ -1,6 +1,7 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -19,6 +20,7 @@ import com.example.administrator.sjassistant.bean.GonggaoType;
 import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.ServerConfigUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -51,6 +53,16 @@ public class PostInformActivity extends Activity implements View.OnClickListener
         setContentView(R.layout.activity_post_inform);
         AppManager.getInstance().addActivity(this);
         initWindow();
+
+        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        Constant.username = sp.getString("username", null);
+        if (TextUtils.isEmpty(sp.getString("server_address",null))) {
+            Constant.SERVER_URL = Constant.TEST_SERVER_URL;
+        } else {
+            ServerConfigUtil.setServerConfig(this);
+        }
+
+
         initView();
         initListeners();
     }

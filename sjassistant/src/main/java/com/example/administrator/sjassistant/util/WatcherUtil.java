@@ -20,6 +20,7 @@ public class WatcherUtil implements TextWatcher{
     /*
      * @param editText 需检测的输入框
      * @param type password:检测密码输入
+     * @param type text: 过滤空格和换行
      */
     public WatcherUtil(EditText editText,String type) {
         this.editText = editText;

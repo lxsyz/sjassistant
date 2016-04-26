@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.example.administrator.sjassistant.activity.UnfinishedWorkActivity;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.OperatorUtil;
+import com.example.administrator.sjassistant.util.ServerConfigUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.view.AddContactsWin;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -72,6 +74,11 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
 
         SharedPreferences sp = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         Constant.username = sp.getString("username", null);
+        if (TextUtils.isEmpty(sp.getString("server_address",null))) {
+            Constant.SERVER_URL = Constant.TEST_SERVER_URL;
+        } else {
+            ServerConfigUtil.setServerConfig(getActivity());
+        }
         Log.d("activity","messag e  oncreate");
         super.onCreate(savedInstanceState);
     }
@@ -79,7 +86,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_message,container,false);
+        View rootView = inflater.inflate(R.layout.fragment_message, container, false);
         initView(rootView);
 
         if (popwindow == null) {
@@ -238,7 +245,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
 
                                 gonggao_time.setText(gonggaoDate);
                                 assistant_time.setText(helperDate);
-                                unfinished_time.setText(workDate);
+                                unfinished_time.setText(workDate+" ");
                                 message_time.setText(messageDate);
 
                                 if (notesCount == 0) {

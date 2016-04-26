@@ -56,6 +56,7 @@ public class AddChatContact extends Activity implements View.OnClickListener {
 
     private int count = 0;
 
+    //from = 1表示来自于添加发送消息的联系人
     private int from = 0;
 
     @Override
@@ -160,22 +161,7 @@ public class AddChatContact extends Activity implements View.OnClickListener {
             }
         });
 
-        ed_name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterData(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
     @Override
@@ -233,9 +219,31 @@ public class AddChatContact extends Activity implements View.OnClickListener {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ed_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterData(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
     /*
-     * 处理数据，获取首字母
-     */
+         * 处理数据，获取首字母
+         */
     private List<SortModel> dealData(String [] data){
         List<SortModel> mSortList = new ArrayList<SortModel>();
 
@@ -272,9 +280,9 @@ public class AddChatContact extends Activity implements View.OnClickListener {
             filterDataList.clear();
             for (SortModel sortModel:datalist) {
                 String name = sortModel.getName();
-                if (name.toUpperCase().indexOf(
-                        filter.toString().toUpperCase()
-                )!= -1 || OperatorUtil.getFirstChar(name).toUpperCase().startsWith(filter.toString().toUpperCase())) {
+                if (name.toUpperCase().contains(
+                        filter.toUpperCase()
+                ) || OperatorUtil.getFirstChar(name).toUpperCase().startsWith(filter.toUpperCase())) {
                     filterDataList.add(sortModel);
                 }
             }

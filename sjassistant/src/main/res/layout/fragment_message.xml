@@ -92,12 +92,12 @@
                 android:layout_below="@+id/unfinished"
                 android:layout_alignStart="@+id/unfinished"
                 android:layout_alignLeft="@+id/unfinished"
-                android:text="待办"
+                android:text="暂时没有待办工作"
                 style="@style/text2" />
 
             <TextView
                 android:id="@+id/unfinished_time"
-                android:text="2016-3-25"
+                android:text=""
                 style="@style/text3"
                 />
         </RelativeLayout>
@@ -135,12 +135,12 @@
                 android:layout_below="@+id/message_inform"
                 android:layout_alignStart="@+id/message_inform"
                 android:layout_alignLeft="@+id/message_inform"
-                android:text=""
+                android:text="暂时没有新的消息、通知"
                 style="@style/text2" />
 
             <TextView
                 android:id="@+id/message_time"
-                android:text="2016-3-25"
+                android:text=""
                 style="@style/text3"
                 />
         </RelativeLayout>
@@ -178,12 +178,12 @@
                 android:layout_below="@+id/gonggao"
                 android:layout_alignStart="@+id/gonggao"
                 android:layout_alignLeft="@+id/gonggao"
-                android:text=""
+                android:text="暂时没有新公告"
                 style="@style/text2" />
 
             <TextView
                 android:id="@+id/gonggao_time"
-                android:text="2016-3-25"
+                android:text=""
                 style="@style/text3"
                 />
         </RelativeLayout>
@@ -226,7 +226,7 @@
 
             <TextView
                 android:id="@+id/assistant_time"
-                android:text="2016-3-25"
+                android:text=""
                 style="@style/text3"
                 />
         </RelativeLayout>

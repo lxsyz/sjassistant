@@ -31,7 +31,7 @@
 
             <TextView
                 android:layout_toRightOf="@+id/guiji"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="15dp"
                 android:layout_alignTop="@+id/guiji"
                 android:id="@+id/text"
                 android:text="审批轨迹"
@@ -45,7 +45,7 @@
 
             android:id="@+id/top_line"
             android:layout_width="1dp"
-            android:layout_height="38dp"
+            android:layout_height="25dp"
             android:layout_marginLeft="50dp"
             android:background="@color/line" />
 
@@ -61,7 +61,7 @@
         <View
             android:id="@+id/bottom_line"
             android:layout_width="1dp"
-            android:layout_height="58dp"
+            android:layout_height="48dp"
             android:layout_below="@id/img_icon"
             android:layout_marginLeft="50dp"
             android:background="@color/line" />
@@ -70,20 +70,21 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="80dp"
+        android:layout_marginTop="46dp"
+        android:layout_marginLeft="75dp"
         android:layout_marginRight="12dp"
-        android:background="@drawable/inspect_qipao_green"
+        android:background="@drawable/qipao_shenpi"
         android:orientation="horizontal"
         android:layout_alignBottom="@+id/linearLayout"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="2dp">
 
         <LinearLayout
             android:id="@+id/person_information_layout"
 
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="6dp">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -92,16 +93,16 @@
                 <ImageView
                     android:id="@+id/iv_person"
                     android:src="@drawable/customer_de"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp" />
+                    android:layout_width="47dp"
+                    android:layout_height="47dp" />
 
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp">
 
                 <TextView
-                    android:layout_marginTop="0dp"
                     android:text="Jimmy"
                     android:id="@+id/name"
                     android:singleLine="true"
@@ -118,7 +119,7 @@
                 <TextView
                     android:textColor="@color/my_light_gray"
                     android:text="2016-3-25"
-
+                    android:layout_alignTop="@+id/name"
                     android:singleLine="true"
                     style="@style/text3"
                     />

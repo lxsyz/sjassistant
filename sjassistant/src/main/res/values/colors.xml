@@ -18,4 +18,6 @@
     <color name="background">#F0F0F0</color>
 
     <color name="change">#f7f7f7</color>
+    <color name="unread">#ff7676</color>
+    <color name="read">#D8EFE5</color>
 </resources>

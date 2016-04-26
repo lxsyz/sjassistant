@@ -1,6 +1,7 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -17,7 +18,9 @@ import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.ServerConfigUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
+import com.example.administrator.sjassistant.util.WatcherUtil;
 import com.example.administrator.sjassistant.view.MyPromptDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -47,6 +50,16 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
         setContentView(R.layout.activity_post_message);
         AppManager.getInstance().addActivity(this);
         initWindow();
+
+        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        Constant.username = sp.getString("username", null);
+        if (TextUtils.isEmpty(sp.getString("server_address",null))) {
+            Constant.SERVER_URL = Constant.TEST_SERVER_URL;
+        } else {
+            ServerConfigUtil.setServerConfig(this);
+        }
+
+
         initView();
         initListeners();
     }
@@ -78,6 +91,8 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
         btn_left.setOnClickListener(this);
         btn_right.setOnClickListener(this);
         add_contacts.setOnClickListener(this);
+
+        message_reader.addTextChangedListener(new WatcherUtil(message_reader,"text"));
     }
 
     @Override
@@ -107,7 +122,7 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
                 break;
             case R.id.add_contacts:
 
-                Intent intent = new Intent(PostMessageActivity.this,AddChatContact.class);
+                Intent intent = new Intent(PostMessageActivity.this,AddPerson.class);
                 intent.putExtra("from",1);
                 intent.putExtra("count",0);
                 startActivityForResult(intent, 1);
@@ -132,17 +147,17 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
     }
 
     /*
-         * 发布消息
-         */
+     * 发布消息
+     */
     private void send() {
         String url = Constant.SERVER_URL + "message/addMessage";
 
-        SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
-        String username = sp.getString("username", null);
+        //SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
+        //String username = sp.getString("username", null);
 
         OkHttpUtils.post()
                 .url(url)
-                .addParams("messagePublisher",username)
+                .addParams("messagePublisher",Constant.username)
                 .addParams("messageTitle",message_title.getText().toString())
                 .addParams("messageDetail",message_content.getText().toString())
                 .addParams("messageReader",message_reader.getText().toString())

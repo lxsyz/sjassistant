@@ -34,7 +34,7 @@
         android:layout_toLeftOf="@+id/bt_right"
         android:layout_alignTop="@+id/bt_left"
         android:visibility="invisible"
-        android:layout_marginRight="12dp"
+        android:layout_marginRight="18dp"
         android:layout_width="23dp"
         android:layout_height="23dp" />
 

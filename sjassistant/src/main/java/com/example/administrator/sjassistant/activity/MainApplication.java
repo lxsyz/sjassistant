@@ -3,6 +3,7 @@ package com.example.administrator.sjassistant.activity;
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import com.example.administrator.sjassistant.util.Constant;
 
@@ -16,6 +17,9 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Log.d("activity","main application create");
+
         JPushInterface.setDebugMode(true);
         JPushInterface.init(getApplicationContext());
 

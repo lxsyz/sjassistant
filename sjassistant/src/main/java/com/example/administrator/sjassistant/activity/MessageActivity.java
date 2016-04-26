@@ -65,10 +65,6 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (TextUtils.isEmpty(Constant.username)) {
-            SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
-            Constant.username = sp.getString("username", null);
-        }
 
         message_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -290,14 +286,13 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
 
 
 
-                if (title.indexOf(text) != -1
-                        || time.indexOf(text) != -1
-                        || publisher.indexOf(text) != -1) {
+                if (title.contains(text)
+                        || time.contains(text)
+                        || publisher.contains(text)) {
                     filterDataList.add(object);
                 }
             }
         }
-        Log.d("activity","adapet"+commonAdapter+" ");
         commonAdapter.updateListView(filterDataList);
 
     }

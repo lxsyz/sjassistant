@@ -114,8 +114,11 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.confirm:
+                if (from == 1) {
+                    change();
+                } else if (from == 2){
 
-                change();
+                }
 
                 break;
             case R.id.getCode:
@@ -273,6 +276,71 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
             ToastUtil.show(ForgetPasswordActivity.this,"验证码不正确");
         }
     }
+
+    /*
+     * 更换邮箱
+     */
+    private void changeEmail() {
+        if (TextUtils.isEmpty(et_username.getText().toString())) {
+            prompt_tv.setVisibility(View.VISIBLE);
+            return;
+        }
+        if (TextUtils.isEmpty(et_password.getText().toString())) {
+            ToastUtil.show(ForgetPasswordActivity.this, "密码不能为空");
+            return;
+        }
+        if (TextUtils.isEmpty(et_validate.getText().toString())) {
+            ToastUtil.show(ForgetPasswordActivity.this,"验证码不能为空");
+            return;
+        }
+
+        if (pd != null) {
+            pd.createDialog().show();
+        }
+        if (message.equals(et_validate.getText().toString())) {
+            String url = Constant.SERVER_URL + "user/settings/changeEmail";
+            OkHttpUtils.post()
+                    .url(url)
+                    .addParams("oldEmail",et_username.getText().toString())
+                    .addParams("newPassword",et_password.getText().toString())
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e) {
+                            Log.d("error",e.getMessage()+" ");
+                            pd.dismissDialog();
+                            ErrorUtil.NetWorkToast(ForgetPasswordActivity.this);
+                        }
+
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("response",response+" ");
+                            pd.dismissDialog();
+                            try {
+                                JSONObject object = new JSONObject(response);
+                                int statusCode = object.getInt("statusCode");
+
+                                Log.d("statusCode",statusCode+" ");
+                                if (statusCode == 0) {
+                                    ToastUtil.showShort(ForgetPasswordActivity.this, "密码修改成功");
+                                    SharedPreferences.Editor editor = getSharedPreferences("userinfo",MODE_PRIVATE).edit();
+                                    editor.putString("password",et_password.getText().toString());
+                                    editor.commit();
+                                    ForgetPasswordActivity.this.finish();
+                                } else if (statusCode == 4) {
+                                    ToastUtil.showShort(ForgetPasswordActivity.this,"邮箱错误");
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+        } else {
+            ToastUtil.show(ForgetPasswordActivity.this,"验证码不正确");
+        }
+    }
+
 
     private Handler handler = new Handler() {
         @Override

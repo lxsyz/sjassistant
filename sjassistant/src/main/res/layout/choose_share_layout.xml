@@ -19,44 +19,48 @@
         android:id="@+id/pop_layout"
         android:layout_width="fill_parent"
         android:layout_height="90dp"
-        android:background="@color/white"
-        android:layout_alignParentBottom="true"
         android:orientation="horizontal" >
 
         <RelativeLayout
             android:id="@+id/weixin_layout"
+            android:background="@drawable/layout_select"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/iv_weixin"
-                android:layout_centerInParent="true"
                 android:src="@drawable/weinxin"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
                 android:layout_width="45dp"
                 android:layout_height="45dp" />
             <TextView
                 android:text="微信好友"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/iv_weixin"
+                android:layout_marginTop="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/qq_layout"
+            android:background="@drawable/layout_select"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/iv_qq"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
                 android:src="@drawable/tencent"
+                android:layout_marginTop="12dp"
                 android:layout_width="45dp"
                 android:layout_height="45dp" />
             <TextView
                 android:text="QQ好友"
+                android:layout_marginTop="4dp"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/iv_qq"
                 android:layout_width="wrap_content"

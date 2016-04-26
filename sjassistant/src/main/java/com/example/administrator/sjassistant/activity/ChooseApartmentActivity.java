@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -89,13 +91,16 @@ public class ChooseApartmentActivity extends Activity implements View.OnClickLis
         ed_name = (EditText)search_layout.findViewById(R.id.search_content);
         delete = (ImageView)search_layout.findViewById(R.id.delete_word);
 
+        ed_name.setHint("搜索部门");
+
+
         apartment_list = (ListView)findViewById(R.id.apartment_list);
 
 
         apartment_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ImageView iv = (ImageView)view.findViewById(R.id.iv_checked);
+                ImageView iv = (ImageView) view.findViewById(R.id.iv_checked);
                 if (position == 0) {
                     Log.d("tag", "header");
 
@@ -107,7 +112,7 @@ public class ChooseApartmentActivity extends Activity implements View.OnClickLis
                         commonAdapter.notifyDataSetChanged();
                         isHeaderChecked = true;
                         int len = datalist.size();
-                        for (int j = 1;j<=len;j++) {
+                        for (int j = 1; j <= len; j++) {
                             result.add(j);
                         }
                     } else {
@@ -120,17 +125,20 @@ public class ChooseApartmentActivity extends Activity implements View.OnClickLis
                         result.clear();
                     }
                 } else {
-                    if (iv.getTag().equals("checked")) {
+                    Department d = datalist.get(position - 1);
+                    if (d.isCheckState()) {
                         iv.setImageResource(R.drawable.radio_unchecked);
                         for (Integer i : result) {
                             if (i == position) {
                                 result.remove(i);
                             }
                         }
-                        iv.setTag("unchecked");
+                        //iv.setTag("unchecked");
+                        d.setCheckState(false);
                     } else {
                         result.add(position);
-                        iv.setTag("checked");
+                        //iv.setTag("checked");
+                        d.setCheckState(true);
                         iv.setImageResource(R.drawable.radio_checked);
                     }
                 }
@@ -190,6 +198,23 @@ public class ChooseApartmentActivity extends Activity implements View.OnClickLis
 
         getApartment();
 
+        ed_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterDepartment(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
     }
 
     /*
@@ -232,16 +257,16 @@ public class ChooseApartmentActivity extends Activity implements View.OnClickLis
                                 }
 
                                 apartment_list.addHeaderView(getLayoutInflater().inflate(R.layout.item_choose_apartment, null));
-                                commonAdapter = new CommonAdapter<Department>(ChooseApartmentActivity.this,datalist,R.layout.item_choose_apartment) {
+                                commonAdapter = new CommonAdapter<Department>(ChooseApartmentActivity.this, datalist, R.layout.item_choose_apartment) {
                                     @Override
                                     public void convert(ViewHolder holder, Department department) {
                                         holder.setText(R.id.apartment_name, department.getName());
                                         if (department.isCheckState()) {
-                                            holder.setImageResource(R.id.iv_checked,R.drawable.radio_checked);
-                                            holder.setTag(R.id.iv_checked,"checked");
+                                            holder.setImageResource(R.id.iv_checked, R.drawable.radio_checked);
+                                            //holder.setTag(R.id.iv_checked,"checked");
                                         } else {
-                                            holder.setImageResource(R.id.iv_checked,R.drawable.radio_unchecked);
-                                            holder.setTag(R.id.iv_checked,"unchecked");
+                                            holder.setImageResource(R.id.iv_checked, R.drawable.radio_unchecked);
+                                            //holder.setTag(R.id.iv_checked,"unchecked");
                                         }
                                     }
                                 };
@@ -259,7 +284,25 @@ public class ChooseApartmentActivity extends Activity implements View.OnClickLis
                 });
     }
 
+    /*
+     * 搜索部门
+     */
+    private void filterDepartment(String text) {
+        List<Department> filterlist = new ArrayList<Department>();
 
+        if (TextUtils.isEmpty(text)) {
+            filterlist = datalist;
+        } else {
+            filterlist.clear();
+            for (Department d:datalist) {
+                String name = d.getName();
+                if (name.contains(text)) {
+                    filterlist.add(d);
+                }
+            }
+        }
+        commonAdapter.updateListView(filterlist);
+    }
 
 
 

@@ -94,6 +94,6 @@ public class ChooseShareWindow implements View.OnClickListener {
 
 
     public interface OnItemClickListener {
-        public void onItemClick(int flag);
+        void onItemClick(int flag);
     }
 }

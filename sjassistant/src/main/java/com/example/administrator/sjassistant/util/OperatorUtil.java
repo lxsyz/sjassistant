@@ -11,6 +11,8 @@ import com.example.administrator.sjassistant.bean.MessageInform;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import java.util.regex.Pattern;
  * 5. 计算两段时间相差多少秒 例如 下午3点  下午5点  "下午HH点"
  * 6. 判断是否联网
  * 7. 判断是否是wifi  3g等等
+ * 8. SHA1加密算法
  */
 public class OperatorUtil {
 
@@ -176,6 +179,7 @@ public class OperatorUtil {
         return false;
     }
 
+
     /*
      * 判断是否是3G网络
      * @param Context
@@ -218,5 +222,28 @@ public class OperatorUtil {
         }
     }
 
-    
+    /*
+     * @param 要加密的字符串
+     * @return result 返回结果
+     */
+    public static String SHA1(String param) {
+        MessageDigest alg = null;
+        String result = "";
+        try {
+            alg = MessageDigest.getInstance("SHA-1");
+            alg.update(param.getBytes());
+            byte[] bts = alg.digest();
+
+            String tmp = "";
+            for (int i =0;i < bts.length;i++) {
+                tmp = (Integer.toHexString(bts[i] & 0xFF));
+                if (tmp.length() == 1) result += "0";
+                result += tmp;
+            }
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

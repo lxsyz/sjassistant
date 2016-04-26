@@ -60,10 +60,10 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (TextUtils.isEmpty(Constant.username)) {
-            SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
-            Constant.username = sp.getString("username", null);
-        }
+//        if (TextUtils.isEmpty(Constant.username)) {
+//            SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+//            Constant.username = sp.getString("username", null);
+//        }
         Log.d("activity", "gonggao  oncreate");
 
         GongGao_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -219,7 +219,7 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
                                     GongGao.setNoteDetail(o.getString("noteDetail"));
                                     GongGao.setNotePublisher(o.getString("notePublisher"));
                                     GongGao.setNotePublishtime(o.getString("notePublishtime"));
-                                    datalist.add(0,GongGao);
+                                    datalist.add(GongGao);
                                 }
 
                                 commonAdapter = new CommonAdapter<GongGao>(GonggaoActivity.this, datalist, R.layout.item_gonggao) {
@@ -258,9 +258,9 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
 
 
 
-                if (title.indexOf(text) != -1
-                        || time.indexOf(text) != -1
-                        || publisher.indexOf(text) != -1) {
+                if (title.contains(text)
+                        || time.contains(text)
+                        || publisher.contains(text)) {
                     filterDataList.add(object);
                 }
             }
@@ -275,7 +275,7 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
     private void delete(int id, final int position) {
         String url = Constant.SERVER_URL + "notes/deleteNotes";
 
-
+        Log.d("response",id+" ");
         OkHttpUtils.get()
                 .url(url)
                 .addParams("id",String.valueOf(id))

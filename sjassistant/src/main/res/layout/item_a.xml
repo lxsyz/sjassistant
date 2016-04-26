@@ -9,17 +9,16 @@
         android:id="@+id/id_leftIcon"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/ic_inspect"
         android:scaleType="fitXY" />
 
     <RelativeLayout
-
-        android:layout_marginRight="12dp"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/inspect_qipao_sec"
-        android:layout_marginLeft="16dp">
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/qipao002">
 
         <TextView
             android:id="@+id/id_title"
@@ -29,6 +28,16 @@
             android:text="jimmy的单据需要你审批"
             android:textColor="@color/my_black"
             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/read_flag"
+            android:textSize="16sp"
+            android:textColor="@color/unread"
+            android:text="未读"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/id_type"
@@ -82,7 +91,7 @@
             android:layout_height="1dp"
             android:background="#15444444"
             android:layout_below="@id/id_time"
-           android:layout_marginTop="10dp"
+            android:layout_marginTop="10dp"
             />
 
 
@@ -97,6 +106,7 @@
             android:textColor="@color/my_light_gray"
             android:textSize="12sp" />
         <ImageView
+
             android:id="@+id/id_more_value"
             android:layout_height="14dp"
             android:layout_width="14dp"

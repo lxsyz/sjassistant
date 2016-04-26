@@ -25,6 +25,8 @@
             android:paddingLeft="15dp"
             android:textSize="15sp"
             android:background="@drawable/border"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent" />
@@ -64,7 +66,9 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/border"
             android:textSize="15sp"
-            android:hint="消息主题"
+            android:hint="请填写主题"
+            android:textColorHint="#979797"
+            android:singleLine="true"
             android:layout_weight="1"
             android:layout_width="fill_parent"
             android:layout_height="0dp" />

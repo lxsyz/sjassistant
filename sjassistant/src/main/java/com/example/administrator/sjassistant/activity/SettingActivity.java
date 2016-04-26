@@ -3,6 +3,8 @@ package com.example.administrator.sjassistant.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -10,10 +12,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.sjassistant.util.AppManager;
+import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.DataCleanManager;
+import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.view.ChangeNumberDialog;
 import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.R;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.FileCallBack;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import java.io.File;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/3/29.
@@ -157,4 +168,34 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             e.printStackTrace();
         }
     }
+
+
+    /*
+     * 检测新版本
+     */
+    private void checkNewVersion () {
+        String url = Constant.SERVER_URL + "";
+
+        OkHttpUtils.get()
+                .url(url)
+                .build().execute(new FileCallBack(Environment.getExternalStorageDirectory().getAbsolutePath(),"ssjassistant.apk") {
+            @Override
+            public void inProgress(float progress, long total) {
+
+            }
+
+            @Override
+            public void onError(Call call, Exception e) {
+                Log.d("error", e.getMessage() + " ");
+                ErrorUtil.NetWorkToast(SettingActivity.this);
+            }
+
+            @Override
+            public void onResponse(File response) {
+
+            }
+        });
+    }
+
+
 }

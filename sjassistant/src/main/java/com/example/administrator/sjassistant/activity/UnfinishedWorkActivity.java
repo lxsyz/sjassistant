@@ -2,20 +2,32 @@ package com.example.administrator.sjassistant.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
 import com.example.administrator.sjassistant.bean.Bill;
+import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/4/5.
@@ -29,6 +41,9 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
 
     private List<Bill> datalist = new ArrayList<Bill>();
 
+    private TextView read_flag;
+
+    private CommonAdapter commonAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +63,7 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
         delete.setOnClickListener(this);
 
         lv = (ListView)findViewById(R.id.unfinished_list);
+        read_flag = (TextView)findViewById(R.id.read_flag);
 
         Bill bill1 = new Bill();
         bill1.setName("Jimmy");
@@ -60,12 +76,6 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
         bill2.setPosttime("2013");
         bill2.setType("经费");
         datalist.add(bill1);datalist.add(bill2);
-        lv.setAdapter(new CommonAdapter<Bill>(this, datalist, R.layout.item_a) {
-            @Override
-            public void convert(ViewHolder holder, Bill bill) {
-                holder.setText(R.id.id_type_value, bill.getType());
-            }
-        });
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -92,4 +102,96 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
                 break;
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getUnfinishedWork();
+
+        commonAdapter = new CommonAdapter<Bill>(UnfinishedWorkActivity.this, datalist, R.layout.item_a) {
+            @Override
+            public void convert(ViewHolder holder, Bill bill) {
+                holder.setText(R.id.id_type_value, bill.getType());
+            }
+        };
+
+        lv.setAdapter(commonAdapter);
+
+        ed_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterData(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    /*
+     * 获取待办
+     */
+    private void getUnfinishedWork() {
+
+        String url = Constant.SERVER_URL + "bill/show";
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("userCode", Constant.username)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage() + " ");
+                        ErrorUtil.NetWorkToast(UnfinishedWorkActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response",response+" ");
+
+
+
+                        commonAdapter = new CommonAdapter<Bill>(UnfinishedWorkActivity.this, datalist, R.layout.item_a) {
+                            @Override
+                            public void convert(ViewHolder holder, Bill bill) {
+                                holder.setText(R.id.id_type_value, bill.getType());
+                            }
+                        };
+
+                        lv.setAdapter(commonAdapter);
+                    }
+                });
+
+
+
+    }
+
+    /*
+         * 搜索待办
+         */
+    private void filterData(String text) {
+        List<Bill> filterList = new ArrayList<Bill>();
+
+        if (TextUtils.isEmpty(text)) {
+            filterList = datalist;
+        } else {
+            for (Bill b : datalist) {
+
+
+                filterList.add(b);
+            }
+        }
+
+
+    }
+
 }

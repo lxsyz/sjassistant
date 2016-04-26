@@ -21,6 +21,7 @@
             android:layout_height="wrap_content" />
 
         <LinearLayout
+            android:id="@+id/message_layout"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="12dp"
             android:layout_marginBottom="3dp"
@@ -64,6 +65,31 @@
                 android:textColor="@color/my_light_gray"
                 android:textSize="12sp"
                 android:text="时间: 2016-03-19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/post_type_layout"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@+id/message_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/type"
+                android:layout_width="15dp"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/post_type"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/my_light_gray"
+                android:textSize="12sp"
+                android:text="公告类型"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

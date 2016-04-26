@@ -15,10 +15,9 @@
         android:layout_height="fill_parent" >
 
         <ListView
-            android:descendantFocusability="blocksDescendants"
             android:id="@+id/contacts_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:fadingEdge="none"
             android:listSelector="#00000000"
             android:cacheColorHint="@android:color/transparent"
@@ -30,6 +29,8 @@
         <com.example.administrator.sjassistant.view.SideBar
             android:id="@+id/sidebar"
             android:layout_width="30dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
             android:layout_height="fill_parent"
             android:layout_gravity="right|center" />
     </FrameLayout>
