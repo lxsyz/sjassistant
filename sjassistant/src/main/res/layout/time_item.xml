@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:background="#ffffff" >
 
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/re"
         android:id="@+id/linearLayout">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -20,14 +22,6 @@
                 android:src="@drawable/guiji"
                 android:layout_width="36dp"
                 android:layout_height="36dp" />
-
-            <!--<View
-                android:layout_marginLeft="50dp"
-                android:id="@+id/shortline"
-                android:layout_below="@+id/guiji"
-                android:layout_width="1dp"
-                android:layout_height="40dp"
-                android:background="@color/line"/>-->
 
             <TextView
                 android:layout_toRightOf="@+id/guiji"
@@ -41,90 +35,125 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
-        <View
-
-            android:id="@+id/top_line"
-            android:layout_width="1dp"
-            android:layout_height="25dp"
-            android:layout_marginLeft="50dp"
-            android:background="@color/line" />
-
-
-        <ImageView
-            android:id="@+id/img_icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_below="@+id/top_line"
-            android:layout_marginLeft="40dp"
-            android:src="@drawable/unfinished" />
-
-        <View
-            android:id="@+id/bottom_line"
-            android:layout_width="1dp"
-            android:layout_height="48dp"
-            android:layout_below="@id/img_icon"
-            android:layout_marginLeft="50dp"
-            android:background="@color/line" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="46dp"
-        android:layout_marginLeft="75dp"
-        android:layout_marginRight="12dp"
-        android:background="@drawable/qipao_shenpi"
+    <LinearLayout
         android:orientation="horizontal"
-        android:layout_alignBottom="@+id/linearLayout"
-        android:layout_marginBottom="2dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/person_information_layout"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <View
 
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
+                android:id="@+id/top_line"
+                android:layout_width="1dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="50dp"
+                android:background="@color/line" />
+
+
+            <ImageView
+                android:id="@+id/img_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="40dp"
+                android:src="@drawable/unfinished" />
+
+            <View
+                android:id="@+id/bottom_line"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+
+                android:layout_marginLeft="50dp"
+                android:background="@color/line" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/re"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="6dp">
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/qipao_shenpi">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/person_information_layout"
 
-                <ImageView
-                    android:id="@+id/iv_person"
-                    android:src="@drawable/customer_de"
-                    android:layout_width="47dp"
-                    android:layout_height="47dp" />
-
-            </RelativeLayout>
-            <RelativeLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp">
+                android:padding="6dp">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/iv_person"
+                        android:src="@drawable/customer_de"
+                        android:layout_width="47dp"
+                        android:layout_height="47dp" />
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp">
+
+                    <TextView
+                        android:text="Jimmy"
+                        android:layout_marginTop="0dp"
+                        android:id="@+id/name"
+                        android:singleLine="true"
+                        style="@style/text1" />
+
+                    <TextView
+                        android:id="@+id/dealResult"
+                        android:layout_below="@+id/name"
+                        android:layout_alignStart="@+id/name"
+                        android:layout_alignLeft="@+id/name"
+                        android:text="财务科"
+                        android:singleLine="true"
+                        android:layout_marginTop="8dp"
+                        style="@style/text2" />
+
+                    <TextView
+                        android:id="@+id/dealTime"
+                        android:textColor="@color/my_light_gray"
+                        android:text="2016-3-25"
+                        android:layout_alignTop="@+id/name"
+                        android:singleLine="true"
+                        style="@style/text3"
+                        />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="6dp"
+                android:orientation="vertical"
+                android:id="@+id/deal_opinion_layout"
+                android:layout_below="@+id/person_information_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:background="@color/line"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp" />
 
                 <TextView
-                    android:text="Jimmy"
-                    android:id="@+id/name"
-                    android:singleLine="true"
-                    style="@style/text1" />
-
-                <TextView
-                    android:layout_below="@+id/name"
-                    android:layout_alignStart="@+id/name"
-                    android:layout_alignLeft="@+id/name"
-                    android:text="财务科"
-                    android:singleLine="true"
-                    style="@style/text2" />
-
-                <TextView
-                    android:textColor="@color/my_light_gray"
-                    android:text="2016-3-25"
-                    android:layout_alignTop="@+id/name"
-                    android:singleLine="true"
-                    style="@style/text3"
+                    android:id="@+id/dealOpinion"
+                    android:text="审批理由:"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
                     />
-            </RelativeLayout>
-        </LinearLayout>
-    </RelativeLayout>
-
-</RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

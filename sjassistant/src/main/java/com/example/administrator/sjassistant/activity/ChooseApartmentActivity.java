@@ -65,6 +65,7 @@ public class ChooseApartmentActivity extends Activity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_apartment);
         AppManager.getInstance().addActivity(this);
+
         initWindow();
         initView();
         initListeners();

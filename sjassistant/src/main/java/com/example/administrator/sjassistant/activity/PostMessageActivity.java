@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.util.AddPersonManager;
 import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
@@ -49,6 +50,7 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_message);
         AppManager.getInstance().addActivity(this);
+        AddPersonManager.getInstance().addActivity(this);
         initWindow();
 
         SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
@@ -59,9 +61,10 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
             ServerConfigUtil.setServerConfig(this);
         }
 
-
+        Log.d("response","oncreate");
         initView();
         initListeners();
+
     }
 
     private void initView() {
@@ -96,6 +99,17 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("response","onresume");
+        String result = "";
+        result = getIntent().getStringExtra("result");
+        Log.d("response",result+" ");
+        message_reader.setText(result);
+        message_reader.setSelection(message_reader.getText().length());
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_left2:
@@ -124,27 +138,28 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
 
                 Intent intent = new Intent(PostMessageActivity.this,AddPerson.class);
                 intent.putExtra("from",1);
-                intent.putExtra("count",0);
-                startActivityForResult(intent, 1);
+                intent.putExtra("count", 0);
+                //startActivityForResult(intent, 1);
+                startActivity(intent);
                 break;
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String result = "";
-        switch (resultCode) {
-            case 1:
-                result = data.getStringExtra("result");
-                message_reader.setText(result);
-                message_reader.setSelection(message_reader.getText().length());
-                break;
-
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        String result = "";
+//        switch (resultCode) {
+//            case 1:
+//                result = data.getStringExtra("result");
+//                message_reader.setText(result);
+//                message_reader.setSelection(message_reader.getText().length());
+//                break;
+//
+//        }
+//
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//    }
 
     /*
      * 发布消息
@@ -187,6 +202,12 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AddPersonManager.getInstance().finishActivity();
     }
 
     protected void initWindow() {

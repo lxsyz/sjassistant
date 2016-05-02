@@ -1,6 +1,7 @@
 package com.example.administrator.sjassistant.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,9 @@ import android.widget.TextView;
 import com.example.administrator.sjassistant.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/4/14.
@@ -19,7 +23,8 @@ public class DetailExpandableAdapter extends BaseExpandableListAdapter {
 
 
     private Context mContext;
-    private ArrayList<Object> mList;
+    //private ArrayList<Object> mList;
+    List<Map<String,String>> mList = new ArrayList<Map<String, String>>();
     private LayoutInflater mInflater;
 
     class GroupViewHolder {
@@ -31,9 +36,10 @@ public class DetailExpandableAdapter extends BaseExpandableListAdapter {
     class ChildViewHolder {
         TextView tv_name;
         View child_vi;
+        View line;
     }
 
-    public DetailExpandableAdapter(Context mContext,ArrayList<Object> list) {
+    public DetailExpandableAdapter(Context mContext,List<Map<String,String>> list) {
         this.mContext = mContext;
         this.mList = list;
 
@@ -48,12 +54,14 @@ public class DetailExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return 3;
+        Log.d("response",mList.get(groupPosition).size() + " ");
+        return this.mList.get(groupPosition).size() - 2;
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return mList.get(groupPosition);
+        return mList.get(groupPosition).get("title") + ":  "
+                + mList.get(groupPosition).get("value");
     }
 
     @Override
@@ -65,7 +73,12 @@ public class DetailExpandableAdapter extends BaseExpandableListAdapter {
 //            Bill b = (Bill)group;
 //
 //        }
-        return "分组项目信息";
+        Map<String,String> map = new HashMap<>();
+        map = mList.get(groupPosition);
+
+
+        return map.get("data"+(childPosition + 1)) + ":  "
+                + map.get("value"+(childPosition + 1));
     }
 
     @Override
@@ -98,7 +111,7 @@ public class DetailExpandableAdapter extends BaseExpandableListAdapter {
             viewHolder = (GroupViewHolder)convertView.getTag();
         }
 
-
+        viewHolder.tv_content.setText(getGroup(groupPosition)+" ");
         if (isExpanded) {
             viewHolder.iv_indicator.setImageResource(R.drawable.up_arrow);
         } else {
@@ -117,16 +130,19 @@ public class DetailExpandableAdapter extends BaseExpandableListAdapter {
 
             childViewHolder.tv_name = (TextView)convertView.findViewById(R.id.child_tv);
             childViewHolder.child_vi = convertView.findViewById(R.id.child_vi);
+            childViewHolder.line = convertView.findViewById(R.id.line);
             convertView.setTag(childViewHolder);
         } else {
             childViewHolder = (ChildViewHolder) convertView.getTag();
         }
 
-        childViewHolder.tv_name.setText("分组信息");
+        childViewHolder.tv_name.setText(getChild(groupPosition,childPosition)+" ");
 
         if (isLastChild) {
             childViewHolder.child_vi.setVisibility(View.VISIBLE);
+            childViewHolder.line.setVisibility(View.GONE);
         } else {
+            childViewHolder.line.setVisibility(View.VISIBLE);
             childViewHolder.child_vi.setVisibility(View.GONE);
         }
 

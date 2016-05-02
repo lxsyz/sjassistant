@@ -18,6 +18,9 @@ import com.example.administrator.sjassistant.view.ChangeNumberDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import okhttp3.Call;
 
 /**
@@ -56,28 +59,12 @@ public class ChangePwdActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         //MyDialog dialog = new MyDialog(ChangePwdActivity.this,R.style.dialog_style);
-        ChangeNumberDialog dialog = new ChangeNumberDialog(ChangePwdActivity.this,R.style.dialog_style);
         switch (v.getId()) {
             case R.id.confirm:
 
                 changePwd();
 
-                //修改成功
-                dialog.setFlag(2);
-                dialog.show();
 
-                dialog.setContentText("密码修改完请重新登录");
-                dialog.setOnDeleteClickListener(new ChangeNumberDialog.OnDeleteClickListener() {
-                    @Override
-                    public void onDelete(int i) {
-                        if (i == 1) {
-                            AppManager.getInstance().finishAllActivity();
-                            Intent intent = new Intent(ChangePwdActivity.this,LoginActivity.class);
-                            startActivity(intent);
-                            ChangePwdActivity.this.finish();
-                        }
-                    }
-                });
                 break;
         }
     }
@@ -104,6 +91,10 @@ public class ChangePwdActivity extends BaseActivity implements View.OnClickListe
             return;
         }
 
+        if (newPassword.getText().toString().length() < 6 || newPassword.getText().toString().length() > 12) {
+            ToastUtil.showShort(ChangePwdActivity.this,"请输入6-12位的新密码");
+        }
+
         OkHttpUtils.post()
                 .url(url)
                 .addParams("userCode",Constant.username)
@@ -119,6 +110,33 @@ public class ChangePwdActivity extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void onResponse(String response) {
+                        Log.d("response",response);
+
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            if (statusCode == 0) {
+                                ChangeNumberDialog dialog = new ChangeNumberDialog(ChangePwdActivity.this,R.style.dialog_style);
+                                //修改成功
+                                dialog.setFlag(2);
+                                dialog.show();
+
+                                dialog.setContentText("密码修改完请重新登录");
+                                dialog.setOnDeleteClickListener(new ChangeNumberDialog.OnDeleteClickListener() {
+                                    @Override
+                                    public void onDelete(int i) {
+                                        if (i == 1) {
+                                            AppManager.getInstance().finishAllActivity();
+                                            Intent intent = new Intent(ChangePwdActivity.this,LoginActivity.class);
+                                            startActivity(intent);
+                                            ChangePwdActivity.this.finish();
+                                        }
+                                    }
+                                });
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
                     }
                 });

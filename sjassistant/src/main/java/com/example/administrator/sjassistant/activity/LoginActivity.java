@@ -3,6 +3,7 @@ package com.example.administrator.sjassistant.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.InputType;
 import android.text.Selection;
 import android.text.Spannable;
@@ -24,6 +25,8 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;

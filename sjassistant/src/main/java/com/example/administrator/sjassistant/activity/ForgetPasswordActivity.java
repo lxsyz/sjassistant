@@ -117,7 +117,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                 if (from == 1) {
                     change();
                 } else if (from == 2){
-
+                    changeEmail();
                 }
 
                 break;
@@ -301,8 +301,9 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
             String url = Constant.SERVER_URL + "user/settings/changeEmail";
             OkHttpUtils.post()
                     .url(url)
-                    .addParams("oldEmail",et_username.getText().toString())
-                    .addParams("newPassword",et_password.getText().toString())
+                    .addParams("userCode",Constant.username)
+                    .addParams("newEmail", et_username.getText().toString())
+                    .addParams("password",et_password.getText().toString())
                     .build()
                     .execute(new StringCallback() {
                         @Override
@@ -322,13 +323,10 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
 
                                 Log.d("statusCode",statusCode+" ");
                                 if (statusCode == 0) {
-                                    ToastUtil.showShort(ForgetPasswordActivity.this, "密码修改成功");
-                                    SharedPreferences.Editor editor = getSharedPreferences("userinfo",MODE_PRIVATE).edit();
-                                    editor.putString("password",et_password.getText().toString());
-                                    editor.commit();
+                                    ToastUtil.showShort(ForgetPasswordActivity.this, "邮箱修改成功");
                                     ForgetPasswordActivity.this.finish();
                                 } else if (statusCode == 4) {
-                                    ToastUtil.showShort(ForgetPasswordActivity.this,"邮箱错误");
+                                    ToastUtil.showShort(ForgetPasswordActivity.this,"密码错误");
                                 }
 
                             } catch (JSONException e) {

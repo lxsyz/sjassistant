@@ -21,6 +21,7 @@
             android:layout_height="38dp">
 
             <TextView
+                android:id="@+id/text_add_person"
                 android:textSize="13sp"
                 android:layout_centerVertical="true"
                 android:textColor="#979797"

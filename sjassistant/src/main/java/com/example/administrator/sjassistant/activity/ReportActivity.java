@@ -87,6 +87,7 @@ public class ReportActivity extends Activity implements View.OnClickListener {
 
         if (TextUtils.isEmpty(et.getText().toString())) {
             ToastUtil.showShort(ReportActivity.this,"反馈内容不能为空");
+            return;
         }
 
         OkHttpUtils.get()
@@ -104,6 +105,7 @@ public class ReportActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void onResponse(String response) {
                         Log.d("response",response);
+                        ReportActivity.this.finish();
                     }
                 });
     }

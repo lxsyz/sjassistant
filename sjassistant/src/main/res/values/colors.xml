@@ -20,4 +20,15 @@
     <color name="change">#f7f7f7</color>
     <color name="unread">#ff7676</color>
     <color name="read">#D8EFE5</color>
+
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="background_tab">#38b994</color>
+
+    <color name="background_text_selected">#7FD0B8</color>
+    <color name="background_text">#414141</color>
+
+    <color name="postInspect">#AFD4F2</color>
+    <color name="inspectd">#ECA6A7</color>
+    <color name="inpectedPost">#E8BB5B</color>
+    <color name="waitInspect">#ACD4F2</color>
 </resources>

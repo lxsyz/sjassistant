@@ -61,7 +61,6 @@ public class HelpActivity extends Activity implements View.OnClickListener {
         webView.getSettings().setJavaScriptEnabled(true);//设置使用够执行JS脚本
         webView.getSettings().setBuiltInZoomControls(true);//设置使支持缩放
 
-        webView.loadUrl("www.baidu.com");
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -127,6 +126,7 @@ public class HelpActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void onResponse(String response) {
                         Log.d("response",response);
+                        webView.loadDataWithBaseURL(null, response, "text/html", "utf-8", null);
                     }
                 });
     }

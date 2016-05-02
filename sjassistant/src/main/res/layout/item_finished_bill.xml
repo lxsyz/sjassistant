@@ -9,17 +9,18 @@
         android:id="@+id/id_leftIcon"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginTop="18dp"
         android:background="@drawable/ic_inspect"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        android:layout_marginTop="5dp" />
 
     <RelativeLayout
 
         android:layout_marginRight="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/inspect_qipao_sec"
-        android:layout_marginLeft="16dp">
+        android:background="@drawable/qipao002"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="5dp">
 
         <TextView
             android:id="@+id/id_title"

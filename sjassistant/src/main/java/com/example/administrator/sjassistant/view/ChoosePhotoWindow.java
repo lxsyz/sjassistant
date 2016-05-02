@@ -202,9 +202,16 @@ public class ChoosePhotoWindow implements OnClickListener {
 	 * 转跳到本地相簿
 	 */
 	public void toPhotos() {
-		Intent i = new Intent(Intent.ACTION_GET_CONTENT, null);
-		i.setType("image/*");
-		((Activity) context).startActivityForResult(i, REQUESTCODE_IMAGE);
+
+		Intent intent=new Intent();
+		intent.setAction(Intent.ACTION_PICK);//Pick an item fromthe data
+		intent.setType("image/*");//从所有图片中进行选择
+		((Activity) context).startActivityForResult(intent, REQUESTCODE_IMAGE);
+//		Intent i = new Intent(Intent.ACTION_GET_CONTENT, null);
+//
+//
+//		i.setType("image/*");
+//		((Activity) context).startActivityForResult(i, REQUESTCODE_IMAGE);
 	}
 
 	/**

@@ -1,48 +1,99 @@
 package com.example.administrator.sjassistant.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2016/4/5.
  */
-public class Bill {
+public class Bill implements Serializable{
 
-    private String type;
+    private int id;
 
-    private String posttime;
+    private String billType;
 
-    private String name;
+    private int billId;
 
-    private String postman;
+    private String dealPerson;
 
+    private String dealTime;
 
-    public String getName() {
-        return name;
+    private String userCode;
+
+    private String dealResult;
+
+    private String dealOpinion;
+
+    private String nextStepDealPerson;
+
+    public int getBillId() {
+        return billId;
     }
 
-    public String getPostman() {
-        return postman;
+    public int getId() {
+        return id;
     }
 
-    public String getPosttime() {
-        return posttime;
+    public String getBillType() {
+        return billType;
     }
 
-    public String getType() {
-        return type;
+    public String getDealOpinion() {
+        return dealOpinion;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getDealPerson() {
+        return dealPerson;
     }
 
-    public void setPostman(String postman) {
-        this.postman = postman;
+    public String getDealResult() {
+        return dealResult;
     }
 
-    public void setPosttime(String posttime) {
-        this.posttime = posttime;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setBillType(String billType) {
+        this.billType = billType;
+    }
+
+    public void setBillId(int billId) {
+        this.billId = billId;
+    }
+
+    public void setDealPerson(String dealPerson) {
+        this.dealPerson = dealPerson;
+    }
+
+    public void setDealTime(String dealTime) {
+        this.dealTime = dealTime;
+    }
+
+    public String getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
+
+    public void setDealResult(String dealResult) {
+        this.dealResult = dealResult;
+    }
+
+    public void setDealOpinion(String dealOpinion) {
+        this.dealOpinion = dealOpinion;
+    }
+
+    public String getNextStepDealPerson() {
+        return nextStepDealPerson;
+    }
+
+    public void setNextStepDealPerson(String nextStepDealPerson) {
+        this.nextStepDealPerson = nextStepDealPerson;
+    }
+
+    public String getDealTime() {
+        return dealTime;
     }
 }

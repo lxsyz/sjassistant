@@ -1,15 +1,19 @@
 package com.example.administrator.sjassistant.fragment;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,16 +29,26 @@ import com.example.administrator.sjassistant.activity.SettingActivity;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.FileUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.view.ChoosePhotoWindow;
 import com.example.administrator.sjassistant.view.CircleImageView;
 import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.view.SexDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
+import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2016/3/28.
@@ -271,26 +285,25 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
      * 上传头像
      */
     private void uploadImg(File file) {
-        String url = Constant.SERVER_URL + "";
+        String url = Constant.SERVER_URL + "user/setting/changePortrait";
 
-//        OkHttpUtils.post()
-//                .url(url)
-//                .addParams()
-//                .build()
-//                .execute(new StringCallback() {
-//                    @Override
-//                    public void onError(Call call, Exception e) {
-//                        Log.d("error",e.getMessage()+" ");
-//                        ErrorUtil.NetWorkToast(getActivity());
-//                    }
-//
-//                    @Override
-//                    public void onResponse(String response) {
-//                        Log.d("response",response);
-//
-//
-//                    }
-//                });
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("userCode", Constant.username)
+                .addFile("image", System.currentTimeMillis()+".jpg",file)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage());
+                        ErrorUtil.NetWorkToast(getActivity());
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response + " ");
+                    }
+                });
     }
 
     //初始化界面数据
@@ -307,8 +320,73 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                 user_photo.setImageBitmap(bitmap);
         }
 
+        //获取头像
+        getUserImg();
         //获取用户信息
 
+        getUserData();
+
+
+    }
+
+    /*
+     *
+     */
+    private void getUserImg() {
+        String url = Constant.SERVER_URL + "user/getPortrait";
+
+        OkHttpUtils.get()
+                .url(url)
+                .addParams("userCode",Constant.username)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(Response response) throws Exception {
+                        InputStream stream = response.body().byteStream();
+                        user_photo.setImageBitmap(BitmapFactory.decodeStream(stream));
+                        Log.d("response","parse response");
+                        return BitmapFactory.decodeStream(stream);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error",e.getMessage()+" ");
+                    }
+
+                    @Override
+                    public void onResponse(Object response) {
+                        Log.d("response",response+" ");
+                    }
+                });
+
+//        File file = new File(Environment.getExternalStorageDirectory()+"/审计助理/Portrait");
+//        OkHttpUtils.post()
+//                .url(url)
+//                .addParams("userCode",Constant.username)
+//                .build()
+//                .execute(new FileCallBack(file.getAbsolutePath(), "myPortrait.jpg") {
+//                    @Override
+//                    public void inProgress(float progress, long total) {
+//                        Log.d("response", "progress" + progress);
+//                    }
+//
+//                    @Override
+//                    public void onError(Call call, Exception e) {
+//                        Log.d("error", e.getMessage() + " ");
+//                        ErrorUtil.NetWorkToast(getActivity());
+//                    }
+//
+//                    @Override
+//                    public void onResponse(File response) {
+//                        Log.d("response", response.getAbsolutePath());
+//                        Bitmap bitmap = BitmapFactory.de
+//                    }
+//                });
+    }
+    /*
+     * 获取用户信息
+     */
+    private void getUserData() {
         String url = Constant.SERVER_URL + "user/info";
 
         OkHttpUtils.post()
@@ -318,13 +396,50 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error",e.getMessage()+" ");
+                        Log.d("error", e.getMessage() + " ");
                         ErrorUtil.NetWorkToast(getActivity());
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        Log.d("response",response);
+                        Log.d("response", response);
+
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.optInt("statusCode");
+                            JSONObject data = object.optJSONObject("data");
+                            if (statusCode == 0) {
+                                String user = data.optString("userName");
+                                String sex = data.optString("sex");
+                                String department = data.optString("dept_name");
+                                String role = data.optString("role_name");
+                                String address = data.optString("address");
+
+                                if (!TextUtils.isEmpty(user)) {
+                                    nickname_text.setText(user);
+                                    username.setText(user);
+                                }
+                                if (!TextUtils.isEmpty(sex)) {
+                                    if (sex.equals("1"))
+                                        sex_text.setText("男");
+                                }
+
+                                if (!TextUtils.isEmpty(department) && !department.equals("null")) {
+                                    apartment_text.setText(department);
+                                    apartment_top.setText(department);
+                                }
+                                if (!TextUtils.isEmpty(address) && !address.equals("null"))
+                                    address_text.setText(address);
+                                if (!TextUtils.isEmpty(role) && !role.equals("null")) {
+                                    work_text.setText(role);
+                                    work_top.setText(role);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
                     }
                 });
     }

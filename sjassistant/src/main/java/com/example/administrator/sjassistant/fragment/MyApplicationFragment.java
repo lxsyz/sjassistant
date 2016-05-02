@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.activity.InspectActivity;
 import com.example.administrator.sjassistant.activity.InspectWorkActivity;
 import com.example.administrator.sjassistant.activity.MoreContact;
 
@@ -55,7 +56,7 @@ public class MyApplicationFragment extends Fragment implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.deal_layout:
-                intent = new Intent(getActivity(),InspectWorkActivity.class);
+                intent = new Intent(getActivity(),InspectActivity.class);
                 startActivity(intent);
                 break;
         }

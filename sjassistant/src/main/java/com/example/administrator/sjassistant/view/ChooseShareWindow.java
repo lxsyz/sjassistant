@@ -52,7 +52,6 @@ public class ChooseShareWindow implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.qq_layout:
                 if (onItemClickListener != null) {
-                    Log.d("test2", "test2");
                     onItemClickListener.onItemClick(QQ_ITEM);
                 }
                 closeWindow();

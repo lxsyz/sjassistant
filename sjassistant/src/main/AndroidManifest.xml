@@ -152,6 +152,10 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.AddPerson"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.InspectActivity"
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.LoginActivity"

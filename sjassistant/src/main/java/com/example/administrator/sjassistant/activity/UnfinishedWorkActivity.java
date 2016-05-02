@@ -19,9 +19,13 @@ import com.example.administrator.sjassistant.adapter.ViewHolder;
 import com.example.administrator.sjassistant.bean.Bill;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -65,22 +69,15 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
         lv = (ListView)findViewById(R.id.unfinished_list);
         read_flag = (TextView)findViewById(R.id.read_flag);
 
-        Bill bill1 = new Bill();
-        bill1.setName("Jimmy");
-        bill1.setPostman("Jimmy");
-        bill1.setPosttime("2013");
-        bill1.setType("经费");
-        Bill bill2 = new Bill();
-        bill2.setName("Jimmy");
-        bill2.setPostman("Jimmy");
-        bill2.setPosttime("2013");
-        bill2.setType("经费");
-        datalist.add(bill1);datalist.add(bill2);
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bill bill = (Bill)lv.getItemAtPosition(position);
                 Intent intent = new Intent(UnfinishedWorkActivity.this,BillInspectActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("bill",bill);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -109,14 +106,6 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
 
         getUnfinishedWork();
 
-        commonAdapter = new CommonAdapter<Bill>(UnfinishedWorkActivity.this, datalist, R.layout.item_a) {
-            @Override
-            public void convert(ViewHolder holder, Bill bill) {
-                holder.setText(R.id.id_type_value, bill.getType());
-            }
-        };
-
-        lv.setAdapter(commonAdapter);
 
         ed_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -140,6 +129,7 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
      * 获取待办
      */
     private void getUnfinishedWork() {
+        datalist.clear();
 
         String url = Constant.SERVER_URL + "bill/show";
 
@@ -157,17 +147,53 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
                     @Override
                     public void onResponse(String response) {
                         Log.d("response",response+" ");
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            JSONObject data = object.getJSONObject("data");
+                            JSONArray list = data.getJSONArray("list");
+                            if (statusCode == 0) {
+                                int len = list.length();
+                                if (len != 0 ) {
+                                    for (int i = 0;i < len;i++) {
+                                        Bill bill = new Bill();
+                                        JSONObject o = list.getJSONObject(i);
+                                        bill.setId(o.getInt("id"));
+                                        bill.setBillId(o.getInt("billId"));
+                                        bill.setBillType(o.getString("billType"));
+                                        bill.setUserCode(o.getString("userCode"));
+                                        bill.setDealTime(o.getString("dealTime"));
+                                        bill.setDealResult(o.getString("dealResult"));
+                                        datalist.add(bill);
+                                    }
+                                }
+                                commonAdapter = new CommonAdapter<Bill>(UnfinishedWorkActivity.this, datalist, R.layout.item_a) {
+                                    @Override
+                                    public void convert(ViewHolder holder, Bill bill) {
+                                        String title = bill.getUserCode() + "的单据需要你审批";
+                                        holder.setText(R.id.id_title,title);
+                                        holder.setText(R.id.id_type_value,bill.getBillType());
+                                        holder.setText(R.id.id_time_value,bill.getDealTime());
+                                        holder.setText(R.id.read_flag,bill.getDealResult());
 
-
-
-                        commonAdapter = new CommonAdapter<Bill>(UnfinishedWorkActivity.this, datalist, R.layout.item_a) {
-                            @Override
-                            public void convert(ViewHolder holder, Bill bill) {
-                                holder.setText(R.id.id_type_value, bill.getType());
+                                        if (TextUtils.isEmpty(bill.getDealResult()) || bill.getDealResult().equals("null")){
+                                            holder.setText(R.id.read_flag,"未读");
+                                            ((TextView)holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
+                                        } else if (bill.getDealResult().equals("未读") || bill.getDealResult().equals("退回未提交")) {
+                                            ((TextView)holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
+                                        } else if (bill.getDealResult().equals("通过未提交") || bill.getDealResult().equals("通过")) {
+                                            ((TextView)holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.read));
+                                        }
+                                    }
+                                };
+                                lv.setAdapter(commonAdapter);
+                            } else {
+                                ToastUtil.showShort(UnfinishedWorkActivity.this,"服务器异常");
                             }
-                        };
 
-                        lv.setAdapter(commonAdapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
@@ -176,8 +202,8 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
     }
 
     /*
-         * 搜索待办
-         */
+     * 搜索待办
+     */
     private void filterData(String text) {
         List<Bill> filterList = new ArrayList<Bill>();
 
@@ -185,13 +211,20 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
             filterList = datalist;
         } else {
             for (Bill b : datalist) {
-
-
-                filterList.add(b);
+                String dealTime = b.getDealTime();
+                String billType = b.getBillType();
+                String userCode = b.getUserCode();
+                String dealResult = b.getDealResult();
+                if (dealTime.contains(text) ||
+                        billType.contains(text) ||
+                        userCode.contains(text) ||
+                        dealResult.contains(text)) {
+                    filterList.add(b);
+                }
             }
         }
 
-
+        commonAdapter.updateListView(filterList);
     }
 
 }
