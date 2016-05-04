@@ -111,24 +111,24 @@ public class HelpActivity extends Activity implements View.OnClickListener {
      * 获取帮助页面
      */
     private void getHelp() {
-        String url = Constant.SERVER_URL + "help";
-
-        OkHttpUtils.get()
-                .url(url)
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        Log.d("error", e.getMessage() + " ");
-                        ErrorUtil.NetWorkToast(HelpActivity.this);
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("response",response);
-                        webView.loadDataWithBaseURL(null, response, "text/html", "utf-8", null);
-                    }
-                });
+        String url = Constant.SERVER_URL + "help.html";
+        webView.loadUrl(url);
+//        OkHttpUtils.get()
+//                .url(url)
+//                .build()
+//                .execute(new StringCallback() {
+//                    @Override
+//                    public void onError(Call call, Exception e) {
+//                        Log.d("error", e.getMessage() + " ");
+//                        ErrorUtil.NetWorkToast(HelpActivity.this);
+//                    }
+//
+//                    @Override
+//                    public void onResponse(String response) {
+//                        Log.d("response",response);
+//                        webView.loadDataWithBaseURL(null, response, "text/html", "utf-8", null);
+//                    }
+//                });
     }
 
     protected void initWindow() {

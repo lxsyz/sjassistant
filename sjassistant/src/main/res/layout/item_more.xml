@@ -23,7 +23,7 @@
             android:id="@+id/name"
             android:textColor="@color/my_black"
             android:textSize="13dp"
-            android:text="张三"
+            android:text=""
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -34,7 +34,7 @@
             android:id="@+id/phoneNumber"
             android:textColor="@color/my_black"
             android:textSize="14dp"
-            android:text="something"
+            android:text=""
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

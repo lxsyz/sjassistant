@@ -1,13 +1,16 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -87,18 +90,39 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
         btn_confirm = (Button)findViewById(R.id.confirm);
 
 
-        et_username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//        et_username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (!hasFocus) {
+//                    if (!OperatorUtil.isEmail(et_username.getText().toString())) {
+//                        success.setVisibility(View.GONE);
+//                        prompt_tv.setVisibility(View.VISIBLE);
+//                    } else {
+//                        success.setVisibility(View.VISIBLE);
+//                        prompt_tv.setVisibility(View.GONE);
+//                    }
+//                }
+//            }
+//        });
+
+        et_username.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (!OperatorUtil.isEmail(et_username.getText().toString())) {
-                        success.setVisibility(View.GONE);
-                        prompt_tv.setVisibility(View.VISIBLE);
-                    } else {
-                        success.setVisibility(View.VISIBLE);
-                        prompt_tv.setVisibility(View.GONE);
-                    }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (OperatorUtil.isEmail(s.toString())) {
+                    prompt_tv.setVisibility(View.GONE);
+                } else  {
+                    prompt_tv.setVisibility(View.VISIBLE);
                 }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -289,8 +313,8 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
             ToastUtil.show(ForgetPasswordActivity.this, "密码不能为空");
             return;
         }
-        if (TextUtils.isEmpty(et_validate.getText().toString())) {
-            ToastUtil.show(ForgetPasswordActivity.this,"验证码不能为空");
+        if (TextUtils.isEmpty(et_validate.getText().toString()) || !et_validate.getText().toString().equals(message)) {
+            ToastUtil.show(ForgetPasswordActivity.this,"验证码不正确");
             return;
         }
 
@@ -324,9 +348,14 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                                 Log.d("statusCode",statusCode+" ");
                                 if (statusCode == 0) {
                                     ToastUtil.showShort(ForgetPasswordActivity.this, "邮箱修改成功");
+                                    Intent intent = new Intent();
+                                    intent.putExtra("email",et_username.getText().toString());
+                                    setResult(1,intent);
                                     ForgetPasswordActivity.this.finish();
                                 } else if (statusCode == 4) {
                                     ToastUtil.showShort(ForgetPasswordActivity.this,"密码错误");
+                                } else if (statusCode == 16) {
+                                    ToastUtil.showShort(ForgetPasswordActivity.this,"邮箱已存在");
                                 }
 
                             } catch (JSONException e) {

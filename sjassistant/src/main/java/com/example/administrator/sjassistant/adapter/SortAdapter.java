@@ -1,6 +1,7 @@
 package com.example.administrator.sjassistant.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.activity.MoreContact;
 import com.example.administrator.sjassistant.bean.SortModel;
 
 import java.util.List;
@@ -51,7 +53,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
-        SortModel sortModel = list.get(position);
+        final SortModel sortModel = list.get(position);
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item,null);
@@ -76,12 +78,13 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer{
 
         }
 
-        final int pos = position;
-
         viewHolder.phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("tag", "clicked on listview item icon_01 position = " + getItemId(pos));
+                Intent intent = new Intent(mContext, MoreContact.class);
+                Log.d("response","phone: "+sortModel.getPhoneNumber());
+                intent.putExtra("phone",sortModel.getPhoneNumber());
+                mContext.startActivity(intent);
             }
         });
         viewHolder.tvTitle.setText(this.list.get(position).getName());
@@ -117,6 +120,5 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer{
         TextView tvTitle;
         TextView group;
         ImageView phone;
-        View line_view;
     }
 }

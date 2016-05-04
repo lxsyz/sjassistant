@@ -181,7 +181,7 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
                                             ((TextView)holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
                                         } else if (bill.getDealResult().equals("未读") || bill.getDealResult().equals("退回未提交")) {
                                             ((TextView)holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
-                                        } else if (bill.getDealResult().equals("通过未提交") || bill.getDealResult().equals("通过")) {
+                                        } else if (bill.getDealResult().equals("通过未提交") || bill.getDealResult().equals("已读")) {
                                             ((TextView)holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.read));
                                         }
                                     }

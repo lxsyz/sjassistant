@@ -21,7 +21,8 @@
                 />
 
             <TextView
-                android:text="9484"
+                android:id="@+id/changeEmail_text"
+                android:text=""
                 android:layout_marginRight="13dp"
                 android:layout_marginEnd="13dp"
                 android:textColor="@color/my_black"

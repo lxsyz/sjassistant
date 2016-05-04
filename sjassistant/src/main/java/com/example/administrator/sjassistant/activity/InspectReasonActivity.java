@@ -1,6 +1,7 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +18,7 @@ import com.example.administrator.sjassistant.bean.InspectPerson;
 import com.example.administrator.sjassistant.bean.Person;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -137,6 +139,7 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
         OkHttpUtils.post()
                 .url(url)
                 .addParams("billId", String.valueOf(billId))
+                .addParams("dealOpinion",inspectReason.getText().toString())
                 .addParams("approver",getApprover())
                 .build()
                 .execute(new StringCallback() {
@@ -149,6 +152,7 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void onResponse(String response) {
                         Log.d("response",response);
+                        ToastUtil.showShort(InspectReasonActivity.this,"提交成功");
                         InspectReasonActivity.this.finish();
                     }
                 });

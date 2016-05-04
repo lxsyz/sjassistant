@@ -16,7 +16,7 @@
         app:pstsDividerColor="@color/white"
         app:pstsTabSwitch="true"
         app:pstsActivateTextColor="@color/background_text_selected"
-        app:pstsDeactivateTextColor="@color/background_text">
+        app:pstsDeactivateTextColor="@color/my_gray">
 
 
     </com.astuetz.PagerSlidingTabStrip>

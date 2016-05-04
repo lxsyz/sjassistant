@@ -34,7 +34,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private LinearLayout changeEmail,changePwd,changeServer,clearCache,update,noDisturb,prompt;
     private Button quit;
 
-    private TextView cache_size;
+    private TextView cache_size,changeEmail_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         quit = (Button)findViewById(R.id.quit);
 
         cache_size = (TextView)findViewById(R.id.cache_size);
-
+        changeEmail_text = (TextView)findViewById(R.id.changeEmail_text);
 
 
         changeEmail.setOnClickListener(this);
@@ -80,7 +80,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.changeEmail:
                 intent = new Intent(SettingActivity.this,ForgetPasswordActivity.class);
                 intent.putExtra("from",2);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
                 break;
             case R.id.changeServer:
                 intent = new Intent(SettingActivity.this,ServerConfigActivity.class);
@@ -101,7 +101,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                         if (i == 1) {
                             //DataCleanManager.cleanAppicationData(SettingActivity.this);
                             DataCleanManager.clearAllCache(SettingActivity.this);
-                            cache_size.setText("0.0M");
+                            cache_size.setText("0K");
                             Toast.makeText(SettingActivity.this,"清除成功",Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -170,9 +170,19 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String result = "";
+        if (resultCode == 1) {
+            result = data.getStringExtra("email");
+            changeEmail_text.setText(result);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     /*
-     * 检测新版本
-     */
+         * 检测新版本
+         */
     private void checkNewVersion () {
         String url = Constant.SERVER_URL + "";
 

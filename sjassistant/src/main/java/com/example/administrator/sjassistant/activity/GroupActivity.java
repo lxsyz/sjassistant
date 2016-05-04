@@ -2,7 +2,9 @@ package com.example.administrator.sjassistant.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,73 +37,47 @@ import java.util.List;
 import okhttp3.Call;
 
 /**
- * Created by Administrator on 2016/4/2.
+ * Created by Administrator on 2016/5/4.
  */
-public class CustomerContactsActivity extends BaseActivity implements View.OnClickListener {
-
+public class GroupActivity extends BaseActivity implements View.OnClickListener {
     private ImageView search,delete;
     private EditText ed_name;
 
-    private ImageView bt_right;
-
-    private AddContactsWin add_contacts;
-
     private ListView customer_list;
-    //private List<String> datalist = new ArrayList<String>();
 
-    private List<ContactsPerson> datalist = new ArrayList<>();
+    private List<GroupPerson> datalist = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (add_contacts == null) {
-            add_contacts = new AddContactsWin(CustomerContactsActivity.this,CustomerContactsActivity.this, OperatorUtil.dp2px(this,250),
-                    OperatorUtil.dp2px(this,160));
-
-            add_contacts.getContentView().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-
-                    if (!hasFocus) {
-                        add_contacts.dismiss();
-                    }
-                }
-            });
-        }
-        add_contacts.setFocusable(true);
     }
 
     @Override
     protected void initView() {
         super.initView();
         setCenterView(R.layout.activity_customer);
-        setTopText("客户");
+        setTopText("小组");
 
         search = (ImageView)findViewById(R.id.search);
         ed_name = (EditText)findViewById(R.id.search_content);
+        ed_name.setHint("搜索小组");
         delete = (ImageView)findViewById(R.id.delete_word);
         search.setOnClickListener(this);
         delete.setOnClickListener(this);
 
-
-        bt_right = (ImageView) layout_top.findViewById(R.id.bt_right);
-        setRightButtonRes(R.drawable.more);
-        setRightButton(View.VISIBLE);
-        bt_right.setOnClickListener(this);
-
         customer_list = (ListView)findViewById(R.id.customer_list);
-
 
 
         customer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ContactsPerson customer_name = (ContactsPerson) customer_list.getItemAtPosition(position);
-                Intent intent = new Intent(CustomerContactsActivity.this,ContactsDetailActivity.class);
-                intent.putExtra("from",3);
-                intent.putExtra("customer_name",customer_name.getCustomerName());
+                GroupPerson gp = (GroupPerson) customer_list.getItemAtPosition(position);
+                Intent intent = new Intent(GroupActivity.this, ContactsDetailActivity.class);
+                intent.putExtra("from", 2);
+                intent.putExtra("id", gp.getId());
+                intent.putExtra("group_name", gp.getGroupName());
+
                 startActivity(intent);
             }
         });
@@ -114,18 +90,6 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
         Intent intent = null;
         switch (v.getId()) {
             case R.id.bt_right:
-                if (add_contacts.isShowing()) {
-                    add_contacts.dismiss();
-                } else
-                    add_contacts.showAsDropDown(bt_right,0,0);
-                break;
-            case R.id.choose:
-                intent = new Intent(CustomerContactsActivity.this,ChooseContactsActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.add:
-                intent = new Intent(CustomerContactsActivity.this,AddContactsActivity.class);
-                startActivity(intent);
                 break;
             case R.id.search:
                 if (!TextUtils.isEmpty(ed_name.getText().toString())) {
@@ -144,18 +108,32 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
     @Override
     protected void onResume() {
         super.onResume();
-        if (add_contacts.isShowing()) {
-            add_contacts.dismiss();
-        }
 
-        getCompany();
+        getGroup();
+
+        ed_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterData(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     /*
-     * 获取公司列表
+     * 获取小组列表
      */
-    private void getCompany() {
-        String url = Constant.SERVER_URL + "phoneBook/showCustomer";
+    private void getGroup() {
+        String url = Constant.SERVER_URL + "phoneBook/showGroup";
 
         OkHttpUtils.post()
                 .url(url)
@@ -165,7 +143,7 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
                     @Override
                     public void onError(Call call, Exception e) {
                         Log.d("error", e.getMessage());
-                        ErrorUtil.NetWorkToast(CustomerContactsActivity.this);
+                        ErrorUtil.NetWorkToast(GroupActivity.this);
                     }
 
                     @Override
@@ -181,20 +159,20 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
                                     JSONArray list = data.optJSONArray("list");
                                     if (list.length() != 0) {
 
-                                        datalist = gson.fromJson(list.toString(), new TypeToken<List<ContactsPerson>>() {
+                                        datalist = gson.fromJson(list.toString(), new TypeToken<List<GroupPerson>>() {
                                         }.getType());
 
-                                        commonAdapter = new CommonAdapter<ContactsPerson>(CustomerContactsActivity.this, datalist, R.layout.item_choose_customer) {
+                                       commonAdapter = new CommonAdapter<GroupPerson>(GroupActivity.this, datalist, R.layout.item_choose_customer) {
                                             @Override
-                                            public void convert(ViewHolder holder, ContactsPerson cp) {
-                                                holder.setText(R.id.customer_name, cp.getCustomerName());
+                                            public void convert(ViewHolder holder, GroupPerson cp) {
+                                                holder.setText(R.id.customer_name, cp.getGroupName());
                                             }
                                         };
                                         customer_list.setAdapter(commonAdapter);
                                     }
                                 }
                             } else {
-                                ToastUtil.showShort(CustomerContactsActivity.this, "获取用户列表失败");
+                                ToastUtil.showShort(GroupActivity.this, "获取用户列表失败");
                             }
 
                         } catch (JSONException e) {
@@ -205,16 +183,16 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
     }
 
     /*
-     * 搜索公司
+     * 搜索小组
      */
     private void filterData(String text) {
-        List<ContactsPerson> filterList = new ArrayList<>();
+        List<GroupPerson> filterList = new ArrayList<>();
 
         if (TextUtils.isEmpty(text)) {
             filterList = datalist;
         } else {
-            for (ContactsPerson person:datalist) {
-                if (person.getCustomerName().contains(text)) {
+            for (GroupPerson person:datalist) {
+                if (person.getGroupName().contains(text)) {
                     filterList.add(person);
                 }
             }

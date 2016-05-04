@@ -93,7 +93,7 @@ public class ReportActivity extends Activity implements View.OnClickListener {
         OkHttpUtils.get()
                 .url(url)
                 .addParams("userCode",Constant.username)
-                .addParams("content",et.getText().toString())
+                .addParams("data",et.getText().toString())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -105,6 +105,7 @@ public class ReportActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void onResponse(String response) {
                         Log.d("response",response);
+                        ToastUtil.showShort(ReportActivity.this,"反馈成功");
                         ReportActivity.this.finish();
                     }
                 });

@@ -92,7 +92,7 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
 
     private ScrollView scrollView;
 
-    private StringBuilder shareContent;
+    private StringBuilder shareContent = new StringBuilder();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,8 +175,10 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
                 });
                 break;
             case R.id.bt_right2:
+                intent = new Intent(BillInspectActivity.this,MoreContact.class);
+                intent.putExtra("master",Constant.username);
+                startActivity(intent);
 
-                
                 break;
             case R.id.pass_layout:
 

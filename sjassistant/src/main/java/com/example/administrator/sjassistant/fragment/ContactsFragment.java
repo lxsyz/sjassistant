@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.activity.CompanyActivity;
 import com.example.administrator.sjassistant.activity.CustomerContactsActivity;
+import com.example.administrator.sjassistant.activity.GroupActivity;
 import com.example.administrator.sjassistant.activity.SearchResultActivity;
 
 /**
@@ -86,7 +87,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
                 ed_name.setText("");
                 break;
             case R.id.company_layout:
-                CompanyFragment cf = new CompanyFragment();
+//                CompanyFragment cf = new CompanyFragment();
 //                fm.beginTransaction().replace(R.id.content,cf)
 //                        .addToBackStack(null)
 //                        .commit();
@@ -101,6 +102,8 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.group_layout:
+                intent = new Intent(getActivity(),GroupActivity.class);
+                startActivity(intent);
                 break;
         }
     }

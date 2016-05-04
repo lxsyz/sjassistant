@@ -27,6 +27,10 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -125,6 +129,56 @@ public class FileUtil {
 
         return inSampleSize;
     }
+
+    /*
+     * 压缩图片生成新的文件
+     * @param bitmap
+     * @param compressPath
+     * @param quality
+     */
+    public static boolean compressBitmap(Bitmap bitmap,String compressPath,int quality) {
+        FileOutputStream stream = null;
+        try {
+            stream = new FileOutputStream(new File(compressPath));
+            bitmap.compress(Bitmap.CompressFormat.JPEG,quality,stream);
+            Log.d("response","压缩成功");
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    /*
+     * bitmap转换成文件
+     */
+// 图片转为文件
+    public static boolean saveBitmap2file(Bitmap bmp, String path)
+    {
+        Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+        int quality = 100;
+        OutputStream stream = null;
+        try
+        {
+            File f = new File(path);
+            if (f.exists()) f.delete();
+            stream = new FileOutputStream(path);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+        return bmp.compress(format, quality, stream);
+    }
+
 
     /*
      * 根据文件后缀名获得对应的MIME类型

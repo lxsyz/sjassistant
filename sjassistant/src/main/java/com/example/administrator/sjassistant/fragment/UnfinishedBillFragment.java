@@ -39,12 +39,13 @@ import okhttp3.Call;
 public class UnfinishedBillFragment extends Fragment {
 
     private ListView lv;
+    private TextView prompt;
 
     private List<Bill> datalist = new ArrayList<Bill>();
 
-
     private CommonAdapter commonAdapter;
 
+    public UnfinishedBillFragment(){}
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,13 +53,45 @@ public class UnfinishedBillFragment extends Fragment {
 
     }
 
+
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_unfinished_bill,null);
+        View v = inflater.inflate(R.layout.fragment_unfinished_bill, null);
 
         lv = (ListView) v.findViewById(R.id.unfinished_list);
+        prompt = (TextView)v.findViewById(R.id.prompt);
 
+        Bundle bundle = getArguments();
+
+        datalist = (ArrayList<Bill>)bundle.getSerializable("data");
+        if (datalist != null) {
+            commonAdapter = new CommonAdapter<Bill>(getActivity(), datalist, R.layout.item_a) {
+                @Override
+                public void convert(ViewHolder holder, Bill bill) {
+                    String title = bill.getUserCode() + "的单据需要你审批";
+                    holder.setText(R.id.id_title, title);
+                    holder.setText(R.id.id_type_value, bill.getBillType());
+                    holder.setText(R.id.id_time_value, bill.getDealTime());
+                    holder.setText(R.id.read_flag, bill.getDealResult());
+
+                    if (TextUtils.isEmpty(bill.getDealResult()) || bill.getDealResult().equals("null")) {
+                        holder.setText(R.id.read_flag, "未读");
+                        ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
+                    } else if (bill.getDealResult().equals("未读") || bill.getDealResult().equals("退回未提交")) {
+                        ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
+                    } else if (bill.getDealResult().equals("通过未提交") || bill.getDealResult().equals("已读")) {
+                        ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.read));
+                    }
+                }
+            };
+            lv.setAdapter(commonAdapter);
+        } else {
+            lv.setVisibility(View.GONE);
+            prompt.setVisibility(View.VISIBLE);
+        }
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -80,19 +113,19 @@ public class UnfinishedBillFragment extends Fragment {
         if (datalist.size() != 0) {
 
         } else {
-            getUnfinishedWork();
+            //getUnfinishedWork();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        datalist.clear();
+        //datalist.clear();
     }
 
     /*
-             * 获取待办
-             */
+     * 获取待办
+     */
     private void getUnfinishedWork() {
         datalist.clear();
 
@@ -162,8 +195,5 @@ public class UnfinishedBillFragment extends Fragment {
                         }
                     }
                 });
-
-
-
     }
 }

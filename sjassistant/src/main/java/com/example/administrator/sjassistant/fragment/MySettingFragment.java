@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -42,8 +43,13 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -72,9 +78,17 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
 
     private String imgPath;
 
+    private String portraitPath = Environment.getExternalStorageDirectory() + "/审计助理/Portrait/portrait.jpg";
+//    private SharedPreferences sp;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("response","oncreate");
+
+        File file = new File(Environment.getExternalStorageDirectory() + "/审计助理/Portrait");
+        if (file.exists()) {}
+        else file.mkdirs();
+
         //回调函数赋值
         if (!(getActivity() instanceof BackHandlerInterface)) {
             throw new ClassCastException("activity case exception");
@@ -88,6 +102,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_mysetting,container,false);
         initView(rootView);
+        Log.d("response","oncreatevbi");
         return rootView;
     }
 
@@ -160,24 +175,24 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                 dialog.show();
                 break;
             case R.id.apartment_layout:
-                textDialog.show();
-                textDialog.setMainTextVisibility(View.GONE);
-                textDialog.setVisibility(View.GONE);
-                textDialog.setCenterVisibility(View.VISIBLE);
-                textDialog.setContentVisibility(View.VISIBLE);
-                textDialog.setHandler(handler);
-                textDialog.setFlag(2);
-                textDialog.show();
+//                textDialog.show();
+//                textDialog.setMainTextVisibility(View.GONE);
+//                textDialog.setVisibility(View.GONE);
+//                textDialog.setCenterVisibility(View.VISIBLE);
+//                textDialog.setContentVisibility(View.VISIBLE);
+//                textDialog.setHandler(handler);
+//                textDialog.setFlag(2);
+//                textDialog.show();
                 break;
             case R.id.work_layout:
-                textDialog.show();
-                textDialog.setMainTextVisibility(View.GONE);
-                textDialog.setVisibility(View.GONE);
-                textDialog.setCenterVisibility(View.VISIBLE);
-                textDialog.setContentVisibility(View.VISIBLE);
-                textDialog.setHandler(handler);
-                textDialog.setFlag(3);
-                textDialog.show();
+//                textDialog.show();
+//                textDialog.setMainTextVisibility(View.GONE);
+//                textDialog.setVisibility(View.GONE);
+//                textDialog.setCenterVisibility(View.VISIBLE);
+//                textDialog.setContentVisibility(View.VISIBLE);
+//                textDialog.setHandler(handler);
+//                textDialog.setFlag(3);
+//                textDialog.show();
                 break;
             case R.id.address_layout:
                 textDialog.show();
@@ -247,22 +262,35 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                         Log.d("tag", "path=" + path);
                         //imgPath = path;
                         if (path != null) {
-//                            BitmapFactory.Options options = new BitmapFactory.Options();
-//                            Bitmap bitmap = BitmapFactory.decodeFile(path,
-//                                    options);
-                            SharedPreferences sp = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sp.edit();
 
-                            editor.putString("imgPath", path);
-                            editor.commit();
                             Bitmap bitmap1 = FileUtil.getSmallBitmap(path, 500, 500);
                             if (bitmap1 == null) {
                                 Toast.makeText(getActivity(), "头像文件不存在", Toast.LENGTH_SHORT).show();
                                 user_photo.setImageResource(R.drawable.customer_de);
                             } else {
                                 user_photo.setImageBitmap(bitmap1);
-                                uploadImg(new File(path));
+                                //压缩后的临时图片文件
+                                File f = new File(portraitPath);
+                                if (!f.exists()) {
+                                    try {
+                                        f.createNewFile();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                if (FileUtil.compressBitmap(bitmap1, portraitPath, 90)) {
+                                    if (f.exists()) {
+
+                                        uploadImg(f);
+
+                                    } else {
+                                        ToastUtil.showShort(getActivity(),"上传失败");
+                                    }
+                                }
+                                bitmap1 = null;
                             }
+                           // editor.commit();
+
                         }
 
 
@@ -284,8 +312,8 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
     /*
      * 上传头像
      */
-    private void uploadImg(File file) {
-        String url = Constant.SERVER_URL + "user/setting/changePortrait";
+    private void uploadImg(final File file) {
+        String url = Constant.SERVER_URL + "user/settings/changePortrait";
 
         OkHttpUtils.post()
                 .url(url)
@@ -302,28 +330,30 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                     @Override
                     public void onResponse(String response) {
                         Log.d("response", response + " ");
+                        //file.delete();
                     }
                 });
     }
 
     //初始化界面数据
     private void initUiData() {
-        SharedPreferences sp = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
-        imgPath = sp.getString("imgPath",null);
-
-        if (imgPath != null) {
-            Bitmap bitmap = FileUtil.getSmallBitmap(imgPath, 500, 500);
+        //sp = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        //imgPath = sp.getString("imgPath", null);
+        File file = new File(portraitPath);
+        if (!file.exists()) {
+            getUserImg();
+        } else {
+            Bitmap bitmap = FileUtil.getSmallBitmap(portraitPath,500,500);
             if (bitmap == null) {
-                //Toast.makeText(getActivity(), "头像文件不存在", Toast.LENGTH_SHORT).show();
-                user_photo.setImageResource(R.drawable.customer_de);
+                getUserImg();
+                //user_photo.setImageResource(R.drawable.customer_de);
             } else
                 user_photo.setImageBitmap(bitmap);
         }
 
-        //获取头像
-        getUserImg();
-        //获取用户信息
 
+
+        //获取用户信息
         getUserData();
 
 
@@ -343,45 +373,30 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                     @Override
                     public Object parseNetworkResponse(Response response) throws Exception {
                         InputStream stream = response.body().byteStream();
-                        user_photo.setImageBitmap(BitmapFactory.decodeStream(stream));
-                        Log.d("response","parse response");
-                        return BitmapFactory.decodeStream(stream);
+                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                        stream.close();
+                        return bitmap;
                     }
 
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error",e.getMessage()+" ");
+                        Log.d("error", e.getMessage() + " ");
                     }
 
                     @Override
                     public void onResponse(Object response) {
-                        Log.d("response",response+" ");
+                        Log.d("response", response + " ");
+                        //writeToFile((InputStream) response, portraitPath);
+                        Bitmap bitmap = (Bitmap)response;
+                        user_photo.setImageBitmap(bitmap);
+                        FileUtil.saveBitmap2file(bitmap,portraitPath);
+//                        if (bitmap != null && !bitmap.isRecycled()) {
+//                            bitmap.recycle();
+//                            bitmap = null;
+//                        }
+
                     }
                 });
-
-//        File file = new File(Environment.getExternalStorageDirectory()+"/审计助理/Portrait");
-//        OkHttpUtils.post()
-//                .url(url)
-//                .addParams("userCode",Constant.username)
-//                .build()
-//                .execute(new FileCallBack(file.getAbsolutePath(), "myPortrait.jpg") {
-//                    @Override
-//                    public void inProgress(float progress, long total) {
-//                        Log.d("response", "progress" + progress);
-//                    }
-//
-//                    @Override
-//                    public void onError(Call call, Exception e) {
-//                        Log.d("error", e.getMessage() + " ");
-//                        ErrorUtil.NetWorkToast(getActivity());
-//                    }
-//
-//                    @Override
-//                    public void onResponse(File response) {
-//                        Log.d("response", response.getAbsolutePath());
-//                        Bitmap bitmap = BitmapFactory.de
-//                    }
-//                });
     }
     /*
      * 获取用户信息
@@ -415,6 +430,13 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                                 String role = data.optString("role_name");
                                 String address = data.optString("address");
 
+                                SharedPreferences.Editor editor = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE).edit();
+                                editor.putString("nickname",user);
+                                editor.putString("sex",sex);
+                                editor.putString("dept_name",department);
+                                editor.putString("role_name",role);
+                                editor.putString("address",address);
+                                editor.commit();
                                 if (!TextUtils.isEmpty(user)) {
                                     nickname_text.setText(user);
                                     username.setText(user);
@@ -422,6 +444,8 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                                 if (!TextUtils.isEmpty(sex)) {
                                     if (sex.equals("1"))
                                         sex_text.setText("男");
+                                    else
+                                        sex_text.setText("女");
                                 }
 
                                 if (!TextUtils.isEmpty(department) && !department.equals("null")) {
@@ -442,6 +466,38 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
 
                     }
                 });
+    }
+
+    /*
+     * 将头像保存至本地
+     */
+    private void writeToFile(InputStream inputStream,String path) {
+        try {
+
+            BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
+            byte[] b = new byte[1024];
+            int len = inputStream.read(b);
+            while (len != -1) {
+                outputStream.write(b,0,len);
+                len = inputStream.read(b);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("response", "destroyvvvv");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("response", "destroy");
     }
 
     //fragment  回退控制

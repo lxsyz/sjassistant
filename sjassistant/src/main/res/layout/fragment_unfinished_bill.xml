@@ -16,5 +16,14 @@
 
     </ListView>
 
+    <TextView
+        android:id="@+id/prompt"
+        android:visibility="gone"
+        android:gravity="center"
+        android:textSize="19sp"
+        android:textColor="@color/my_gray"
+        android:text="暂无信息"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
 
 </LinearLayout>

@@ -6,12 +6,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.ContactAdapter;
 import com.example.administrator.sjassistant.bean.Person;
+import com.example.administrator.sjassistant.util.OperatorUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.view.ChangeNumberDialog;
 import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.view.MyListView;
@@ -24,7 +27,7 @@ import java.util.List;
  */
 public class MoreContact extends BaseActivity implements View.OnClickListener {
 
-    private MyListView listView;
+    private ListView listView;
 
     private List<Person> datalist = new ArrayList<Person>();
 
@@ -51,7 +54,7 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
         setTopText("多方通话");
         setCenterView(R.layout.activity_more_contact);
 
-        listView = (MyListView)findViewById(R.id.person);
+        listView = (ListView)findViewById(R.id.person);
 
         iv_start = (ImageView)findViewById(R.id.iv_start);
         number = (EditText)findViewById(R.id.number);
@@ -69,35 +72,8 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
 
         adapter = new ContactAdapter(this,datalist);
 
-//        listView.setAdapter(new CommonAdapter<Person>(this, datalist, R.layout.item_more) {
-//            @Override
-//            public void convert(final ViewHolder holder, Person person) {
-//                holder.getView(R.id.delete_contacts).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        ChangeNumberDialog d = new ChangeNumberDialog(MoreContact.this);
-//
-//                        d.setFlag(1);
-//                        d.show();
-//                        d.setOnDeleteClickListener(new ChangeNumberDialog.OnDeleteClickListener() {
-//                            @Override
-//                            public void onDelete(int i) {
-//                                result = i;
-//                                Log.d("tag", "result: " + result);
-//                                if (result == 1) {
-//                                    Log.d("tag", "result: " + result+"position"+holder.getPosition());
-//                                    removeItem(holder.getPosition());
-//                                }
-//                            }
-//                        });
-//
-//                    }
-//                });
-//            }
-//        });
-
         listView.setAdapter(adapter);
-
+        OperatorUtil.setListViewHeight(listView);
         change_layout.setOnClickListener(this);
         iv_start.setOnClickListener(this);
         add.setOnClickListener(this);
@@ -106,7 +82,6 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         Intent intent = null;
-        MyDialog dialog = new MyDialog(this);
         ChangeNumberDialog dialog2 = new ChangeNumberDialog(this);
         switch (v.getId()) {
             case R.id.iv_start:
@@ -133,7 +108,12 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
                 dialog2.setOnItemClickListener(new ChangeNumberDialog.OnItemClickListener() {
                     @Override
                     public void onItemClick(String str) {
-                        master.setText(str);
+                        if (OperatorUtil.isPhoneNumber(str))
+                            master.setText(str);
+                        else {
+                            ToastUtil.showShort(MoreContact.this,"手机号码格式不正确");
+                            master.setText("");
+                        }
                     }
                 });
 

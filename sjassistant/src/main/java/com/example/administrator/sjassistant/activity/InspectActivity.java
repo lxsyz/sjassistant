@@ -8,7 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -16,9 +19,29 @@ import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.adapter.CommonAdapter;
+import com.example.administrator.sjassistant.adapter.ViewHolder;
+import com.example.administrator.sjassistant.bean.Bill;
+import com.example.administrator.sjassistant.bean.InspectPerson;
 import com.example.administrator.sjassistant.fragment.FinishedBillFragment;
 import com.example.administrator.sjassistant.fragment.UnfinishedBillFragment;
+import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.OperatorUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Call;
 
 
 /**
@@ -32,6 +55,14 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
 
     private ImageView bt_left,bt_right;
     private TextView tv_center;
+
+    FinishedBillFragment finishedBillFragment;
+    UnfinishedBillFragment unfinishedBillFragment;
+
+
+    private List<Bill> datalist = new ArrayList<Bill>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +81,8 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
         bt_right.setOnClickListener(this);
 
 
-        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+
         tabs = (PagerSlidingTabStrip)findViewById(R.id.tabs);
-        tabs.setViewPager(viewPager);
         tabs.setIndicatorColor(Color.parseColor("#38B994"));
         tabs.setBackgroundResource(R.color.white);
         tabs.setIndicatorHeight(OperatorUtil.dp2px(this,2));
@@ -72,6 +102,7 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
                 break;
             case R.id.bt_right:
                 intent = new Intent(InspectActivity.this,SearchBillActivity.class);
+                intent.putExtra("data",(ArrayList)datalist);
                 startActivity(intent);
                 break;
         }
@@ -80,22 +111,24 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
     class MyPagerAdapter extends FragmentPagerAdapter {
         String[] title = {"已审批单据","未审批单据"};
 
-        FinishedBillFragment finishedBillFragment;
-        UnfinishedBillFragment unfinishedBillFragment;
+        FragmentManager fm;
 
-        public MyPagerAdapter(FragmentManager adapter) {
-            super(adapter);
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+            this.fm = fm;
         }
 
         @Override
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    finishedBillFragment = new FinishedBillFragment();
+                    //finishedBillFragment = new FinishedBillFragment();
+                    //Bundle bundle = new Bundle();
+
                     return finishedBillFragment;
                 case 1:
-                    unfinishedBillFragment = new UnfinishedBillFragment();
-                    return  unfinishedBillFragment;
+                    //unfinishedBillFragment = new UnfinishedBillFragment();
+                    return unfinishedBillFragment;
                 default:
                     return null;
             }
@@ -110,6 +143,90 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
             return title[position];
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //unfinshDatalist.clear();
+        if (finishedBillFragment == null || unfinishedBillFragment == null)
+            getUnfinishedWork();
+    }
+
+    /*
+         * 获取未完成
+         */
+    private void getUnfinishedWork() {
+        //unfinshDatalist.clear();
+        datalist.clear();
+
+        String url = Constant.SERVER_URL + "bill/show";
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("userCode", Constant.username)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage() + " ");
+                        ErrorUtil.NetWorkToast(InspectActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response + " ");
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            JSONObject data = object.getJSONObject("data");
+                            JSONArray list = data.getJSONArray("list");
+                            if (statusCode == 0) {
+                                Gson gson = new Gson();
+                                int len = list.length();
+                                if (len != 0) {
+                                    datalist = gson.fromJson(list.toString(), new TypeToken<List<Bill>>() {
+                                    }.getType());
+                                    List<Bill> unfinishedList = new ArrayList<Bill>();
+                                    List<Bill> finishedList = new ArrayList<Bill>();
+                                    for (Bill bill:datalist) {
+                                        if (TextUtils.isEmpty(bill.getDealResult())) {
+                                            bill.setDealResult("未读");
+                                            unfinishedList.add(bill);
+                                        } else if (bill.getDealResult().equals("已读")) {
+                                            finishedList.add(bill);
+                                        } else {
+                                            unfinishedList.add(bill);
+                                        }
+                                    }
+
+                                    finishedBillFragment = new FinishedBillFragment();
+                                    unfinishedBillFragment = new UnfinishedBillFragment();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("data", (ArrayList) unfinishedList);
+                                    unfinishedBillFragment.setArguments(bundle);
+
+
+                                    Bundle bundle2 = new Bundle();
+                                    bundle2.putSerializable("data",(ArrayList) finishedList);
+                                    finishedBillFragment.setArguments(bundle2);
+
+                                }
+                                viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+                                tabs.setViewPager(viewPager);
+
+
+                            } else {
+                                ToastUtil.showShort(InspectActivity.this, "服务器异常");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+
     protected void initWindow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(

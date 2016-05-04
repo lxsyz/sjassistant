@@ -158,6 +158,9 @@
         <activity android:name=".activity.InspectActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".activity.GroupActivity"
+            android:screenOrientation="portrait" />
+
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>

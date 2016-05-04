@@ -200,7 +200,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
 
-        if (contactData.size() == 0 || departmentData.size() == 0)
+        if (contactData.size() == 0 && departmentData.size() == 0)
             getData(id);
 
         ed_name.addTextChangedListener(new TextWatcher() {
