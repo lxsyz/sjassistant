@@ -100,7 +100,7 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.PostMessageActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.ChooseApartmentActivity"
@@ -134,6 +134,7 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.MoreContact"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.InspectWorkActivity"

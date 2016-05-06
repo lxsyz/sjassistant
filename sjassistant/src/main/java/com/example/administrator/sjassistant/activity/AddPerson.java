@@ -60,6 +60,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
     private ListView apartment_list;
     private ListView contact_list;
     private TextView text_add_person;
+    private View v;
     /*
      * 保存添加的结果
      */
@@ -148,6 +149,8 @@ public class AddPerson extends Activity implements View.OnClickListener {
         bt_left.setOnClickListener(this);
         bt_right.setOnClickListener(this);
 
+
+        v = findViewById(R.id.div);
     }
 
     /*
@@ -277,6 +280,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
                                     }
                                     text_add_person.setText("选择部门");
                                 } else if (lenU != 0) {
+                                    v.setVisibility(View.GONE);
                                     text_add_person.setText("选择联系人");
                                 } else {
                                     text_add_person.setText("没有更多的联系人了");
@@ -299,8 +303,8 @@ public class AddPerson extends Activity implements View.OnClickListener {
                                     @Override
                                     public void convert(ViewHolder holder, MyContacts contact) {
                                         holder.getView(R.id.right_arrow1).setVisibility(View.INVISIBLE);
-
-                                        holder.setText(R.id.name, contact.getUsername());
+                                        holder.setText(R.id.group, contact.getRoleName());
+                                        holder.setText(R.id.name, contact.getTrueName());
 
                                     }
                                 };
@@ -320,7 +324,6 @@ public class AddPerson extends Activity implements View.OnClickListener {
     }
 
 
-
     /*
      * 搜索联系人
      */
@@ -331,7 +334,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
             filterList = contactData;
         } else {
             for (MyContacts contacts:contactData) {
-                if (contacts.getUsername().contains("text")) {
+                if (contacts.getUsername().contains(text)) {
                     filterList.add(contacts);
                 }
             }
@@ -340,12 +343,6 @@ public class AddPerson extends Activity implements View.OnClickListener {
         contactAdapter.updateListView(filterList);
     }
 
-    protected void initWindow() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-    }
 
     @Override
     public void onClick(View v) {
@@ -375,11 +372,16 @@ public class AddPerson extends Activity implements View.OnClickListener {
                     }
                     Log.d("response","result.size "+result.size()+"sb  "+sb.toString());
                     Intent intent = new Intent(AddPerson.this,PostMessageActivity.class);
-                    intent.putExtra("result",sb.toString());
+                    Bundle bundle = new Bundle();
+                    bundle.putString("result",sb.toString());
+//                    intent.putExtra("result",sb.toString());
+                    intent.putExtras(bundle);
                     startActivity(intent);
-                    AddPersonManager.getInstance().finishAllActivity();
+                    //AddPersonManager.getInstance().finishAllActivity();
                 }
                 else {
+
+
                     if (count > 8) {
                         MyDialog dialog = new MyDialog(AddPerson.this, R.style.dialog_style);
                         dialog.show();
@@ -391,6 +393,13 @@ public class AddPerson extends Activity implements View.OnClickListener {
                     }
                 }
                 break;
+        }
+    }
+
+    protected void initWindow() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
 

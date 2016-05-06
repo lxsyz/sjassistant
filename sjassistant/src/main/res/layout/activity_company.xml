@@ -19,6 +19,7 @@
             android:layout_height="38dp">
 
             <TextView
+                android:id="@+id/text_add_person"
                 android:textSize="13sp"
                 android:layout_centerVertical="true"
                 android:textColor="#979797"
@@ -35,51 +36,56 @@
                 android:background="@color/line" />
         </RelativeLayout>
 
-        <!--   <RelativeLayout
-               android:id="@+id/all_apartment"
-               android:layout_width="fill_parent"
-               android:layout_height="45dp">
-
-               <TextView
-                   android:textColor="@color/my_black"
-                   android:textSize="16sp"
-                   android:layout_centerVertical="true"
-                   android:text="全部分所"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content" />
-
-               <View
-                   android:layout_alignParentBottom="true"
-                   android:layout_width="match_parent"
-                   android:layout_height="0.5dp"
-                   android:background="@color/line"
-                    />
-               <ImageView
-                   android:id="@+id/iv_all_checked"
-                   android:layout_marginRight="12dp"
-                   android:layout_toLeftOf="@+id/right_arrow1"
-                   android:layout_centerVertical="true"
-                   android:src="@drawable/radio_unchecked"
-                   android:layout_width="15dp"
-                   android:layout_height="15dp" />
-               <ImageView
-                   android:id="@+id/right_arrow1"
-                   style="@style/right_arrow" />
-
-           </RelativeLayout> -->
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/apartment_list"
-        android:background="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fadingEdge="none"
-        android:scrollbars="none"
-        android:divider="@drawable/list_item_divider"
-        android:dividerHeight="0.5dp"
-        >
+    <!--<ListView-->
+    <!--android:id="@+id/list"-->
+    <!--android:background="@color/white"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:fadingEdge="none"-->
+    <!--android:scrollbars="none"-->
 
-    </ListView>
+    <!-->-->
+    <!--</ListView>-->
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fadingEdge="none" >
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <ListView
+                android:background="@color/white"
+                android:id="@+id/apartment_list"
+                android:fadingEdge="none"
+                android:scrollbars="none"
+                android:divider="@drawable/list_item_divider"
+                android:dividerHeight="0.5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </ListView>
+
+            <View
+                android:id="@+id/div"
+                android:layout_width="fill_parent"
+                android:layout_height="12dp" />
+            <ListView
+                android:background="@color/white"
+                android:id="@+id/manager_list"
+                android:fadingEdge="none"
+                android:scrollbars="none"
+                android:divider="@drawable/list_item_divider"
+                android:dividerHeight="0.5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </ListView>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

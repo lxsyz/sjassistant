@@ -88,7 +88,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer{
             }
         });
         viewHolder.tvTitle.setText(this.list.get(position).getName());
-
+        viewHolder.group.setText(this.list.get(position).getGroup());
         return convertView;
     }
 

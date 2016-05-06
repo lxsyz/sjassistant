@@ -339,17 +339,18 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
     private void initUiData() {
         //sp = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         //imgPath = sp.getString("imgPath", null);
-        File file = new File(portraitPath);
-        if (!file.exists()) {
-            getUserImg();
-        } else {
-            Bitmap bitmap = FileUtil.getSmallBitmap(portraitPath,500,500);
-            if (bitmap == null) {
-                getUserImg();
-                //user_photo.setImageResource(R.drawable.customer_de);
-            } else
-                user_photo.setImageBitmap(bitmap);
-        }
+        getUserImg();
+//        File file = new File(portraitPath);
+//        if (!file.exists()) {
+//            getUserImg();
+//        } else {
+//            Bitmap bitmap = FileUtil.getSmallBitmap(portraitPath,500,500);
+//            if (bitmap == null) {
+//                getUserImg();
+//                //user_photo.setImageResource(R.drawable.customer_de);
+//            } else
+//                user_photo.setImageBitmap(bitmap);
+//        }
 
 
 
@@ -389,7 +390,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                         //writeToFile((InputStream) response, portraitPath);
                         Bitmap bitmap = (Bitmap)response;
                         user_photo.setImageBitmap(bitmap);
-                        FileUtil.saveBitmap2file(bitmap,portraitPath);
+//                        FileUtil.saveBitmap2file(bitmap,portraitPath);
 //                        if (bitmap != null && !bitmap.isRecycled()) {
 //                            bitmap.recycle();
 //                            bitmap = null;
@@ -430,13 +431,13 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                                 String role = data.optString("role_name");
                                 String address = data.optString("address");
 
-                                SharedPreferences.Editor editor = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE).edit();
-                                editor.putString("nickname",user);
-                                editor.putString("sex",sex);
-                                editor.putString("dept_name",department);
-                                editor.putString("role_name",role);
-                                editor.putString("address",address);
-                                editor.commit();
+//                                SharedPreferences.Editor editor = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE).edit();
+//                                editor.putString("nickname",user);
+//                                editor.putString("sex",sex);
+//                                editor.putString("dept_name",department);
+//                                editor.putString("role_name",role);
+//                                editor.putString("address",address);
+//                                editor.commit();
                                 if (!TextUtils.isEmpty(user)) {
                                     nickname_text.setText(user);
                                     username.setText(user);

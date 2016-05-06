@@ -217,7 +217,7 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
         OkHttpUtils.get()
                 .url(url)
                 .addParams("billId",String.valueOf(bill.getBillId()))
-                .addParams("auditPerson",bill.getUserCode())
+                .addParams("auditPerson",Constant.username)
                 .addParams("ispass",String.valueOf(isPass))
                 .build()
                 .execute(new StringCallback() {
@@ -288,7 +288,7 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
     private void getBillDetail() {
         datalist.clear();
         String url = Constant.SERVER_URL + "bill/showDetail";
-
+        Log.d("billId",bill.getBillId()+" ");
         OkHttpUtils.post()
                 .url(url)
                 .addParams("displayLevel", "1")
@@ -339,7 +339,7 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
                                         shareContent.append(": ");
                                         shareContent.append(o.optString("displayValue"));
                                         shareContent.append("\n");
-                                        datalist.add(billDetail);
+                                        datalist.add(0,billDetail);
                                     }
 
                                 }

@@ -50,7 +50,7 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_message);
         AppManager.getInstance().addActivity(this);
-        AddPersonManager.getInstance().addActivity(this);
+        //AddPersonManager.getInstance().addActivity(this);
         initWindow();
 
         SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
@@ -99,14 +99,17 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("response","onresume");
+    protected void onNewIntent(Intent intent) {
         String result = "";
-        result = getIntent().getStringExtra("result");
-        Log.d("response",result+" ");
+        result = intent.getStringExtra("result");
         message_reader.setText(result);
         message_reader.setSelection(message_reader.getText().length());
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override

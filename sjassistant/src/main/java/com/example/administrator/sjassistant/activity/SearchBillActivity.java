@@ -109,7 +109,6 @@ public class SearchBillActivity extends BaseActivity implements View.OnClickList
             for (Bill bill : datalist) {
                 if (bill.getDealTime().contains(text)
                         || bill.getDealResult().contains(text)
-                        || bill.getDealPerson().contains(text)
                         || bill.getUserCode().contains(text)
                         || bill.getBillType().contains(text)) {
                     filterData.add(bill);

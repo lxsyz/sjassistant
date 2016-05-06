@@ -152,6 +152,11 @@ public class ChangeNumberDialog extends Dialog implements View.OnClickListener {
         return flag;
     }
 
+    /*
+     * @param flag=0 更换号码
+     * @param flag=1 删除联系人
+     * @param flag=2 显示一个确定按钮
+     */
     public void setFlag(int flag) {
         this.flag = flag;
     }

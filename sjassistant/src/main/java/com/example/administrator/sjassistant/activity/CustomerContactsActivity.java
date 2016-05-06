@@ -2,7 +2,9 @@ package com.example.administrator.sjassistant.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -149,6 +151,23 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
         }
 
         getCompany();
+
+        ed_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterData(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     /*
@@ -184,13 +203,17 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
                                         datalist = gson.fromJson(list.toString(), new TypeToken<List<ContactsPerson>>() {
                                         }.getType());
 
-                                        commonAdapter = new CommonAdapter<ContactsPerson>(CustomerContactsActivity.this, datalist, R.layout.item_choose_customer) {
-                                            @Override
-                                            public void convert(ViewHolder holder, ContactsPerson cp) {
-                                                holder.setText(R.id.customer_name, cp.getCustomerName());
-                                            }
-                                        };
-                                        customer_list.setAdapter(commonAdapter);
+                                        if (commonAdapter != null) {
+                                            commonAdapter.updateListView(datalist);
+                                        } else {
+                                            commonAdapter = new CommonAdapter<ContactsPerson>(CustomerContactsActivity.this, datalist, R.layout.item_choose_customer) {
+                                                @Override
+                                                public void convert(ViewHolder holder, ContactsPerson cp) {
+                                                    holder.setText(R.id.customer_name, cp.getCustomerName());
+                                                }
+                                            };
+                                            customer_list.setAdapter(commonAdapter);
+                                        }
                                     }
                                 }
                             } else {
@@ -222,5 +245,5 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
         commonAdapter.updateListView(filterList);
     }
 
-    private CommonAdapter commonAdapter;
+    private CommonAdapter<ContactsPerson> commonAdapter;
 }

@@ -239,19 +239,20 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                                         if (TextUtils.isEmpty(message.getHeadImg())) {
                                             holder.setImageResource(R.id.user_photo, R.drawable.customer_de);
                                         } else {
-                                            OkHttpUtils.get()
-                                                    .url(message.getHeadImg())
-                                                    .build().execute(new BitmapCallback() {
-                                                @Override
-                                                public void onError(Call call, Exception e) {
-                                                    ErrorUtil.NetWorkToast(MessageActivity.this);
-                                                }
-
-                                                @Override
-                                                public void onResponse(Bitmap response) {
-                                                    holder.setImageBitmap(R.id.user_photo, response);
-                                                }
-                                            });
+                                            holder.setImageResource(R.id.user_photo, R.drawable.customer_de);
+//                                            OkHttpUtils.get()
+//                                                    .url(message.getHeadImg())
+//                                                    .build().execute(new BitmapCallback() {
+//                                                @Override
+//                                                public void onError(Call call, Exception e) {
+//                                                    ErrorUtil.NetWorkToast(MessageActivity.this);
+//                                                }
+//
+//                                                @Override
+//                                                public void onResponse(Bitmap response) {
+//                                                    holder.setImageBitmap(R.id.user_photo, response);
+//                                                }
+//                                            });
                                         }
                                     }
                                 };

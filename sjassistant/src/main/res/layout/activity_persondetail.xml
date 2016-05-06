@@ -101,7 +101,12 @@
         </RelativeLayout>
 
     </LinearLayout>
-
+    <View
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line" />
     <LinearLayout
         android:background="@color/white"
         android:padding="12dp"
@@ -126,7 +131,12 @@
                 android:layout_height="wrap_content" />
         </RelativeLayout>
     </LinearLayout>
-
+    <View
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line" />
     <LinearLayout
         android:background="@color/white"
         android:padding="12dp"
@@ -151,7 +161,12 @@
                 android:layout_height="wrap_content" />
         </RelativeLayout>
     </LinearLayout>
-
+    <View
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line" />
     <LinearLayout
         android:background="@color/white"
         android:padding="12dp"

@@ -82,7 +82,7 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
-        datalist.clear();
+
         if (datalist.size() != 0) {
             commonAdapter = new CommonAdapter<InspectPerson>(InspectReasonActivity.this, datalist, R.layout.item_inspect_reason) {
                 @Override
@@ -135,7 +135,7 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
 
     private void postReason() {
         String url = Constant.SERVER_URL + "bill/commitBill";
-
+        Log.d("approver",getApprover()+" ");
         OkHttpUtils.post()
                 .url(url)
                 .addParams("billId", String.valueOf(billId))

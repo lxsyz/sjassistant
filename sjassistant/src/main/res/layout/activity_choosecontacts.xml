@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/background"
+    android:background="@color/white"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,7 +9,6 @@
         android:id="@+id/layout_top" />
 
     <LinearLayout
-        android:background="@color/white"
         android:layout_width="fill_parent"
         android:orientation="vertical"
         android:layout_height="42dp">
@@ -42,7 +41,6 @@
         android:id="@+id/customer_type_layout"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="55dp">
@@ -62,7 +60,7 @@
 
             <TextView
                 android:id="@+id/customer_type"
-                android:text="企业单位"
+                android:text=""
                 android:layout_toLeftOf="@+id/right_arrow1"
                 style="@style/choose_contacts" />
 
@@ -84,7 +82,6 @@
         android:id="@+id/person_apartment_layout"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="55dp">
@@ -104,7 +101,7 @@
 
             <TextView
                 android:id="@+id/person_apartment"
-                android:text="信息科"
+                android:text=""
                 style="@style/choose_contacts"
                 android:layout_toLeftOf="@+id/right_arrow2"
                  />
@@ -127,7 +124,6 @@
         android:id="@+id/person_work_layout"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="55dp">
@@ -146,7 +142,7 @@
                 />
             <TextView
                 android:id="@+id/person_work"
-                android:text="经理"
+                android:text=""
                 style="@style/choose_contacts"
                 android:layout_toLeftOf="@+id/right_arrow3"
                 />
@@ -157,6 +153,9 @@
         </RelativeLayout>
     </LinearLayout>
 
-
+    <View
+        android:background="@color/background"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 </LinearLayout>

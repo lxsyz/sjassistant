@@ -20,7 +20,7 @@
             <EditText
                 android:id="@+id/company_name"
                 android:layout_alignParentRight="true"
-                android:text=""
+                android:gravity="right"
                 android:hint="请输入公司名称"
                 android:background="@drawable/border"
                 android:singleLine="true"
@@ -177,6 +177,7 @@
                 android:id="@+id/name"
                 android:layout_alignParentRight="true"
                 android:text=""
+                android:gravity="right"
                 android:hint="请输入联系人姓名"
                 android:background="@drawable/border"
                 android:singleLine="true"
@@ -215,6 +216,7 @@
                 android:id="@+id/phone"
                 android:layout_alignParentRight="true"
                 android:text=""
+                android:gravity="right"
                 android:hint="请输入联系人电话"
                 android:background="@drawable/border"
                 android:singleLine="true"
@@ -234,7 +236,7 @@
 
         <Button
             android:id="@+id/confirm"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="22dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:textColor="@color/white"

@@ -1,7 +1,9 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -150,6 +152,27 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        ed_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterData(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search:
@@ -172,7 +195,7 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
      */
     private void getContacts() {
         String url = Constant.SERVER_URL + "phoneBook/showCustomerUser";
-
+        Log.d("customer_name",customer_name);
         OkHttpUtils.post()
                 .url(url)
                 .addParams("userCode", Constant.username)
@@ -197,10 +220,14 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
                                 if (data != null && data.length() != 0) {
                                     JSONArray list = data.optJSONArray("list");
                                     if (list.length() != 0) {
-
-                                        datalist = gson.fromJson(list.toString(), new TypeToken<List<ContactsPerson>>(){}.getType());
-
-
+                                        List<ContactsPerson> contactsPersonsList = new ArrayList<>();
+//
+                                        contactsPersonsList = gson.fromJson(list.toString(), new TypeToken<List<ContactsPerson>>() {
+                                        }.getType());
+                                        datalist = dealData(contactsPersonsList);
+                                        Collections.sort(datalist, pinyinComparator);
+                                        adapter = new SortAdapter(ContactsDetailActivity.this, datalist);
+                                        sortListView.setAdapter(adapter);
                                     }
                                 }
                             } else {
@@ -221,7 +248,7 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
         Log.d("response","group");
 
         String url = Constant.SERVER_URL + "phoneBook/showGroupUser";
-
+        Log.d("response",id);
         OkHttpUtils.get()
                 .url(url)
                 .addParams("id",id)
@@ -229,13 +256,13 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error",e.getMessage());
+                        Log.d("error", e.getMessage());
                         ErrorUtil.NetWorkToast(ContactsDetailActivity.this);
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        Log.d("response",response);
+                        Log.d("response", response);
                         try {
                             JSONObject object = new JSONObject(response);
                             int statusCode = object.getInt("statusCode");
@@ -245,13 +272,19 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
                                 if (data != null && data.length() != 0) {
                                     JSONArray list = data.optJSONArray("list");
                                     if (list.length() != 0) {
+                                        Log.d("response", "list0->0" + list.length());
                                         List<GroupDetail> groupDetailList = new ArrayList<GroupDetail>();
-
-                                        groupDetailList = gson.fromJson(list.toString(), new TypeToken<List<GroupDetail>>(){}.getType());
-
-                                        datalist = dealData(groupDetailList);
-                                        Collections.sort(datalist,pinyinComparator);
-                                        adapter = new SortAdapter(ContactsDetailActivity.this,datalist);
+//                                        for (int i = 0;i < list.length();i++) {
+//                                            GroupDetail groupDetail = new GroupDetail();
+//                                            groupDetail.setTrueName(list.getJSONObject(i).optString("trueName"));
+//                                            groupDetail.setPhone(list.getJSONObject(i).optString("phone"));
+//                                            groupDetailList.add(groupDetail);
+//                                        }
+                                        groupDetailList = gson.fromJson(list.toString(), new TypeToken<List<GroupDetail>>() {
+                                        }.getType());
+                                        datalist = dealGroupData(groupDetailList);
+                                        Collections.sort(datalist, pinyinComparator);
+                                        adapter = new SortAdapter(ContactsDetailActivity.this, datalist);
                                         sortListView.setAdapter(adapter);
                                     }
                                 }
@@ -269,13 +302,14 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
     /*
      * 处理数据，获取首字母
      */
-    private List<SortModel> dealData(List<GroupDetail> data){
+    private List<SortModel> dealGroupData(List<GroupDetail> data){
         List<SortModel> mSortList = new ArrayList<SortModel>();
         for (int i = 0; i < data.size(); i++) {
             String name = data.get(i).getTrueName();
             SortModel sortModel = new SortModel();
             sortModel.setName(name);
             sortModel.setPhoneNumber(data.get(i).getPhone());
+            sortModel.setGroup(data.get(i).getDeptName());
             //汉字转换成拼音
             String pinyin = OperatorUtil.getFirstChar(name);
             String sortString = pinyin.substring(0, 1).toUpperCase();
@@ -296,34 +330,36 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
     /*
      * 处理数据，获取首字母
      */
-//    private List<SortModel> dealData(List<ContactsPerson> data){
-//        List<SortModel> mSortList = new ArrayList<SortModel>();
-//        for (int i = 0; i < data.size(); i++) {
-//            String name = ((ContactsPerson) data.get(i)).getTrueName();
-//            SortModel sortModel = new SortModel();
-//            sortModel.setName(name);
-//            //汉字转换成拼音
-//            String pinyin = OperatorUtil.getFirstChar(name);
-//            String sortString = pinyin.substring(0, 1).toUpperCase();
-//
-//            // 正则表达式，判断首字母是否是英文字母
-//            if (sortString.matches("[A-Z]")) {
-//                sortModel.setSortLetter(sortString.toUpperCase());
-//            } else {
-//                sortModel.setSortLetter("#");
-//            }
-//
-//            mSortList.add(sortModel);
-//        }
-//
-//        return mSortList;
-//    }
+    private List<SortModel> dealData(List<ContactsPerson> data){
+        List<SortModel> mSortList = new ArrayList<SortModel>();
+        for (int i = 0; i < data.size(); i++) {
+            String name = data.get(i).getLinkName();
+            SortModel sortModel = new SortModel();
+            sortModel.setName(name);
+            sortModel.setPhoneNumber(data.get(i).getLinkPhone());
+            sortModel.setGroup(data.get(i).getCustomerName());
+            //汉字转换成拼音
+            String pinyin = OperatorUtil.getFirstChar(name);
+            String sortString = pinyin.substring(0, 1).toUpperCase();
+
+            // 正则表达式，判断首字母是否是英文字母
+            if (sortString.matches("[A-Z]")) {
+                sortModel.setSortLetter(sortString.toUpperCase());
+            } else {
+                sortModel.setSortLetter("#");
+            }
+
+            mSortList.add(sortModel);
+        }
+
+        return mSortList;
+    }
 
     /*
      * 搜索
      */
     private void filterData(String filter) {
-        //小组
+
 
         List<SortModel> filterDataList = new ArrayList<SortModel>();
 

@@ -27,7 +27,7 @@
                 android:layout_centerVertical="true"
                 android:textColor="#979797"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:text="选择部门"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent" />
@@ -35,6 +35,8 @@
             <View
                 android:layout_alignParentBottom="true"
                 android:layout_width="fill_parent"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
                 android:layout_height="0.5dp"
                 android:background="@color/line" />
         </RelativeLayout>
@@ -77,6 +79,7 @@
         android:id="@+id/apartment_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:fadingEdge="none"
         android:listSelector="#00000000"
         android:cacheColorHint="@android:color/transparent"

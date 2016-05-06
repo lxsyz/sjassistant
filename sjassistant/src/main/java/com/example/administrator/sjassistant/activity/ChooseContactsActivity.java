@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.bean.FilterCondition;
+import com.example.administrator.sjassistant.util.AppManager;
 
 /**
  * Created by Administrator on 2016/4/2.
@@ -26,10 +28,15 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
 
     private LinearLayout person_work_layout,person_apartment_layout,customer_type_layout;
     private TextView customer_type,person_work,person_apartment;
+
+    private int customerId;
+    private int deptId;
+    private int postId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choosecontacts);
+        AppManager.getInstance().addActivity(this);
         initWindow();
         initView();
     }
@@ -71,6 +78,9 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
             case R.id.bt_right:
                 intent = new Intent(ChooseContactsActivity.this,SearchResultActivity.class);
                 intent.putExtra("type","筛选结果");
+                intent.putExtra("customerType",customerId);
+                intent.putExtra("customerDept",deptId);
+                intent.putExtra("customerPost", postId);
                 startActivity(intent);
                 break;
             case R.id.customer_type_layout:
@@ -94,23 +104,24 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("tag",requestCode+"  "+resultCode+"  ");
-        String result = "";
-        switch (resultCode) {
-            case 1:
-                result = data.getStringExtra("result");
-                customer_type.setText(result);
-                break;
-            case 2:
-                result = data.getStringExtra("result");
-                person_apartment.setText(result);
-                break;
-            case 3:
-                result = data.getStringExtra("result");
-                person_work.setText(result);
-                break;
+        FilterCondition result = (FilterCondition) data.getSerializableExtra("result");
+
+        if (result != null) {
+            switch (resultCode) {
+                case 1:
+                    customerId = result.getId();
+                    customer_type.setText(result.getName());
+                    break;
+                case 2:
+                    deptId = result.getId();
+                    person_apartment.setText(result.getName());
+                    break;
+                case 3:
+                    postId = result.getId();
+                    person_work.setText(result.getName());
+                    break;
+            }
         }
-
-
         super.onActivityResult(requestCode, resultCode, data);
 
     }

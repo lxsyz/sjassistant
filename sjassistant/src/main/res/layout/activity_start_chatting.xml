@@ -84,7 +84,7 @@
                 android:layout_marginLeft="35dp"
                 android:layout_marginRight="35dp"
                 android:background="#EB7374"
-
+                android:id="@+id/end"
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
                 <ImageView

@@ -18,9 +18,18 @@ import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
 import com.example.administrator.sjassistant.bean.Person;
+import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/3/31.
@@ -35,24 +44,30 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
 
     private ListView lv;
     private List<Person> personList = new ArrayList<Person>();
-    private String content;
-    private String type;
+    private int customerType,customerDept,customerPost;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        content = getIntent().getStringExtra("name");
-        type = getIntent().getStringExtra("type");
+        //初始界面搜索跳转过来的
+        String content = getIntent().getStringExtra("name");
         if (!TextUtils.isEmpty(content)) {
             ed_name.setText(content);
             setTopText("搜索结果");
             number.setText(personList.size()+"个搜索结果");
         }
 
+
+        String type = getIntent().getStringExtra("type");
         if (!TextUtils.isEmpty(type)) {
             ed_name.setText("");
             setTopText("筛选结果");
-            number.setText(personList.size()+"个筛选结果");
+
+            customerDept = getIntent().getIntExtra("customerDept", 0);
+            customerPost = getIntent().getIntExtra("customerPost", 0);
+            customerType = getIntent().getIntExtra("customerType", 0);
+            Log.d("response",customerDept+" "+customerPost+" "+customerType);
+            //number.setText(personList.size()+"个筛选结果");
         }
 
 
@@ -126,6 +141,49 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
         ed_name.setOnClickListener(this);
         delete.setOnClickListener(this);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getFilterResult();
+    }
+
+    /*
+     * 获取筛选结果
+     */
+    private void getFilterResult() {
+        String url = Constant.SERVER_URL + "phoneBook/getCustomerByReason";
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("customerType", String.valueOf(customerType))
+                .addParams("customerDept", String.valueOf(customerDept))
+                .addParams("customerPost", String.valueOf(customerPost))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error",e.getMessage());
+                        ErrorUtil.NetWorkToast(SearchResultActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response",response);
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.optInt("statusCode");
+                            if (statusCode == 0) {
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
     }
 
     @Override
