@@ -6,85 +6,134 @@ import java.io.Serializable;
  * Created by Administrator on 2016/4/2.
  */
 public class Person implements Serializable{
-    private String name;
+    private String id;
 
-    private String group;
-
-    private String phoneNumber;
-
-    private String companyName;
-
-    private String customer_type;
-
-    private String apartment;
-
-    private String person_work;
-
-    private String imgPath;
-
-    public String getApartment() {
-        return apartment;
+    public String getId() {
+        return id;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getCustomer_type() {
-        return customer_type;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public String getPerson_work() {
-        return person_work;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    public void setApartment(String apartment) {
-        this.apartment = apartment;
+    public String getCustomerCode() {
+        return customerCode;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
     }
 
-    public void setCustomer_type(String customer_type) {
-        this.customer_type = customer_type;
+    public String getGroupOrder() {
+        return groupOrder;
     }
 
-    public void setPerson_work(String person_work) {
-        this.person_work = person_work;
+    public void setGroupOrder(String groupOrder) {
+        this.groupOrder = groupOrder;
     }
 
-    public String getGroup() {
-        return group;
+    public int getCustomerType() {
+        return customerType;
     }
 
-    public String getName() {
-        return name;
+    public void setCustomerType(int customerType) {
+        this.customerType = customerType;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public int getCustomerDept() {
+        return customerDept;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setCustomerDept(int customerDept) {
+        this.customerDept = customerDept;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public int getCustomerPost() {
+        return customerPost;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-
-        this.phoneNumber = phoneNumber;
+    public void setCustomerPost(int customerPost) {
+        this.customerPost = customerPost;
     }
 
-    public void setImgPath(String imgPath) {
-        this.imgPath = imgPath;
+    public String getLinkName() {
+        return linkName;
     }
 
-    public String getImgPath() {
-        return imgPath;
+    public void setLinkName(String linkName) {
+        this.linkName = linkName;
+    }
+
+    public String getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
+
+    public String getLinkPhone() {
+        return linkPhone;
+    }
+
+    public void setLinkPhone(String linkPhone) {
+        this.linkPhone = linkPhone;
+    }
+
+    private String customerCode;
+
+    private String customerName;
+
+    private String groupOrder;
+
+    private int customerType;
+
+    private int customerDept;
+
+    private int customerPost;
+
+    private String linkName;
+
+    private String linkPhone;
+
+    private String userCode;
+
+    private String postName;
+
+    private String deptName;
+
+    private String customerTypeName;
+
+    public String getCustomerTypeName() {
+        return customerTypeName;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public String getPostName() {
+        return postName;
+    }
+
+    public void setCustomerTypeName(String customerTypeName) {
+        this.customerTypeName = customerTypeName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public void setPostName(String postName) {
+        this.postName = postName;
     }
 }
 

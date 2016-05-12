@@ -39,13 +39,14 @@
                     android:src="@drawable/open_unchecked"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="15dp"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp" />
+                    android:layout_width="45dp"
+                    android:layout_height="45dp" />
                 <TextView
                     android:text="免提"
                     android:layout_below="@+id/iv_open"
                     android:textColor="@color/my_light_gray"
                     android:layout_marginTop="12dp"
+                    android:textSize="15sp"
                     android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -61,13 +62,14 @@
                     android:src="@drawable/novoice_unchecked"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="15dp"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp" />
+                    android:layout_width="45dp"
+                    android:layout_height="45dp" />
                 <TextView
                     android:text="静音"
                     android:layout_below="@+id/iv_novoice"
                     android:textColor="@color/my_light_gray"
                     android:layout_marginTop="12dp"
+                    android:textSize="15sp"
                     android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

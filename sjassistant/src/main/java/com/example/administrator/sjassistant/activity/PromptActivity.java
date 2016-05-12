@@ -95,7 +95,7 @@ public class PromptActivity extends BaseActivity implements View.OnClickListener
                 break;
         }
         Log.d("tag","commit");
-        editor.commit();
+        editor.apply();
     }
 
     @Override

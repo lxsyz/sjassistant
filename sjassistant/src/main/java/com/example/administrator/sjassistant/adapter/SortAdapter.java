@@ -2,6 +2,7 @@ package com.example.administrator.sjassistant.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,8 +83,10 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MoreContact.class);
-                Log.d("response","phone: "+sortModel.getPhoneNumber());
-                intent.putExtra("phone",sortModel.getPhoneNumber());
+                Log.d("response", "phone: " + sortModel.getPhoneNumber());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("sortPerson",sortModel);
+                intent.putExtras(bundle);
                 mContext.startActivity(intent);
             }
         });

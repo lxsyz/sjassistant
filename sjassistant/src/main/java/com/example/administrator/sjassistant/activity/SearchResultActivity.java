@@ -1,7 +1,6 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
@@ -20,9 +18,12 @@ import com.example.administrator.sjassistant.adapter.ViewHolder;
 import com.example.administrator.sjassistant.bean.Person;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,17 +46,19 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
     private ListView lv;
     private List<Person> personList = new ArrayList<Person>();
     private int customerType,customerDept,customerPost;
+    private String customerTypeName,deptName,postName;
+    private CommonAdapter<Person> commonAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //初始界面搜索跳转过来的
-        String content = getIntent().getStringExtra("name");
-        if (!TextUtils.isEmpty(content)) {
-            ed_name.setText(content);
-            setTopText("搜索结果");
-            number.setText(personList.size()+"个搜索结果");
-        }
+//        String content = getIntent().getStringExtra("name");
+//        if (!TextUtils.isEmpty(content)) {
+//            ed_name.setText(content);
+//            setTopText("搜索结果");
+//            number.setText(personList.size()+"个搜索结果");
+//        }
 
 
         String type = getIntent().getStringExtra("type");
@@ -66,8 +69,10 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
             customerDept = getIntent().getIntExtra("customerDept", 0);
             customerPost = getIntent().getIntExtra("customerPost", 0);
             customerType = getIntent().getIntExtra("customerType", 0);
-            Log.d("response",customerDept+" "+customerPost+" "+customerType);
-            //number.setText(personList.size()+"个筛选结果");
+            customerTypeName = getIntent().getStringExtra("customerTypeName");
+            deptName = getIntent().getStringExtra("deptName");
+            postName = getIntent().getStringExtra("postName");
+            Log.d("response", customerDept + " " + customerPost + " " + customerType);
         }
 
 
@@ -79,41 +84,10 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
         super.initView();
         setCenterView(R.layout.activity_search_result);
 
-
-        Person p = new Person();
-        p.setGroup("北京分所");
-        p.setApartment("信息科");
-        p.setCompanyName("小公司");
-        p.setCustomer_type("企业");
-        p.setPerson_work("经理");
-        p.setName("张三");
-        p.setPhoneNumber("13006152436");
-
-        personList.add(p);
         number = (TextView)findViewById(R.id.number);
         lv = (ListView)findViewById(R.id.lv_result);
 
-        lv.setAdapter(new CommonAdapter<Person>(this, personList, R.layout.item_search_result) {
-            @Override
-            public void convert(ViewHolder holder, Person person) {
-                final String phonenumber = person.getPhoneNumber();
-                holder.setText(R.id.username, person.getName());
-                holder.setText(R.id.group, person.getGroup());
 
-                holder.getView(R.id.phone).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
-                                + phonenumber));
-                        //noinspection ResourceType,ResourceType
-                        startActivity(intent);
-
-                        Toast.makeText(SearchResultActivity.this, "电话", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            }
-        });
 
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -122,8 +96,9 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
 
 
                 Person p = (Person) lv.getItemAtPosition(position);
-                Log.d("tag",position+" ");
-                Log.d("tag",p.getName()+" ");
+                p.setDeptName(deptName);
+                p.setCustomerTypeName(customerTypeName);
+                p.setPostName(postName);
                 Intent intent = new Intent(SearchResultActivity.this,PersonDetail.class);
                 Bundle mBundle = new Bundle();
                 mBundle.putSerializable("person",p);
@@ -176,7 +151,37 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                             JSONObject object = new JSONObject(response);
                             int statusCode = object.optInt("statusCode");
                             if (statusCode == 0) {
+                                JSONObject data = object.optJSONObject("data");
+                                JSONArray listu = data.optJSONArray("listu");
+                                Gson gson = new Gson();
+                                if (listu != null) {
+                                    personList = gson.fromJson(listu.toString(), new TypeToken<List<Person>>() {
+                                    }.getType());
+                                    if (commonAdapter != null) {
+                                        commonAdapter.updateListView(personList);
+                                    } else {
+                                        commonAdapter = new CommonAdapter<Person>(SearchResultActivity.this, personList, R.layout.item_search_result) {
+                                            @Override
+                                            public void convert(ViewHolder holder, final Person person) {
+                                                holder.setText(R.id.username, person.getLinkName());
+                                                holder.setText(R.id.group, person.getCustomerName());
+                                                holder.getView(R.id.phone).setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        Intent intent = new Intent(SearchResultActivity.this, MoreContact.class);
+                                                        Bundle bundle = new Bundle();
+                                                        bundle.putSerializable("person", person);
+                                                        intent.putExtras(bundle);
+                                                        startActivity(intent);
+                                                    }
+                                                });
+                                            }
+                                        };
 
+                                        lv.setAdapter(commonAdapter);
+                                        number.setText(personList.size()+"个筛选结果");
+                                    }
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

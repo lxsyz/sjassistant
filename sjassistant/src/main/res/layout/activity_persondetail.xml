@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:background="@color/white"
         android:padding="12dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="55dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -28,6 +31,7 @@
 
         </RelativeLayout>
 
+
     </LinearLayout>
 
     <View
@@ -38,7 +42,6 @@
         android:background="@color/line" />
 
     <LinearLayout
-        android:background="@color/white"
         android:padding="12dp"
         android:layout_width="match_parent"
         android:layout_height="55dp">
@@ -53,8 +56,8 @@
 
             <TextView
                 android:id="@+id/phone"
-                android:layout_marginRight="13dp"
-                android:layout_marginEnd="13dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
                 android:textColor="@color/my_more_light_gray"
                 android:textSize="15sp"
                 android:layout_toLeftOf="@+id/right_arrow2"
@@ -67,16 +70,19 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:src="@drawable/contacts_unchecked"
                 />
         </RelativeLayout>
 
     </LinearLayout>
 
+    <View
+        android:background="@color/background"
+        android:layout_width="fill_parent"
+        android:layout_height="14dp" />
 
     <LinearLayout
-        android:layout_marginTop="14dp"
-        android:background="@color/white"
         android:padding="12dp"
         android:layout_width="match_parent"
         android:layout_height="55dp">
@@ -108,7 +114,6 @@
         android:layout_height="0.5dp"
         android:background="@color/line" />
     <LinearLayout
-        android:background="@color/white"
         android:padding="12dp"
         android:layout_width="match_parent"
         android:layout_height="55dp">
@@ -137,8 +142,8 @@
         android:layout_width="fill_parent"
         android:layout_height="0.5dp"
         android:background="@color/line" />
+
     <LinearLayout
-        android:background="@color/white"
         android:padding="12dp"
         android:layout_width="match_parent"
         android:layout_height="55dp">
@@ -168,7 +173,6 @@
         android:layout_height="0.5dp"
         android:background="@color/line" />
     <LinearLayout
-        android:background="@color/white"
         android:padding="12dp"
         android:layout_width="match_parent"
         android:layout_height="55dp">
@@ -192,4 +196,8 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <View
+        android:background="@color/background"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 </LinearLayout>

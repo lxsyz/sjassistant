@@ -27,6 +27,9 @@ public class DetailExpandableAdapter extends BaseExpandableListAdapter {
     List<Map<String,String>> mList = new ArrayList<Map<String, String>>();
     private LayoutInflater mInflater;
 
+    private int fatherId;
+    private String isHref;
+
     class GroupViewHolder {
         TextView tv_content;
         ImageView iv_indicator;
@@ -55,7 +58,7 @@ public class DetailExpandableAdapter extends BaseExpandableListAdapter {
     @Override
     public int getChildrenCount(int groupPosition) {
         Log.d("response",mList.get(groupPosition).size() + " ");
-        return this.mList.get(groupPosition).size() - 2;
+        return (this.mList.get(groupPosition).size() - 4) /2;
     }
 
     @Override
@@ -66,19 +69,13 @@ public class DetailExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-//        Object group = mList.get(groupPosition);
-//        Object child = null;
-//
-//        if (group instanceof Bill) {
-//            Bill b = (Bill)group;
-//
-//        }
+
         Map<String,String> map = new HashMap<>();
         map = mList.get(groupPosition);
 
 
-        return map.get("data"+(childPosition + 1)) + ":  "
-                + map.get("value"+(childPosition + 1));
+        return map.get("data"+(childPosition)) + ":  "
+                + map.get("value"+(childPosition));
     }
 
     @Override
@@ -151,6 +148,11 @@ public class DetailExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
+
         return true;
+    }
+
+    public List<Map<String, String>> getmList() {
+        return mList;
     }
 }

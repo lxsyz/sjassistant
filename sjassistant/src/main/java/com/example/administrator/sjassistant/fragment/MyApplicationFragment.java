@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.activity.InspectActivity;
-import com.example.administrator.sjassistant.activity.InspectWorkActivity;
 import com.example.administrator.sjassistant.activity.MoreContact;
 
 /**

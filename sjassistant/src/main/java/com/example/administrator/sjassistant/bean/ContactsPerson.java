@@ -1,8 +1,5 @@
 package com.example.administrator.sjassistant.bean;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
 
 /**
@@ -17,11 +14,11 @@ public class ContactsPerson implements Serializable {
 
     private String groupOrder;
 
-    private String customerType;
+    private int customerType;
 
-    private String customerDept;
+    private int customerDept;
 
-    private String customerPost;
+    private int customerPost;
 
     private String linkName;
     private String linkPhone;
@@ -59,28 +56,28 @@ public class ContactsPerson implements Serializable {
         this.groupOrder = groupOrder;
     }
 
-    public String getCustomerType() {
+    public int getCustomerType() {
         return customerType;
     }
 
-    public void setCustomerType(String customerType) {
-        this.customerType = customerType;
-    }
-
-    public String getCustomerDept() {
-        return customerDept;
-    }
-
-    public void setCustomerDept(String customerDept) {
-        this.customerDept = customerDept;
-    }
-
-    public String getCustomerPost() {
+    public int getCustomerPost() {
         return customerPost;
     }
 
-    public void setCustomerPost(String customerPost) {
+    public int getCustomerDept() {
+        return customerDept;
+    }
+
+    public void setCustomerType(int customerType) {
+        this.customerType = customerType;
+    }
+
+    public void setCustomerPost(int customerPost) {
         this.customerPost = customerPost;
+    }
+
+    public void setCustomerDept(int customerDept) {
+        this.customerDept = customerDept;
     }
 
     public String getLinkName() {

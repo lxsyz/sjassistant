@@ -1,6 +1,5 @@
 package com.example.administrator.sjassistant.adapter;
 
-import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
@@ -20,15 +19,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
-import com.example.administrator.sjassistant.activity.MainActivity;
-import com.example.administrator.sjassistant.bean.BillDetailList;
 import com.example.administrator.sjassistant.bean.ListLog;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 
 import okhttp3.Call;
-import okhttp3.Request;
 
 public class TimeAxisAdapter extends BaseAdapter {
 
@@ -53,6 +49,11 @@ public class TimeAxisAdapter extends BaseAdapter {
 	public TimeAxisAdapter(Context context, List<ListLog> list) {
 		this.context = context;
 		this.list = list;
+	}
+
+	public void updateData(List<ListLog> list) {
+		this.list = list;
+		this.notifyDataSetChanged();
 	}
 
 	@Override

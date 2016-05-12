@@ -20,7 +20,6 @@ import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.R;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.File;
 
@@ -144,7 +143,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                             editor.putString("phonenumber",null);
                             editor.putString("password",null);
                             editor.putString("imgPath",null);
-                            editor.commit();
+                            editor.apply();
 
                             AppManager.getInstance().AppExit(SettingActivity.this);
                         }

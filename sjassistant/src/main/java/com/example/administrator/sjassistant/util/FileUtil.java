@@ -1,12 +1,8 @@
 package com.example.administrator.sjassistant.util;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -22,10 +18,6 @@ import android.util.Log;
 //import org.apache.poi.hwpf.usermodel.PictureType;
 //import org.w3c.dom.Document;
 
-import com.example.administrator.sjassistant.R;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.FileCallBack;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -33,8 +25,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import okhttp3.Call;
 
 //import javax.xml.parsers.DocumentBuilderFactory;
 //import javax.xml.parsers.ParserConfigurationException;
@@ -59,11 +49,13 @@ public class FileUtil {
      */
     public static boolean avaiableMedia() {
         String status = Environment.getExternalStorageState();
+
         if (status.equals(Environment.MEDIA_MOUNTED))
             return true;
         else
             return false;
     }
+
 
     /**
      * 获取图片名称【以系统时间为准】

@@ -285,7 +285,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                                     ToastUtil.showShort(ForgetPasswordActivity.this, "密码修改成功");
                                     SharedPreferences.Editor editor = getSharedPreferences("userinfo",MODE_PRIVATE).edit();
                                     editor.putString("password",et_password.getText().toString());
-                                    editor.commit();
+                                    editor.apply();
                                     ForgetPasswordActivity.this.finish();
                                 } else if (statusCode == 4) {
                                     ToastUtil.showShort(ForgetPasswordActivity.this,"邮箱错误");

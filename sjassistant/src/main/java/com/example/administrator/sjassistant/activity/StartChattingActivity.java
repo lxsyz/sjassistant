@@ -6,15 +6,19 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.RecyclerAdapter;
 import com.example.administrator.sjassistant.bean.Person;
+import com.example.administrator.sjassistant.bean.SortModel;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.view.ChangeNumberDialog;
+import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -35,54 +39,40 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
     private RecyclerAdapter adapter;
     private List<Person> datalist = new ArrayList<Person>();
 
+
+    //是否开启免提和静音
+    private int open_flag = 0,voice_flag = 0;
+    private ImageView iv_open,iv_novoice;
+    
+    private Person master;
+
+
     private String sessionId;
-
-    private RelativeLayout novoice_layout,open_layout,end;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            sessionId = getIntent().getStringExtra("sessionId");
-        } else {
-            sessionId = savedInstanceState.getString("sessionId");
+        Log.d("response", "startchatting create");
+
+        master = (Person) getIntent().getSerializableExtra("master");
+        datalist = (ArrayList<Person>)getIntent().getSerializableExtra("person");
+        //datalist.add(0,master);
+        if (master != null) {
+            datalist.add(0,master);
         }
-
-        for (int i = 0;i < 7;i++) {
-            Person p = new Person();
-            p.setName("李 四");
-            p.setPhoneNumber("13003152436");
-            datalist.add(0, p);
+        if (datalist == null) {
+            datalist = new ArrayList<>();
         }
-
-        adapter = new RecyclerAdapter(datalist);
-
-        recyclerView.setAdapter(adapter);
-        adapter.setOnClickListener(new RecyclerAdapter.OnItemClickListener() {
-
-            @Override
-            public void onClick(View v, final Object object) {
-                if (object.equals("add")) {
-                    Intent intent = new Intent(StartChattingActivity.this, AddPerson.class);
-                    intent.putExtra("count", adapter.getItemCount());
-                    startActivity(intent);
-                } else {
-                    ChangeNumberDialog d = new ChangeNumberDialog(StartChattingActivity.this);
-                    d.setFlag(1);
-                    d.show();
-                    d.setContentText("删除XXX此次的电话会议");
-                    d.setOnDeleteClickListener(new ChangeNumberDialog.OnDeleteClickListener() {
-                        @Override
-                        public void onDelete(int i) {
-                            if (i == 1) {
-                                minus(object);
-                            }
-                        }
-                    });
-                }
-            }
-        });
+        Person add = new Person();
+        datalist.add(add);
+        OperatorUtil.closeSpeaker(this);
+//        if (savedInstanceState == null) {
+//            sessionId = getIntent().getStringExtra("sessionId");
+//        } else {
+//            sessionId = savedInstanceState.getString("sessionId");
+//        }
+        if (sessionId == null)
+            create();
     }
 
     @Override
@@ -93,33 +83,84 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
         setCenterView(R.layout.activity_start_chatting);
 
         recyclerView = (RecyclerView)findViewById(R.id.id_recyclerview);
-        open_layout = (RelativeLayout)findViewById(R.id.open_layout);
-        novoice_layout = (RelativeLayout)findViewById(R.id.novoice_layout);
-        end = (RelativeLayout)findViewById(R.id.end);
+        RelativeLayout open_layout = (RelativeLayout) findViewById(R.id.open_layout);
+        RelativeLayout novoice_layout = (RelativeLayout) findViewById(R.id.novoice_layout);
+        RelativeLayout end = (RelativeLayout) findViewById(R.id.end);
+
+        iv_novoice = (ImageView)findViewById(R.id.iv_novoice);
+        iv_open = (ImageView)findViewById(R.id.iv_open);
 
         open_layout.setOnClickListener(this);
-
-
+        novoice_layout.setOnClickListener(this);
+        end.setOnClickListener(this);
         GridLayoutManager manager = new GridLayoutManager(this,3);
         recyclerView.setLayoutManager(manager);
+    }
 
-        Person add = new Person();
-        datalist.add(add);
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+//        List<Person> personList = new ArrayList<>();
+//        personList = (ArrayList<Person>)intent.getSerializableExtra("personList");
+//        int add = intent.getIntExtra("add",0);
+//
+//
+//        if (add == 1) {
+//            add(personList);
+//        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        adapter = new RecyclerAdapter(datalist);
+
+        recyclerView.setAdapter(adapter);
+        adapter.setOnClickListener(new RecyclerAdapter.OnItemClickListener() {
+
+            @Override
+            public void onClick(View v, final Object object) {
+                if (object.equals("add")) {
+                    Intent intent = new Intent(StartChattingActivity.this, AddChatContact.class);
+                    intent.putExtra("count", adapter.getItemCount() - 1);
+                    //intent.putExtra("from",2);
+                    startActivityForResult(intent, 2);
+                } else {
+                    ChangeNumberDialog d = new ChangeNumberDialog(StartChattingActivity.this);
+                    d.setFlag(1);
+                    d.show();
+                    d.setContentText("删除 " + ((Person) object).getLinkName() + " 此次的电话会议");
+                    d.setOnDeleteClickListener(new ChangeNumberDialog.OnDeleteClickListener() {
+                        @Override
+                        public void onDelete(int i) {
+                            if (i == 1) {
+                                minus(object);
+
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     /*
-     * 添加多方通话人员
-     */
-    private void add() {
+         * 添加多方通话人员
+         */
+    private void add(String phones) {
         String url = Constant.SERVER_URL + "phone/add";
 
         OkHttpUtils.post()
+                .addParams("sessionId", sessionId)
+                .addParams("phones",phones)
                 .url(url)
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error", e.getMessage());
+                        Log.d("error", e.getMessage() + " ");
                         ErrorUtil.NetWorkToast(StartChattingActivity.this);
                     }
 
@@ -130,6 +171,7 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
                             JSONObject object = new JSONObject(response);
                             int statusCode = object.getInt("statusCode");
                             if (statusCode == 0) {
+
                                 ToastUtil.showShort(StartChattingActivity.this, "添加成功");
                             }
                         } catch (JSONException e) {
@@ -149,7 +191,7 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
         OkHttpUtils.post()
                 .url(url)
                 .addParams("sessionId", sessionId)
-                .addParams("phones", person.getPhoneNumber())
+                .addParams("phones", person.getLinkPhone())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -166,8 +208,9 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
                             int statusCode = object.getInt("statusCode");
                             if (statusCode == 0) {
                                 adapter.removePerson(person);
-
                                 ToastUtil.showShort(StartChattingActivity.this, "移除成功");
+                            } else {
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -187,10 +230,27 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
+
         switch (v.getId()) {
             case R.id.open_layout:
+                if (open_flag == 0) {
+                    open_flag = 1;
+                    iv_open.setImageResource(R.drawable.open_checked);
+                } else {
+                    open_flag = 0;
+                    iv_open.setImageResource(R.drawable.open_unchecked);
+                }
+                OperatorUtil.toggleSpeaker(this);
                 break;
             case R.id.novoice_layout:
+                if (voice_flag == 0) {
+                    voice_flag = 1;
+                    iv_novoice.setImageResource(R.drawable.novoice_checked);
+                } else {
+                    voice_flag = 0;
+                    iv_novoice.setImageResource(R.drawable.novoice_unchecked);
+                }
+                OperatorUtil.toggleVoice(this);
                 break;
             case R.id.end:
                 end();
@@ -211,7 +271,7 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error", e.getMessage());
+                        Log.d("error", e.getMessage()+" ");
                         ErrorUtil.NetWorkToast(StartChattingActivity.this);
                     }
 
@@ -224,6 +284,7 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
                             if (statusCode == 0) {
 
                                 ToastUtil.showShort(StartChattingActivity.this, "结束通话");
+                                StartChattingActivity.this.finish();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -231,4 +292,122 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
                     }
                 });
     }
+
+
+    /*
+         * 发起多方通话
+         */
+    private void create() {
+
+        String url = Constant.SERVER_URL + "phone/create";
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("caller", master.getLinkPhone())
+                .addParams("phones", getInvolvers())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response);
+                        JSONObject object = null;
+                        try {
+                            object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            if (statusCode == 0) {
+                                sessionId= object.optString("data");
+                                //JSONObject data = object.optJSONObject("data");
+//                                if (data != null) {
+//                                    sessionId = data.optString("data");
+//                                    String describe = data.optString("describe");
+
+//                                    if (!describe.equals("success")) {
+//                                        ToastUtil.showShort(StartChattingActivity.this, "发起失败");
+//                                        return;
+//                                    }
+
+                                    //sessionId = sessionId;
+                                    //Intent intent = new Intent(StartChattingActivity.this, StartChattingActivity.class);
+                                    //intent.putExtra("sessionId", sessionId);
+                                    //startActivity(intent);
+                                }
+
+                            //}
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+    }
+
+    /*
+     * 逗号连接
+     */
+    private String getInvolvers() {
+        StringBuilder sb = new StringBuilder();
+        boolean need = false;
+
+        for (Person i : datalist) {
+            if (i.equals(datalist.get(0))) {
+                continue;
+            }
+            if (need) {
+                sb.append(",");
+            }
+            sb.append(i.getLinkPhone());
+            need = true;
+        }
+        return sb.toString();
+    }
+
+    /*
+     * 添加多个联系人
+     */
+    private String addInvolvers(List<SortModel> list) {
+        StringBuilder sb = new StringBuilder();
+        boolean need = false;
+
+        for (SortModel i : list) {
+            if (need) {
+                sb.append(",");
+            }
+            sb.append(i.getPhoneNumber());
+            need = true;
+        }
+        return sb.toString();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            List<SortModel> modelList = new ArrayList<>();
+            modelList = (ArrayList<SortModel>)data.getSerializableExtra("result");
+
+            if (modelList != null) {
+                String result = addInvolvers(modelList);
+                add(result);
+                for (SortModel sm:modelList) {
+                    Person person = new Person();
+                    person.setLinkName(sm.getName());
+                    person.setUserCode(sm.getUserCode());
+                    person.setLinkPhone(sm.getPhoneNumber());
+
+                    datalist.add(person);
+
+                }
+                adapter.update(datalist);
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+
 }

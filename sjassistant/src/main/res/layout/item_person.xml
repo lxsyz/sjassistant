@@ -5,15 +5,15 @@
 
     <com.example.administrator.sjassistant.view.CircleImageView
         android:id="@+id/iv"
-        android:layout_width="56dp"
+        android:layout_width="64dp"
         android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
-        android:layout_height="56dp" />
+        android:layout_height="64dp" />
 
     <TextView
         android:layout_below="@+id/iv"
         android:layout_centerHorizontal="true"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textColor="@color/my_black"
         android:layout_marginTop="13dp"
         android:id="@+id/username"

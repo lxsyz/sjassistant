@@ -1,9 +1,11 @@
 package com.example.administrator.sjassistant.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2016/4/4.
  */
-public class SortModel {
+public class SortModel implements Serializable {
 
     private String name;        //名字
 
@@ -14,6 +16,46 @@ public class SortModel {
     private String phoneNumber;     //电话号码
 
     private int checked;
+
+    private int customerType;       //客户类型
+
+    private int customerDept;       //客户部门
+
+    private int customerPost;       //客户职位
+
+    private String userCode;        //
+
+    public String getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
+
+    public int getCustomerDept() {
+        return customerDept;
+    }
+
+    public int getCustomerPost() {
+        return customerPost;
+    }
+
+    public int getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerDept(int customerDept) {
+        this.customerDept = customerDept;
+    }
+
+    public void setCustomerPost(int customerPost) {
+        this.customerPost = customerPost;
+    }
+
+    public void setCustomerType(int customerType) {
+        this.customerType = customerType;
+    }
 
     public void setChecked(int checked) {
         this.checked = checked;

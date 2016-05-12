@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class BillDetailList implements Serializable{
 
+    private int id;
     private int recordId;
 
     private int billId;
@@ -23,6 +24,16 @@ public class BillDetailList implements Serializable{
     private List<ListLog> listLogs;
 
     private String userImg;
+
+    private String isHref;
+
+    public String getIsHref() {
+        return isHref;
+    }
+
+    public void setIsHref(String isHref) {
+        this.isHref = isHref;
+    }
 
     public String getUserImg() {
         return userImg;
@@ -118,6 +129,11 @@ public class BillDetailList implements Serializable{
         this.billShowType = billShowType;
     }
 
+    public int getId() {
+        return id;
+    }
 
-
+    public void setId(int id) {
+        this.id = id;
+    }
 }

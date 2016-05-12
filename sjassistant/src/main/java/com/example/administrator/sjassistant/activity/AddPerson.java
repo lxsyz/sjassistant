@@ -25,6 +25,7 @@ import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
 import com.example.administrator.sjassistant.bean.Department;
 import com.example.administrator.sjassistant.bean.MyContacts;
+import com.example.administrator.sjassistant.bean.Person;
 import com.example.administrator.sjassistant.util.AddPersonManager;
 import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.Constant;
@@ -191,7 +192,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
                 int tempId = department.getId();
                 Intent intent = new Intent(AddPerson.this, AddPerson.class);
                 intent.putExtra("id", tempId);
-                intent.putExtra("from", 1);
+                intent.putExtra("from", from);
                 intent.putExtra("count", count);
                 intent.putExtra("result", (ArrayList) result);
                 startActivity(intent);
@@ -265,6 +266,8 @@ public class AddPerson extends Activity implements View.OnClickListener {
                                         MyContacts contact = new MyContacts();
                                         contact.setId(user.optInt("id"));
                                         contact.setUsername(user.optString("username"));
+                                        contact.setTrueName(user.optString("trueName"));
+                                        contact.setPhone(user.optString("phone"));
                                         contactData.add(contact);
                                     }
                                 }
@@ -333,14 +336,18 @@ public class AddPerson extends Activity implements View.OnClickListener {
         if (TextUtils.isEmpty(text)) {
             filterList = contactData;
         } else {
+            filterList.clear();
             for (MyContacts contacts:contactData) {
-                if (contacts.getUsername().contains(text)) {
-                    filterList.add(contacts);
+                if (contacts.getTrueName() != null) {
+                    if (contacts.getTrueName().contains(text)) {
+                        filterList.add(contacts);
+                    }
                 }
             }
         }
 
         contactAdapter.updateListView(filterList);
+        setListViewHeight(contact_list);
     }
 
 
@@ -370,18 +377,14 @@ public class AddPerson extends Activity implements View.OnClickListener {
                             need = true;
                         }
                     }
-                    Log.d("response","result.size "+result.size()+"sb  "+sb.toString());
                     Intent intent = new Intent(AddPerson.this,PostMessageActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("result",sb.toString());
-//                    intent.putExtra("result",sb.toString());
                     intent.putExtras(bundle);
                     startActivity(intent);
                     //AddPersonManager.getInstance().finishAllActivity();
-                }
-                else {
-
-
+                } else {
+                    Log.d("message","morecontact");
                     if (count > 8) {
                         MyDialog dialog = new MyDialog(AddPerson.this, R.style.dialog_style);
                         dialog.show();
@@ -389,7 +392,29 @@ public class AddPerson extends Activity implements View.OnClickListener {
                         dialog.setVisibility(View.GONE);
                         dialog.setCenterVisibility(View.VISIBLE);
                     } else {
-                        this.finish();
+                        List<Person> personList = new ArrayList<>();
+                        for (MyContacts m : result) {
+                            Person person = new Person();
+                            person.setLinkPhone(m.getPhone());
+                            person.setLinkName(m.getTrueName());
+                            person.setUserCode(m.getUserCode());
+                            personList.add(person);
+                        }
+                        Intent intent = null;
+                        if (from == 2) {
+                            intent = new Intent(AddPerson.this,StartChattingActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("personList",(ArrayList)personList);
+                            bundle.putInt("add",1);
+                            intent.putExtras(bundle);
+                        } else {
+                            intent = new Intent(AddPerson.this,MoreContact.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("personList",(ArrayList)personList);
+                            intent.putExtras(bundle);
+                        }
+
+                        startActivity(intent);
                     }
                 }
                 break;
@@ -426,6 +451,6 @@ public class AddPerson extends Activity implements View.OnClickListener {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        AddPersonManager.getInstance().finishActivity();
+        //AddPersonManager.getInstance().finishActivity();
     }
 }

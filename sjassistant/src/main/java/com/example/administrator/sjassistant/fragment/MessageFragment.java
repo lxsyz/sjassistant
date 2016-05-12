@@ -1,7 +1,9 @@
 package com.example.administrator.sjassistant.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,12 +20,15 @@ import android.widget.TextView;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.activity.AssistantActivity;
 import com.example.administrator.sjassistant.activity.GonggaoActivity;
+import com.example.administrator.sjassistant.activity.MainActivity;
 import com.example.administrator.sjassistant.activity.MessageActivity;
 import com.example.administrator.sjassistant.activity.PostInformActivity;
 import com.example.administrator.sjassistant.activity.PostMessageActivity;
 import com.example.administrator.sjassistant.activity.UnfinishedWorkActivity;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.ExampleUtil;
+import com.example.administrator.sjassistant.util.Notifier;
 import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.ServerConfigUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
@@ -34,6 +39,7 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 
 /**
@@ -69,6 +75,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     private String helperContent;
     private String messageDate;
 
+    private MainReceiver receiver;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -106,6 +113,19 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         popwindow.setFocusable(true);
         popwindow.setItem1Text("发布公告");
         popwindow.setItem2Text("发布消息、通知");
+
+        receiver = new MainReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(JPushInterface.ACTION_REGISTRATION_ID);
+        filter.addAction(JPushInterface.ACTION_MESSAGE_RECEIVED);
+        filter.addAction(JPushInterface.ACTION_NOTIFICATION_RECEIVED);
+        filter.addAction(JPushInterface.ACTION_NOTIFICATION_OPENED);
+        filter.addAction(JPushInterface.ACTION_RICHPUSH_CALLBACK);
+        filter.addAction(JPushInterface.ACTION_CONNECTION_CHANGE);
+        filter.addCategory("com.example.administrator.sjassistant");
+        // 注册广播
+        getActivity().registerReceiver(receiver, filter);
+
         return rootView;
     }
 
@@ -201,10 +221,6 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     private void showMessage() {
         String url = Constant.SERVER_URL + "message/show";
 
-
-
-        Log.d("activity","url"+ Constant.SERVER_URL+" ");
-        Log.d("activity","username"+ Constant.username+" ");
         //Constant.username = username;
 
         OkHttpUtils.post()
@@ -282,5 +298,92 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     public void onStop() {
         Log.d("activity","message fragment stop");
         super.onStop();
+    }
+
+    public class MainReceiver extends BroadcastReceiver {
+        private static final String TAG = "JPush";
+        Notifier notifier = new Notifier(getActivity());
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            //printBundle(bundle);
+            Log.d("response","我的推送");
+            notifier.noti();
+            if (JPushInterface.ACTION_REGISTRATION_ID
+                    .equals(intent.getAction())) {
+                String regId = bundle
+                        .getString(JPushInterface.EXTRA_REGISTRATION_ID);
+                Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
+                // send the Registration Id to your server...
+
+            } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
+                    .getAction())) {
+                Log.d(TAG,
+                        "[MyReceiver] 接收到推送下来的自定义消息: "
+                                + bundle.getString(JPushInterface.EXTRA_MESSAGE));
+
+            } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED
+                    .equals(intent.getAction())) {
+                Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
+                int notifactionId = bundle
+                        .getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
+                Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
+
+                showMessage();
+
+            } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent
+                    .getAction())) {
+                Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
+                // 打开自定义的Activity
+                if (MainActivity.isForeground) {
+                    showMessage();
+                } else {
+                    Intent i = new Intent(context, MainActivity.class);
+                    i.putExtras(bundle);
+                    //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(i);
+                }
+            } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent
+                    .getAction())) {
+                Log.d(TAG,
+                        "[MyReceiver] 用户收到到RICH PUSH CALLBACK: "
+                                + bundle.getString(JPushInterface.EXTRA_EXTRA));
+                // 在这里根据 JPushInterface.EXTRA_EXTRA 的内容处理代码，比如打开新的Activity，
+                // 打开一个网页等..
+            } else if (JPushInterface.ACTION_CONNECTION_CHANGE.equals(intent
+                    .getAction())) {
+                boolean connected = intent.getBooleanExtra(
+                        JPushInterface.EXTRA_CONNECTION_CHANGE, false);
+                Log.w(TAG, "[MyReceiver]" + intent.getAction()
+                        + " connected state change to " + connected);
+            } else {
+                Log.d(TAG,
+                        "[MyReceiver] Unhandled intent - " + intent.getAction());
+            }
+        }
+    }
+
+    private void processCustomMessage(Context context, Bundle bundle) {
+        if (MainActivity.isForeground) {
+            String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
+            String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
+            Intent msgIntent = new Intent(MainActivity.MESSAGE_RECEIVED_ACTION);
+            msgIntent.putExtra(MainActivity.KEY_MESSAGE, message);
+            if (!ExampleUtil.isEmpty(extras)) {
+                try {
+                    JSONObject extraJson = new JSONObject(extras);
+                    if (null != extraJson && extraJson.length() > 0) {
+                        msgIntent.putExtra(MainActivity.KEY_EXTRAS, extras);
+
+                    }
+                } catch (JSONException e) {
+
+                }
+
+            }
+            context.sendBroadcast(msgIntent);
+        }
     }
 }

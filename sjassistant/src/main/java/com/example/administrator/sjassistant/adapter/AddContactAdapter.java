@@ -81,16 +81,8 @@ public class AddContactAdapter extends BaseAdapter implements SectionIndexer {
             viewHolder.add.setImageResource(R.drawable.radio_checked);
         }
 
-//        final int pos = position;
-//
-//        viewHolder.add.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.v("tag", "clicked on listview item icon_01 position = " + getItemId(pos));
-//            }
-//        });
         viewHolder.tvTitle.setText(this.list.get(position).getName());
-
+        viewHolder.group.setText(this.list.get(position).getGroup());
         return convertView;
     }
 

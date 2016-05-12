@@ -1,17 +1,16 @@
 package com.example.administrator.sjassistant.util;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-
-import com.example.administrator.sjassistant.bean.MessageInform;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 
@@ -19,8 +18,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -250,6 +247,113 @@ public class OperatorUtil {
         }
         return result;
     }
+
+    /*
+     * 打开扬声器
+     * @param context
+     */
+    public static void openSpeaker(Context context) {
+        try {
+            AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setMode(AudioManager.ROUTE_SPEAKER);
+            if (!audioManager.isSpeakerphoneOn()) {
+                audioManager.setSpeakerphoneOn(true);
+                audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL,audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL),
+                                            AudioManager.STREAM_VOICE_CALL);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+     * 关闭扬声器
+     */
+    public static void closeSpeaker(Context mContext) {
+        try {
+            AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+            if(audioManager != null) {
+                if(audioManager.isSpeakerphoneOn()) {
+                    audioManager.setSpeakerphoneOn(false);
+                    audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL,audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL),
+                            AudioManager.STREAM_VOICE_CALL);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 免提
+     *
+     * @param context
+     */
+    public static void toggleSpeaker(Context context) {
+        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        am.setMode(AudioManager.MODE_IN_CALL);
+        am.setSpeakerphoneOn(!am.isSpeakerphoneOn());
+    }
+
+    /*
+     * 静音开启与关闭
+     * @param context
+     */
+    public static void toggleVoice(Context context) {
+        AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        //通话音量
+
+        int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL);
+        int current = mAudioManager.getStreamVolume( AudioManager.STREAM_VOICE_CALL );
+        Log.d("response","current "+current+"max  "+max);
+        if (current != 0) {
+            mAudioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, 0, AudioManager.STREAM_VOICE_CALL);
+        } else {
+            mAudioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, max, AudioManager.STREAM_VOICE_CALL);
+        }
+//        System.out.println("isMicrophoneMute =" + mAudioManager.isMicrophoneMute());
+//        mAudioManager.setMicrophoneMute(!mAudioManager.isMicrophoneMute());
+    }
+
+    /*
+     * 7  8   9  企业单位  党政机关  事业单位
+     * 10 11 12  信息科  财务科  研发科
+     * 13 14 15  经理   会计 出纳
+     */
+
+//    /**
+//     * 获取软件版本号
+//     * @param context
+//     * @return
+//     */
+//    public static int getVerCode(Context context) {
+//        int verCode = -1;
+//        try {
+//
+//            verCode = context.getPackageManager().getPackageInfo(
+//                    getPa, 0).versionCode;
+//        } catch (PackageManager.NameNotFoundException e) {
+//            Log.e("msg",e.getMessage());
+//        }
+//        return verCode;
+//    }
+//    /**
+//     * 获取版本名称
+//     * @param context
+//     * @return
+//     */
+//    public static String getVerName(Context context) {
+//        String verName = "";
+//        try {
+//            verName = context.getPackageManager().getPackageInfo(
+//                    "com.example.try_downloadfile_progress", 0).versionName;
+//        } catch (NameNotFoundException e) {
+//            Log.e("msg",e.getMessage());
+//        }
+//        return verName;
+//    }
+
 
     /**
      * 设置listview高度的方法

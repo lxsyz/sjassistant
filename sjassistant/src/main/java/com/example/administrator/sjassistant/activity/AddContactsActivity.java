@@ -99,23 +99,24 @@ public class AddContactsActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        FilterCondition result = (FilterCondition) data.getSerializableExtra("result");
-        if (result != null) {
+        FilterCondition result = null;
             switch (resultCode) {
                 case 1:
+                    result = (FilterCondition) data.getSerializableExtra("result");
                     customerId = result.getId();
                     customer_type_value.setText(result.getName());
                     break;
                 case 2:
+                    result = (FilterCondition) data.getSerializableExtra("result");
                     deptId = result.getId();
                     apartment_value.setText(result.getName());
                     break;
                 case 3:
+                    result = (FilterCondition) data.getSerializableExtra("result");
                     postId = result.getId();
                     person_work_value.setText(result.getName());
                     break;
             }
-        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 

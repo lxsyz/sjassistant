@@ -1,8 +1,6 @@
 package com.example.administrator.sjassistant.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -19,7 +17,6 @@ import android.widget.ImageView;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
-import com.example.administrator.sjassistant.bean.GongGao;
 import com.example.administrator.sjassistant.bean.GongGao;
 import com.example.administrator.sjassistant.swipemenulistview.SwipeMenu;
 import com.example.administrator.sjassistant.swipemenulistview.SwipeMenuCreator;

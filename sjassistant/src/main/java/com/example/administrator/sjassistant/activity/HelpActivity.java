@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
@@ -19,12 +18,7 @@ import android.widget.TextView;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.Constant;
-import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.ServerConfigUtil;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
-import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/3/31.

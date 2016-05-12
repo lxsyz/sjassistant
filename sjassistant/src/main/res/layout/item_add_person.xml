@@ -29,14 +29,13 @@
 
         <ImageView
             android:id="@+id/iv_checked"
-            android:layout_marginRight="12dp"
+            android:layout_marginRight="17dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/radio_unchecked"
             android:layout_width="15dp"
             android:layout_height="15dp" />
         <ImageView
-            android:layout_marginRight="10dp"
             android:id="@+id/right_arrow1"
             android:layout_width="17dp"
             android:layout_height="17dp"

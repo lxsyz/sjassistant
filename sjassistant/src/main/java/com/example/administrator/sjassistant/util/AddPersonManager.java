@@ -1,7 +1,6 @@
 package com.example.administrator.sjassistant.util;
 
 import android.app.Activity;
-import android.util.Log;
 
 import java.util.Stack;
 

@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <com.example.administrator.sjassistant.view.CircleImageView
             android:src="@drawable/gonggao"
             android:layout_width="46dp"
             android:layout_height="46dp" />

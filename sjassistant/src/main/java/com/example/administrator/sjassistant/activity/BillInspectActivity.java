@@ -3,7 +3,6 @@ package com.example.administrator.sjassistant.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
@@ -47,7 +45,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.Call;
@@ -89,10 +86,13 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
 
     private String userImg;
 
-
+    private TimeAxisAdapter mTimeAxisAdapter;
     private ScrollView scrollView;
 
     private StringBuilder shareContent = new StringBuilder();
+
+    private String displayLevel;
+    private int id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,6 +190,10 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
             case R.id.bill_detail_layout:
                 intent = new Intent(BillInspectActivity.this,BillDetailActivity.class);
                 intent.putExtra("billId",bill.getBillId());
+                intent.putExtra("displayLevel",displayLevel);
+
+                //有待商榷
+                intent.putExtra("fatherId",0);
                 startActivity(intent);
                 break;
         }
@@ -293,6 +297,7 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
                 .url(url)
                 .addParams("displayLevel", "1")
                 .addParams("billId", String.valueOf(bill.getBillId()))
+                .addParams("fatherId","0")
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -312,13 +317,13 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
                             if (statusCode == 0) {
                                 JSONObject data = object.optJSONObject("data");
                                 userImg = data.optString("userImg");
-                                String displayLevel = data.optString("displayLevel");
+                                displayLevel = data.optString("displayLevel");
                                 String billShowType = data.optString("billShowType");
                                 JSONArray listlog = data.optJSONArray("listlog");
 
 
-
-                                List<ListLog> log = gson.fromJson(listlog.toString(),new TypeToken<List<ListLog>>(){}.getType());
+                                List<ListLog> log = gson.fromJson(listlog.toString(), new TypeToken<List<ListLog>>() {
+                                }.getType());
                                 JSONArray list = data.optJSONArray("list");
                                 int len = list.length();
                                 if (len > 0) {
@@ -333,32 +338,40 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
                                         billDetail.setDisplayLevel(o.optString("displayLevel"));
                                         billDetail.setFatherId(o.optInt("fatherId"));
                                         billDetail.setBillShowType(o.optString("billShowType"));
-
+                                        billDetail.setId(o.optInt("id"));
                                         billDetail.setListLogs(log);
                                         shareContent.append(o.optString("displayName"));
                                         shareContent.append(": ");
                                         shareContent.append(o.optString("displayValue"));
                                         shareContent.append("\n");
-                                        datalist.add(0,billDetail);
+                                        datalist.add(billDetail);
                                     }
 
                                 }
-                                TimeAxisAdapter mTimeAxisAdapter = new TimeAxisAdapter(BillInspectActivity.this,log);
-                                inspect_list.setDividerHeight(0);
-                                inspect_list.setAdapter(mTimeAxisAdapter);
 
-                                OperatorUtil.setListViewHeight(inspect_list);
-                                CommonAdapter<BillDetailList> commonAdapter = new CommonAdapter<BillDetailList>(BillInspectActivity.this,datalist,R.layout.item_bill_inspect) {
+                                if (mTimeAxisAdapter != null) {
+                                    mTimeAxisAdapter.updateData(log);
+                                    OperatorUtil.setListViewHeight(inspect_list);
+                                } else {
+
+                                    mTimeAxisAdapter = new TimeAxisAdapter(BillInspectActivity.this, log);
+
+                                    inspect_list.setDividerHeight(0);
+                                    inspect_list.setAdapter(mTimeAxisAdapter);
+                                    OperatorUtil.setListViewHeight(inspect_list);
+                                }
+                                CommonAdapter<BillDetailList> commonAdapter = new CommonAdapter<BillDetailList>(BillInspectActivity.this, datalist, R.layout.item_bill_inspect) {
                                     @Override
                                     public void convert(ViewHolder holder, BillDetailList billDetailList) {
-                                        holder.setText(R.id.bill_detail,billDetailList.getDisplayName());
-                                        holder.setText(R.id.bill_value,billDetailList.getDisplayValue());
+                                        holder.setText(R.id.bill_detail, billDetailList.getDisplayName());
+                                        holder.setText(R.id.bill_value, billDetailList.getDisplayValue());
                                     }
                                 };
                                 bill_list.setAdapter(commonAdapter);
                                 OperatorUtil.setListViewHeight(bill_list);
 
                                 scrollView.smoothScrollTo(0, 0);
+
                             } else {
                                 ToastUtil.showShort(BillInspectActivity.this, "服务器异常");
                             }

@@ -1,17 +1,20 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,16 +28,27 @@ import com.example.administrator.sjassistant.fragment.ContactsFragment;
 import com.example.administrator.sjassistant.fragment.MessageFragment;
 import com.example.administrator.sjassistant.fragment.MyApplicationFragment;
 import com.example.administrator.sjassistant.fragment.MySettingFragment;
+import com.example.administrator.sjassistant.receiver.PhoneReceiver;
 import com.example.administrator.sjassistant.util.AppManager;
+import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ExampleUtil;
+import com.example.administrator.sjassistant.util.ServerConfigUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 
 /**
  * Created by Administrator on 2016/3/28.
  */
 public class MainActivity extends FragmentActivity implements View.OnClickListener,MySettingFragment.BackHandlerInterface {
+
+    private Set<String> tags = new HashSet<>();
+
 
     private RelativeLayout message_layout,myapplication_layout,
                             mysetting_layout,contacts_layout;
@@ -49,7 +63,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private int mCurrentIndex = 0;
 
     public static boolean isForeground = false;
-
+    //PhoneReceiver phoneReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,17 +73,44 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Log.d("activity", "activity" + android.os.Process.myPid());
         Log.d("tag"," main id  "+Thread.currentThread().getId()+"main   thread"+ Thread.currentThread().getName());
         instance = MainActivity.this;
+        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        Constant.username = sp.getString("username", null);
 
+        if (TextUtils.isEmpty(sp.getString("server_address", null))) {
+            Constant.SERVER_URL = Constant.TEST_SERVER_URL;
+        } else {
+            ServerConfigUtil.setServerConfig(this);
+        }
 //        Intent intent = new Intent(MainActivity.this,MessageService.class);
 //
 //        startService(intent);
-
+        int dept_id = sp.getInt("dept_id",1);
         initWindow();
         initView();
 
         registerMessageReceiver();
 
+        tags.add(String.valueOf(dept_id));
+        JPushInterface.setTags(this, tags, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
 
+            }
+        });
+        JPushInterface.setAlias(this, Constant.username,
+                new TagAliasCallback() {
+                    @Override
+                    public void gotResult(int i, String s, Set<String> set) {
+
+                    }
+                });
+
+//        phoneReceiver = new PhoneReceiver();
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
+//        filter.setPriority(1000);
+//        filter.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+//        registerReceiver(phoneReceiver, filter);
     }
 
 
@@ -313,6 +354,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onDestroy() {
         Log.d("activity"," main destroy");
         unregisterReceiver(mMessageReceiver);
+        //unregisterReceiver(phoneReceiver);
         super.onDestroy();
     }
 

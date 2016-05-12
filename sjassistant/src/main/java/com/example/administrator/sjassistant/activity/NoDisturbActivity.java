@@ -46,7 +46,7 @@ public class NoDisturbActivity extends BaseActivity implements View.OnClickListe
                     editor.putInt("endTime", -1);
                     editor.putFloat("startX",startX);
                     editor.putFloat("endX",endX);
-                    editor.commit();
+                    editor.apply();
                 }
             }
         });
@@ -110,6 +110,6 @@ public class NoDisturbActivity extends BaseActivity implements View.OnClickListe
         disturbEditor.putInt("endTime", -1);
         disturbEditor.putFloat("startX",-20);
         disturbEditor.putFloat("endX",0);
-        disturbEditor.commit();
+        disturbEditor.apply();
     }
 }

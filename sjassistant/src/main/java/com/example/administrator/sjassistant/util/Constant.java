@@ -27,5 +27,5 @@ public class Constant {
 
     public static final String TEST_SERVER_URL = "http://219.234.5.13:8080/app/";
 
-
+    public static String communicateTime;
 }

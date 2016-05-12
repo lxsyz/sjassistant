@@ -1,9 +1,6 @@
 package com.example.administrator.sjassistant.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -18,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
@@ -29,9 +27,9 @@ import com.example.administrator.sjassistant.swipemenulistview.SwipeMenuListView
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
+import com.example.administrator.sjassistant.view.CircleImageView;
 import com.example.administrator.sjassistant.view.MyPromptDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONArray;
@@ -191,9 +189,6 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         datalist.clear();
 
         String url = Constant.SERVER_URL + "message/showMessage";
-
-
-
         OkHttpUtils.post()
                 .url(url)
                 .addParams("userCode",Constant.username)
@@ -227,40 +222,47 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                                     messageInform.setHeadImg(o.getString("headImg"));
                                     datalist.add(0, messageInform);
                                 }
+                                if (commonAdapter!= null) {
+                                    commonAdapter.updateListView(datalist);
+                                } else {
+                                    commonAdapter = new CommonAdapter<MessageInform>(MessageActivity.this, datalist, R.layout.item_message) {
+                                        @Override
+                                        public void convert(final ViewHolder holder, MessageInform message) {
 
-                                commonAdapter = new CommonAdapter<MessageInform>(MessageActivity.this, datalist, R.layout.item_message) {
-                                    @Override
-                                    public void convert(final ViewHolder holder, MessageInform message) {
+                                            holder.setText(R.id.username, message.getMessagePublisher());
+                                            holder.setText(R.id.message_title, message.getMessageTitle());
+                                            holder.setText(R.id.message_time, message.getMessagePublishtime());
 
-                                        holder.setText(R.id.username, message.getMessagePublisher());
-                                        holder.setText(R.id.message_title, message.getMessageTitle());
-                                        holder.setText(R.id.message_time, message.getMessagePublishtime());
-
-                                        if (TextUtils.isEmpty(message.getHeadImg())) {
-                                            holder.setImageResource(R.id.user_photo, R.drawable.customer_de);
-                                        } else {
-                                            holder.setImageResource(R.id.user_photo, R.drawable.customer_de);
-//                                            OkHttpUtils.get()
-//                                                    .url(message.getHeadImg())
-//                                                    .build().execute(new BitmapCallback() {
-//                                                @Override
-//                                                public void onError(Call call, Exception e) {
-//                                                    ErrorUtil.NetWorkToast(MessageActivity.this);
-//                                                }
+                                            if (TextUtils.isEmpty(message.getHeadImg())) {
+                                                holder.setImageResource(R.id.user_photo, R.drawable.customer_de);
+                                            } else {
+                                                String imgurl = Constant.SERVER_URL + message.getHeadImg().substring(3);
+                                                Log.d("imgurl",imgurl);
+                                                Glide.with(MessageActivity.this)
+                                                        .load(imgurl)
+                                                        .into((CircleImageView) holder.getView(R.id.user_photo));
+                                                //holder.setImageResource(R.id.user_photo, R.drawable.customer_de);
+//                                                OkHttpUtils.get()
+//                                                        .url()
+//                                                        .build().execute(new BitmapCallback() {
+//                                                    @Override
+//                                                    public void onError(Call call, Exception e) {
+//                                                        ErrorUtil.NetWorkToast(MessageActivity.this);
+//                                                    }
 //
-//                                                @Override
-//                                                public void onResponse(Bitmap response) {
-//                                                    holder.setImageBitmap(R.id.user_photo, response);
-//                                                }
-//                                            });
+//                                                    @Override
+//                                                    public void onResponse(Bitmap response) {
+//                                                        holder.setImageBitmap(R.id.user_photo, response);
+//                                                    }
+//                                                });
+//                                            }
+//                                        }
+                                            }
                                         }
-                                    }
-                                };
-                                message_list.setAdapter(commonAdapter);
+                                    };
+                                    message_list.setAdapter(commonAdapter);
+                                }
                                 pd.dismissDialog();
-
-                            } else {
-                                ToastUtil.show(MessageActivity.this, "服务器异常");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -336,7 +338,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void onDestroy() {
-        Log.d("activity","message destroy");
+        Log.d("activity", "message destroy");
         super.onDestroy();
     }
 

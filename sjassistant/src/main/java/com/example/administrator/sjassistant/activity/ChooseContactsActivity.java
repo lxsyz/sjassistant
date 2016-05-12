@@ -17,6 +17,7 @@ import com.example.administrator.sjassistant.bean.FilterCondition;
 import com.example.administrator.sjassistant.util.AppManager;
 
 /**
+ * 筛选联系人
  * Created by Administrator on 2016/4/2.
  */
 public class ChooseContactsActivity extends Activity implements View.OnClickListener {
@@ -24,14 +25,13 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
     private ImageView bt_left;
     private TextView bt_right;
     private TextView title;
-    private RelativeLayout layout_top;
 
-    private LinearLayout person_work_layout,person_apartment_layout,customer_type_layout;
     private TextView customer_type,person_work,person_apartment;
 
     private int customerId;
     private int deptId;
     private int postId;
+    private String customerName,deptName,postName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,14 +42,14 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
     }
 
     private void initView() {
-        layout_top = (RelativeLayout)findViewById(R.id.layout_top);
-        bt_right = (TextView)layout_top.findViewById(R.id.bt_right);
-        bt_left = (ImageView)layout_top.findViewById(R.id.bt_left);
+        RelativeLayout layout_top = (RelativeLayout) findViewById(R.id.layout_top);
+        bt_right = (TextView) layout_top.findViewById(R.id.bt_right);
+        bt_left = (ImageView) layout_top.findViewById(R.id.bt_left);
         title = (TextView)findViewById(R.id.tv_center);
 
-        customer_type_layout = (LinearLayout)findViewById(R.id.customer_type_layout);
-        person_work_layout = (LinearLayout)findViewById(R.id.person_work_layout);
-        person_apartment_layout = (LinearLayout)findViewById(R.id.person_apartment_layout);
+        LinearLayout customer_type_layout = (LinearLayout) findViewById(R.id.customer_type_layout);
+        LinearLayout person_work_layout = (LinearLayout) findViewById(R.id.person_work_layout);
+        LinearLayout person_apartment_layout = (LinearLayout) findViewById(R.id.person_apartment_layout);
 
         person_work = (TextView)findViewById(R.id.person_work);
         customer_type = (TextView)findViewById(R.id.customer_type);
@@ -80,7 +80,10 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
                 intent.putExtra("type","筛选结果");
                 intent.putExtra("customerType",customerId);
                 intent.putExtra("customerDept",deptId);
-                intent.putExtra("customerPost", postId);
+                intent.putExtra("customerPost", postId)
+                        .putExtra("customerTypeName",customerName)
+                        .putExtra("deptName",deptName)
+                        .putExtra("postName",postName);
                 startActivity(intent);
                 break;
             case R.id.customer_type_layout:
@@ -104,24 +107,29 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("tag",requestCode+"  "+resultCode+"  ");
-        FilterCondition result = (FilterCondition) data.getSerializableExtra("result");
+        FilterCondition result = null;
+        switch (resultCode) {
 
-        if (result != null) {
-            switch (resultCode) {
-                case 1:
-                    customerId = result.getId();
-                    customer_type.setText(result.getName());
-                    break;
-                case 2:
-                    deptId = result.getId();
-                    person_apartment.setText(result.getName());
-                    break;
-                case 3:
-                    postId = result.getId();
-                    person_work.setText(result.getName());
-                    break;
-            }
+            case 1:
+                result = (FilterCondition) data.getSerializableExtra("result");
+                customerId = result.getId();
+                customerName = result.getName();
+                customer_type.setText(result.getName());
+                break;
+            case 2:
+                result = (FilterCondition) data.getSerializableExtra("result");
+                deptId = result.getId();
+                deptName = result.getName();
+                person_apartment.setText(result.getName());
+                break;
+            case 3:
+                result = (FilterCondition) data.getSerializableExtra("result");
+                postId = result.getId();
+                postName = result.getName();
+                person_work.setText(result.getName());
+                break;
         }
+
         super.onActivityResult(requestCode, resultCode, data);
 
     }

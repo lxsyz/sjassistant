@@ -1,5 +1,6 @@
 package com.example.administrator.sjassistant.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.bean.Person;
+import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.view.CircleImageView;
 
 import java.util.ArrayList;
@@ -24,9 +27,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         this.mDatas = mDatas;
     }
 
+    private Context mContext;
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_person,parent,false);
+        mContext = parent.getContext();
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_person,parent,false);
         MyViewHolder holder = new MyViewHolder(view);
         view.setOnClickListener(this);
         return holder;
@@ -34,13 +39,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+        if (getItemCount() == 10) {
+            holder.iv.setVisibility(View.GONE);
+        } else {
+            holder.iv.setVisibility(View.VISIBLE);
+        }
+
         if (position == getItemCount() - 1) {
             holder.iv.setImageResource(R.drawable.add02);
             holder.tv.setText("添加人员");
             holder.itemView.setTag("add");
 
         } else {
-            holder.iv.setImageResource(R.drawable.customer_de);
+
+            if (mDatas.get(position).getUserCode() != null) {
+                String imgUrl = Constant.SERVER_URL + "images/" + mDatas.get(position).getUserCode() + ".jpg";
+                Glide.with(mContext).load(imgUrl).error(R.drawable.customer_de).into(holder.iv);
+            } else {
+                holder.iv.setImageResource(R.drawable.customer_de);
+            }
+
+            holder.tv.setText(mDatas.get(position).getLinkName());
             Log.d("position",position+" ");
             holder.itemView.setTag(mDatas.get(position));
         }
@@ -94,7 +113,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                 break;
             }
         }
+    }
 
+    public void update(List<Person> data) {
+        this.mDatas = data;
+        notifyDataSetChanged();
     }
 
     interface OnItemLongClickListener {

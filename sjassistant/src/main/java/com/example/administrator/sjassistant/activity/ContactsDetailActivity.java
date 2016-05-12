@@ -1,5 +1,6 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -10,13 +11,12 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.SortAdapter;
 import com.example.administrator.sjassistant.bean.ContactsPerson;
 import com.example.administrator.sjassistant.bean.GroupDetail;
-import com.example.administrator.sjassistant.bean.GroupPerson;
+import com.example.administrator.sjassistant.bean.Person;
 import com.example.administrator.sjassistant.bean.SortModel;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
@@ -146,6 +146,17 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("position",position+" ");
+                Person person = new Person();
+                Intent intent = new Intent(ContactsDetailActivity.this,PersonDetail.class);
+                Bundle bundle = new Bundle();
+                person.setLinkName(datalist.get(position).getName());
+                person.setLinkPhone(datalist.get(position).getPhoneNumber());
+                person.setCustomerType(datalist.get(position).getCustomerType());
+                person.setCustomerDept(datalist.get(position).getCustomerDept());
+                person.setCustomerPost(datalist.get(position).getCustomerPost());
+                bundle.putSerializable("person",person);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
@@ -195,7 +206,7 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
      */
     private void getContacts() {
         String url = Constant.SERVER_URL + "phoneBook/showCustomerUser";
-        Log.d("customer_name",customer_name);
+        Log.d("customer_name", customer_name);
         OkHttpUtils.post()
                 .url(url)
                 .addParams("userCode", Constant.username)
@@ -204,13 +215,13 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error",e.getMessage());
+                        Log.d("error", e.getMessage());
                         ErrorUtil.NetWorkToast(ContactsDetailActivity.this);
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        Log.d("response",response);
+                        Log.d("response", response);
                         try {
                             JSONObject object = new JSONObject(response);
                             int statusCode = object.getInt("statusCode");
@@ -226,8 +237,12 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
                                         }.getType());
                                         datalist = dealData(contactsPersonsList);
                                         Collections.sort(datalist, pinyinComparator);
-                                        adapter = new SortAdapter(ContactsDetailActivity.this, datalist);
-                                        sortListView.setAdapter(adapter);
+                                        if (adapter != null) {
+                                            adapter.updateListView(datalist);
+                                        } else {
+                                            adapter = new SortAdapter(ContactsDetailActivity.this, datalist);
+                                            sortListView.setAdapter(adapter);
+                                        }
                                     }
                                 }
                             } else {
@@ -248,7 +263,6 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
         Log.d("response","group");
 
         String url = Constant.SERVER_URL + "phoneBook/showGroupUser";
-        Log.d("response",id);
         OkHttpUtils.get()
                 .url(url)
                 .addParams("id",id)
@@ -274,18 +288,17 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
                                     if (list.length() != 0) {
                                         Log.d("response", "list0->0" + list.length());
                                         List<GroupDetail> groupDetailList = new ArrayList<GroupDetail>();
-//                                        for (int i = 0;i < list.length();i++) {
-//                                            GroupDetail groupDetail = new GroupDetail();
-//                                            groupDetail.setTrueName(list.getJSONObject(i).optString("trueName"));
-//                                            groupDetail.setPhone(list.getJSONObject(i).optString("phone"));
-//                                            groupDetailList.add(groupDetail);
-//                                        }
+
                                         groupDetailList = gson.fromJson(list.toString(), new TypeToken<List<GroupDetail>>() {
                                         }.getType());
                                         datalist = dealGroupData(groupDetailList);
                                         Collections.sort(datalist, pinyinComparator);
-                                        adapter = new SortAdapter(ContactsDetailActivity.this, datalist);
-                                        sortListView.setAdapter(adapter);
+                                        if (adapter != null) {
+                                            adapter.updateListView(datalist);
+                                        } else {
+                                            adapter = new SortAdapter(ContactsDetailActivity.this, datalist);
+                                            sortListView.setAdapter(adapter);
+                                        }
                                     }
                                 }
                             } else {
@@ -310,6 +323,7 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
             sortModel.setName(name);
             sortModel.setPhoneNumber(data.get(i).getPhone());
             sortModel.setGroup(data.get(i).getDeptName());
+            //sortModel.setCustomerDept(data.get(i).get);
             //汉字转换成拼音
             String pinyin = OperatorUtil.getFirstChar(name);
             String sortString = pinyin.substring(0, 1).toUpperCase();
@@ -338,6 +352,10 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
             sortModel.setName(name);
             sortModel.setPhoneNumber(data.get(i).getLinkPhone());
             sortModel.setGroup(data.get(i).getCustomerName());
+            sortModel.setCustomerDept(data.get(i).getCustomerDept());
+            sortModel.setCustomerPost(data.get(i).getCustomerPost());
+            sortModel.setCustomerType(data.get(i).getCustomerType());
+            sortModel.setUserCode(data.get(i).getUserCode());
             //汉字转换成拼音
             String pinyin = OperatorUtil.getFirstChar(name);
             String sortString = pinyin.substring(0, 1).toUpperCase();
@@ -369,9 +387,9 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
             filterDataList.clear();
             for (SortModel sortModel : datalist) {
                 String name = sortModel.getName();
-                if (name.toUpperCase().indexOf(
-                        filter.toString().toUpperCase()
-                ) != -1 || OperatorUtil.getFirstChar(name).toUpperCase().startsWith(filter.toString().toUpperCase())) {
+                if (name.toUpperCase().contains(
+                        filter.toUpperCase()
+                ) || OperatorUtil.getFirstChar(name).toUpperCase().startsWith(filter.toUpperCase())) {
                     filterDataList.add(sortModel);
                 }
             }

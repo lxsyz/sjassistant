@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,10 +18,7 @@ import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.example.administrator.sjassistant.R;
-import com.example.administrator.sjassistant.adapter.CommonAdapter;
-import com.example.administrator.sjassistant.adapter.ViewHolder;
 import com.example.administrator.sjassistant.bean.Bill;
-import com.example.administrator.sjassistant.bean.InspectPerson;
 import com.example.administrator.sjassistant.fragment.FinishedBillFragment;
 import com.example.administrator.sjassistant.fragment.UnfinishedBillFragment;
 import com.example.administrator.sjassistant.util.Constant;

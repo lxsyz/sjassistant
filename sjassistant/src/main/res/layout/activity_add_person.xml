@@ -22,18 +22,19 @@
 
             <TextView
                 android:id="@+id/text_add_person"
-                android:textSize="13sp"
+                android:textSize="11sp"
                 android:layout_centerVertical="true"
                 android:textColor="#979797"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
                 android:text="选择部门"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent" />
+                android:layout_height="wrap_content" />
 
             <View
                 android:layout_alignParentBottom="true"
                 android:layout_width="fill_parent"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
                 android:layout_height="0.5dp"
                 android:background="@color/line" />
         </RelativeLayout>
@@ -65,6 +66,8 @@
                 android:id="@+id/apartment_list"
                 android:fadingEdge="none"
                 android:scrollbars="none"
+                android:listSelector="#00000000"
+                android:cacheColorHint="@android:color/transparent"
                 android:divider="@drawable/list_item_divider"
                 android:dividerHeight="0.5dp"
                 android:layout_width="match_parent"
@@ -82,8 +85,10 @@
                 android:background="@color/white"
                 android:id="@+id/manager_list"
                 android:fadingEdge="none"
+                android:listSelector="#00000000"
+                android:cacheColorHint="@android:color/transparent"
                 android:scrollbars="none"
-                android:divider="@drawable/list_item_divider"
+                android:divider="@drawable/list_item_divider_down"
                 android:dividerHeight="0.5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

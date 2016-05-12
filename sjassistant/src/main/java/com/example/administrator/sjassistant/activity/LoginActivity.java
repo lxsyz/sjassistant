@@ -3,7 +3,6 @@ package com.example.administrator.sjassistant.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.InputType;
 import android.text.Selection;
 import android.text.Spannable;
@@ -25,8 +24,6 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.File;
 
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
@@ -192,16 +189,25 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             String statusCode = object.getString("statusCode");
                             String message = object.getString("message");
                             if (statusCode.equals("0")) {
-                                SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sp.edit();
-                                Constant.username = et_username.getText().toString();
-                                editor.putString("username",et_username.getText().toString());
-                                editor.putString("password", et_password.getText().toString());
-                                editor.commit();
-                                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                                startActivity(intent);
-                                ToastUtil.showShort(LoginActivity.this,"登录成功");
-                                LoginActivity.this.finish();
+                                JSONObject data = object.optJSONObject("data");
+                                if (data != null) {
+                                    int dept_id = data.optInt("dept_id");
+                                    SharedPreferences sp = getSharedPreferences("userinfo", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sp.edit();
+                                    Constant.username = et_username.getText().toString();
+                                    editor.putString("username", et_username.getText().toString());
+                                    editor.putString("password", et_password.getText().toString());
+                                    editor.putInt("dept_id", dept_id);
+
+                                    editor.apply();
+                                    Log.d("response","asd");
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    ToastUtil.showShort(LoginActivity.this, "登录成功");
+                                    LoginActivity.this.finish();
+                                } else {
+                                    ToastUtil.showShort(LoginActivity.this,"服务器异常");
+                                }
                             } else if (statusCode.equals("1")) {
                                 ToastUtil.show(LoginActivity.this,"用户名不存在");
                             } else if (statusCode.equals("2")) {

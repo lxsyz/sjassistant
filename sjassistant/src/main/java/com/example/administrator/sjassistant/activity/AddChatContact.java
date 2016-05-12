@@ -18,16 +18,31 @@ import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.AddContactAdapter;
+import com.example.administrator.sjassistant.adapter.CommonAdapter;
+import com.example.administrator.sjassistant.bean.MyContacts;
 import com.example.administrator.sjassistant.bean.SortModel;
 import com.example.administrator.sjassistant.util.AppManager;
+import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.PinyinComparator;
+import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.view.SideBar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/4/7.
@@ -44,14 +59,18 @@ public class AddChatContact extends Activity implements View.OnClickListener {
 
     private ListView sortListView;
     private SideBar sideBar;
-
     private AddContactAdapter adapter;
+
+    private List<SortModel> result = new ArrayList<>();
+
+    private List<MyContacts> contactData = new ArrayList<MyContacts>();
+
+    private CommonAdapter<MyContacts> contactAdapter;
 
     private List<SortModel> datalist = new ArrayList<SortModel>();
 
     private PinyinComparator pinyinComparator;
 
-    private List<Integer> result = new ArrayList<Integer>();
 
 
     private int count = 0;
@@ -69,6 +88,7 @@ public class AddChatContact extends Activity implements View.OnClickListener {
         initView();
 
         from = getIntent().getIntExtra("from",0);
+
         count = getIntent().getIntExtra("count",0);
         if (count != 0) {
             bt_right.setText("确定(" + count + ")");
@@ -115,44 +135,34 @@ public class AddChatContact extends Activity implements View.OnClickListener {
         });
 
 
-        //获取数据
-        datalist = dealData(getResources().getStringArray(R.array.test));
 
 
-        Collections.sort(datalist, pinyinComparator);
-        adapter = new AddContactAdapter(this,datalist);
-        sortListView.setAdapter(adapter);
 
         sortListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageView v = (ImageView) view.findViewById(R.id.add);
-                SortModel sm = datalist.get(position);
+                SortModel sm = (SortModel)sortListView.getItemAtPosition(position);
                 Log.d("position", position + " ");
                 if (sm.getChecked() == 0) {
                     v.setImageResource(R.drawable.radio_checked);
                     sm.setChecked(1);
                     count++;
+                    result.add(sm);
 
-                    if (from == 1) {
-                        result.add(position);
-                    }
+                    //if (from == 1) {
+                    //}
                     adapter.notifyDataSetChanged();
                 } else {
                     v.setImageResource(R.drawable.radio_unchecked);
                     sm.setChecked(0);
                     count--;
+                    result.remove(sm);
 
-                    if (from == 1) {
-                        for (Integer i : result) {
-                            if (i == position) {
-                                result.remove(i);
-                            }
-                        }
-                    }
+                    //if (from == 1) {
+                    //}
                     adapter.notifyDataSetChanged();
                 }
-                Log.d("position", datalist.get(position).getChecked() + " ");
                 if (count != 0) {
                     bt_right.setText("确定(" + count + ")");
                 } else {
@@ -184,26 +194,7 @@ public class AddChatContact extends Activity implements View.OnClickListener {
                 break;
 
             case R.id.bt_right:
-                if (from == 1) {
-                    StringBuilder sb = new StringBuilder();
-
-                    if (result.size() > 0) {
-                        boolean need = false;
-
-                        for (Integer i : result) {
-                            if (need) {
-                                sb.append(",");
-                            }
-                            sb.append(datalist.get(i).getName());
-                            need = true;
-                        }
-                    }
-                    Intent intent = new Intent(AddChatContact.this,PostMessageActivity.class);
-                    intent.putExtra("result",sb.toString());
-                    setResult(1, intent);
-                    this.finish();
-                }
-                else {
+                //if (from == 1) {
                     if (count > 8) {
                         MyDialog dialog = new MyDialog(AddChatContact.this, R.style.dialog_style);
                         dialog.show();
@@ -211,9 +202,14 @@ public class AddChatContact extends Activity implements View.OnClickListener {
                         dialog.setVisibility(View.GONE);
                         dialog.setCenterVisibility(View.VISIBLE);
                     } else {
+                        Intent intent = new Intent();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("result",(ArrayList)result);
+                        intent.putExtras(bundle);
+                        setResult(RESULT_OK,intent);
                         this.finish();
                     }
-                }
+                //}
                 break;
         }
     }
@@ -222,6 +218,8 @@ public class AddChatContact extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+
+        getData();
 
         ed_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -242,28 +240,104 @@ public class AddChatContact extends Activity implements View.OnClickListener {
     }
 
     /*
+     *
+     */
+    private void getData() {
+        String url = Constant.SERVER_URL + "phoneBook/queryAllUser";
+
+        OkHttpUtils.post()
+                .url(url)
+                //.addParams("id",String.valueOf(id))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage() + " ");
+                        ErrorUtil.NetWorkToast(AddChatContact.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response);
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.optInt("statusCode", 0);
+
+                            if (statusCode == 0) {
+                                JSONObject data = object.optJSONObject("data");
+                                JSONArray list = data.optJSONArray("list");
+                                int len = list.length();
+                                if (len != 0) {
+                                    Gson gson = new Gson();
+                                    contactData = gson.fromJson(list.toString(), new TypeToken<List<MyContacts>>() {
+                                    }.getType());
+
+//                                    for (int i = 0; i < len; i++) {
+//                                        JSONObject user = list.optJSONObject(i);
+////                                        MyContacts contact = new MyContacts();
+////                                        contact.setId(user.optInt("id"));
+////                                        contact.setUsername(user.optString("username"));
+////                                        contact.setTrueName(user.optString("trueName"));
+////                                        contact.setPhone(user.optString("phone"));
+//                                        contactData.add(contact);
+//                                    }
+
+                                    datalist = dealData(contactData);
+//                                    contactAdapter = new CommonAdapter<MyContacts>(AddChatContact.this, contactData, R.layout.item_add_person) {
+//                                        @Override
+//                                        public void convert(ViewHolder holder, MyContacts contact) {
+//                                            holder.getView(R.id.right_arrow1).setVisibility(View.INVISIBLE);
+//                                            holder.setText(R.id.group, contact.getRoleName());
+//                                            holder.setText(R.id.name, contact.getTrueName());
+//
+//                                        }
+//                                    };
+                                    Collections.sort(datalist, pinyinComparator);
+                                    adapter = new AddContactAdapter(AddChatContact.this,datalist);
+                                    sortListView.setAdapter(adapter);
+
+                                }
+
+
+                            } else {
+                                ToastUtil.showShort(AddChatContact.this, "服务器异常");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+    
+    /*
          * 处理数据，获取首字母
          */
-    private List<SortModel> dealData(String [] data){
+    private List<SortModel> dealData(List<MyContacts> data){
         List<SortModel> mSortList = new ArrayList<SortModel>();
-
-        for(int i=0; i<data.length; i++){
+        for (int i = 0; i < data.size(); i++) {
+            String name = data.get(i).getTrueName();
             SortModel sortModel = new SortModel();
-            sortModel.setName(data[i]);
-            sortModel.setChecked(0);
+            sortModel.setName(name);
+            sortModel.setPhoneNumber(data.get(i).getPhone());
+            sortModel.setGroup(data.get(i).getDeptName());
+            sortModel.setUserCode(data.get(i).getUserCode());
+            //sortModel.setCustomerDept(data.get(i).getCustomerDept());
+            //sortModel.setCustomerPost(data.get(i).getCustomerPost());
+            //sortModel.setCustomerType(data.get(i).getCustomerType());
             //汉字转换成拼音
-            String pinyin = OperatorUtil.getFirstChar(data[i]);
+            String pinyin = OperatorUtil.getFirstChar(name);
             String sortString = pinyin.substring(0, 1).toUpperCase();
 
             // 正则表达式，判断首字母是否是英文字母
-            if(sortString.matches("[A-Z]")){
+            if (sortString.matches("[A-Z]")) {
                 sortModel.setSortLetter(sortString.toUpperCase());
-            }else{
+            } else {
                 sortModel.setSortLetter("#");
             }
 
             mSortList.add(sortModel);
         }
+
         return mSortList;
     }
 

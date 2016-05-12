@@ -15,8 +15,6 @@ import com.example.administrator.sjassistant.adapter.ViewHolder;
 import com.example.administrator.sjassistant.bean.FilterCondition;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -61,6 +59,7 @@ public class EditActivity extends BaseActivity {
                 FilterCondition res = (FilterCondition) lv.getItemAtPosition(position);
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
+                //if (res != null)
                 bundle.putSerializable("result",res);
                 intent.putExtras(bundle);
                 setResult(request, intent);

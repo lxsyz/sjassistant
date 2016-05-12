@@ -15,13 +15,10 @@ import android.widget.ListView;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
-import com.example.administrator.sjassistant.bean.ContactsPerson;
 import com.example.administrator.sjassistant.bean.GroupPerson;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
-import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
-import com.example.administrator.sjassistant.view.AddContactsWin;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -162,13 +159,17 @@ public class GroupActivity extends BaseActivity implements View.OnClickListener 
                                         datalist = gson.fromJson(list.toString(), new TypeToken<List<GroupPerson>>() {
                                         }.getType());
 
-                                       commonAdapter = new CommonAdapter<GroupPerson>(GroupActivity.this, datalist, R.layout.item_choose_customer) {
-                                            @Override
-                                            public void convert(ViewHolder holder, GroupPerson cp) {
-                                                holder.setText(R.id.customer_name, cp.getGroupName());
-                                            }
-                                        };
-                                        customer_list.setAdapter(commonAdapter);
+                                        if (commonAdapter !=null) {
+                                            commonAdapter.updateListView(datalist);
+                                        } else {
+                                            commonAdapter = new CommonAdapter<GroupPerson>(GroupActivity.this, datalist, R.layout.item_choose_customer) {
+                                                @Override
+                                                public void convert(ViewHolder holder, GroupPerson cp) {
+                                                    holder.setText(R.id.customer_name, cp.getGroupName());
+                                                }
+                                            };
+                                            customer_list.setAdapter(commonAdapter);
+                                        }
                                     }
                                 }
                             } else {
@@ -191,6 +192,7 @@ public class GroupActivity extends BaseActivity implements View.OnClickListener 
         if (TextUtils.isEmpty(text)) {
             filterList = datalist;
         } else {
+            filterList.clear();
             for (GroupPerson person:datalist) {
                 if (person.getGroupName().contains(text)) {
                     filterList.add(person);
@@ -200,5 +202,5 @@ public class GroupActivity extends BaseActivity implements View.OnClickListener 
         commonAdapter.updateListView(filterList);
     }
 
-    private CommonAdapter commonAdapter;
+    private CommonAdapter<GroupPerson> commonAdapter;
 }

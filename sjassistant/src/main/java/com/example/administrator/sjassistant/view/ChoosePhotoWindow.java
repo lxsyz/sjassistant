@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
@@ -190,7 +191,7 @@ public class ChoosePhotoWindow implements OnClickListener {
 	 * 转跳到相机
 	 */
 	public void toCamera() {
-		tempPath = "file:///sdcard/" + FileUtil.getPhotoFileName();
+		tempPath = Environment.getExternalStorageDirectory() + FileUtil.getPhotoFileName();
 		imageUri = Uri.parse(tempPath);
 		//LogHelper.i("tempPath:" + tempPath);
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -224,9 +225,6 @@ public class ChoosePhotoWindow implements OnClickListener {
 	public void onActivityResult(int requestCode, int resultCode, Intent data,
 			Upload upload) {
 		//LogHelper.d("requestCode:" + requestCode + ",resultCode:" + resultCode);
-        Log.d("tag","imageuri"+ imageUri);
-        Log.d("tag","tempapth" + tempPath);
-        Log.d("tag","path" + path);
 		if (resultCode != Activity.RESULT_OK) {
 			return;
 		}

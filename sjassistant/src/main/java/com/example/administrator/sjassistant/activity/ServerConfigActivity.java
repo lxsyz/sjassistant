@@ -66,11 +66,11 @@ public class ServerConfigActivity extends BaseActivity implements View.OnClickLi
                 sp.putString("server_address",et_server_address.getText().toString());
                 sp.putString("server_port", et_server_port.getText().toString());
 
-                sp.commit();
+                sp.apply();
 
                 SharedPreferences sp2 = getSharedPreferences("userinfo",MODE_PRIVATE);
 
-                Constant.SERVER_URL = "http://"+sp2.getString("server_address",null)+":"+sp2.getString("server_port",null);
+                Constant.SERVER_URL = "http://"+sp2.getString("server_address",null)+":"+sp2.getString("server_port",null)+"/app/";
                 ToastUtil.showShort(ServerConfigActivity.this,"配置成功");
 
                 ServerConfigActivity.this.finish();

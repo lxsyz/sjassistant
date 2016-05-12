@@ -1,13 +1,8 @@
 package com.example.administrator.sjassistant.fragment;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -24,6 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.StringSignature;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.activity.HelpActivity;
 import com.example.administrator.sjassistant.activity.SettingActivity;
@@ -36,25 +34,19 @@ import com.example.administrator.sjassistant.view.CircleImageView;
 import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.view.SexDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
-import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * Created by Administrator on 2016/3/28.
@@ -83,11 +75,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("response","oncreate");
-
-        File file = new File(Environment.getExternalStorageDirectory() + "/审计助理/Portrait");
-        if (file.exists()) {}
-        else file.mkdirs();
+        Log.d("response", "oncreate");
 
         //回调函数赋值
         if (!(getActivity() instanceof BackHandlerInterface)) {
@@ -235,12 +223,12 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                     username.setText(Constant.nickname);
                     break;
                 case 2:
-                    apartment_text.setText(Constant.apartment);
-                    apartment_top.setText(Constant.apartment);
+//                    apartment_text.setText(Constant.apartment);
+//                    apartment_top.setText(Constant.apartment);
                     break;
                 case 3:
-                    work_text.setText(Constant.work);
-                    work_top.setText(Constant.work);
+//                    work_text.setText(Constant.work);
+//                    work_top.setText(Constant.work);
                     break;
                 case 4:
                     address_text.setText(Constant.address);
@@ -263,12 +251,12 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                         //imgPath = path;
                         if (path != null) {
 
-                            Bitmap bitmap1 = FileUtil.getSmallBitmap(path, 500, 500);
+                            Bitmap bitmap1 = FileUtil.getSmallBitmap(path, 200, 200);
                             if (bitmap1 == null) {
                                 Toast.makeText(getActivity(), "头像文件不存在", Toast.LENGTH_SHORT).show();
                                 user_photo.setImageResource(R.drawable.customer_de);
                             } else {
-                                user_photo.setImageBitmap(bitmap1);
+
                                 //压缩后的临时图片文件
                                 File f = new File(portraitPath);
                                 if (!f.exists()) {
@@ -287,7 +275,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                                         ToastUtil.showShort(getActivity(),"上传失败");
                                     }
                                 }
-                                bitmap1 = null;
+                                //bitmap1 = null;
                             }
                            // editor.commit();
 
@@ -318,7 +306,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
         OkHttpUtils.post()
                 .url(url)
                 .addParams("userCode", Constant.username)
-                .addFile("image", System.currentTimeMillis()+".jpg",file)
+                .addFile("image", Constant.username+".jpg", file)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -330,7 +318,9 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                     @Override
                     public void onResponse(String response) {
                         Log.d("response", response + " ");
-                        //file.delete();
+
+                        user_photo.setImageBitmap(FileUtil.getSmallBitmap(file.getPath(), 200, 200));
+                        file.delete();
                     }
                 });
     }
@@ -340,18 +330,6 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
         //sp = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         //imgPath = sp.getString("imgPath", null);
         getUserImg();
-//        File file = new File(portraitPath);
-//        if (!file.exists()) {
-//            getUserImg();
-//        } else {
-//            Bitmap bitmap = FileUtil.getSmallBitmap(portraitPath,500,500);
-//            if (bitmap == null) {
-//                getUserImg();
-//                //user_photo.setImageResource(R.drawable.customer_de);
-//            } else
-//                user_photo.setImageBitmap(bitmap);
-//        }
-
 
 
         //获取用户信息
@@ -364,40 +342,51 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
      *
      */
     private void getUserImg() {
-        String url = Constant.SERVER_URL + "user/getPortrait";
+        String url = Constant.SERVER_URL + "images/"+Constant.username+".jpg";
+        Log.d("response",url);
+        Glide.with(getActivity()).load(url)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .placeholder(R.drawable.customer_de)
+                .error(R.drawable.customer_de)
+                .into(user_photo);
+//        Glide.with(getActivity()).load(url)
+//                .skipMemoryCache(true)
+//                .diskCacheStrategy(DiskCacheStrategy.NONE).into(user_photo);
+//        String url = Constant.SERVER_URL + "user/getPortrait";
 
-        OkHttpUtils.get()
-                .url(url)
-                .addParams("userCode",Constant.username)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(Response response) throws Exception {
-                        InputStream stream = response.body().byteStream();
-                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                        stream.close();
-                        return bitmap;
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        Log.d("error", e.getMessage() + " ");
-                    }
-
-                    @Override
-                    public void onResponse(Object response) {
-                        Log.d("response", response + " ");
-                        //writeToFile((InputStream) response, portraitPath);
-                        Bitmap bitmap = (Bitmap)response;
-                        user_photo.setImageBitmap(bitmap);
-//                        FileUtil.saveBitmap2file(bitmap,portraitPath);
-//                        if (bitmap != null && !bitmap.isRecycled()) {
-//                            bitmap.recycle();
-//                            bitmap = null;
-//                        }
-
-                    }
-                });
+//        OkHttpUtils.get()
+//                .url(url)
+//                .addParams("userCode",Constant.username)
+//                .build()
+//                .execute(new Callback() {
+//                    @Override
+//                    public Object parseNetworkResponse(Response response) throws Exception {
+//                        InputStream stream = response.body().byteStream();
+//                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+//                        stream.close();
+//                        return bitmap;
+//                    }
+//
+//                    @Override
+//                    public void onError(Call call, Exception e) {
+//                        Log.d("error", e.getMessage() + " ");
+//                    }
+//
+//                    @Override
+//                    public void onResponse(Object response) {
+//                        Log.d("response", response + " ");
+//                        //writeToFile((InputStream) response, portraitPath);
+//                        Bitmap bitmap = (Bitmap)response;
+//                        user_photo.setImageBitmap(bitmap);
+////                        FileUtil.saveBitmap2file(bitmap,portraitPath);
+////                        if (bitmap != null && !bitmap.isRecycled()) {
+////                            bitmap.recycle();
+////                            bitmap = null;
+////                        }
+//
+//                    }
+//                });
     }
     /*
      * 获取用户信息

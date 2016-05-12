@@ -12,15 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ExpandableListView;
-import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
@@ -32,7 +29,6 @@ import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.view.CHScrollView2;
-import com.example.administrator.sjassistant.view.HListView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -88,6 +84,7 @@ public class BillDetailActivity extends BaseActivity {
     private int billId;
     private String displayLevel;
     private String level;
+    private int fatherId;
 
     private LayoutInflater layoutInflater;
 
@@ -110,6 +107,7 @@ public class BillDetailActivity extends BaseActivity {
 
         billId = getIntent().getIntExtra("billId", -1);
         displayLevel = getIntent().getStringExtra("displayLevel");
+        fatherId = getIntent().getIntExtra("fatherId",0);
         if (TextUtils.isEmpty(displayLevel)) {
             displayLevel = "1";
         }
@@ -127,6 +125,8 @@ public class BillDetailActivity extends BaseActivity {
 
     }
 
+
+    private List<Map<String, String>> gridData;
     /*
      * 获取数据
      */
@@ -139,6 +139,7 @@ public class BillDetailActivity extends BaseActivity {
                 .url(url)
                 .addParams("displayLevel",displayLevel)
                 .addParams("billId",String.valueOf(billId))
+                .addParams("fatherId",String.valueOf(fatherId))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -171,7 +172,7 @@ public class BillDetailActivity extends BaseActivity {
                                     }
                                 } else if (billShowType.equals("2")) {
                                     JSONArray list = data.optJSONArray("list");
-                                    List<Map<String, String>> gridData = new ArrayList<Map<String, String>>();
+                                    gridData = new ArrayList<Map<String, String>>();
                                     if (list != null) {
                                         //表格行数
                                         rows = list.length();
@@ -211,22 +212,22 @@ public class BillDetailActivity extends BaseActivity {
                                             for (int i = 0;i < groupCount;i++) {
                                                 JSONArray group = new JSONArray(list.optString(i));
 
-                                                int childCount = group.length();
+                                                int childCount = group.optJSONArray(1).length();
                                                 Log.d("response","billId"+billId+"displayLevel"+level+"childCount "+childCount);
                                                 if (childCount != 0) {
                                                     Map<String,String> map = new HashMap<String, String>();
                                                     map.put("title",new JSONArray(group.optString(0)).optString(0));
                                                     map.put("value",new JSONArray(group.optString(0)).optString(1));
-                                                    if (1 >= childCount - 1) {
+                                                    map.put("fatherId",new JSONArray(group.optString(0)).optString(2));
+                                                    map.put("isHref",new JSONArray(group.optString(0)).optString(3));
+                                                    if (childCount <= 0) {
                                                         expandData.add(map);
                                                     } else {
-                                                        for (int j = 1; j < childCount - 1; j++) {
-                                                            String str = new JSONArray(group.optString(j)).optString(0);
-                                                            String str2 = new JSONArray(group.optString(j)).optString(1);
+                                                        JSONArray childGroup = group.optJSONArray(1);
+                                                        for (int j = 0; j < childCount; j++) {
+                                                            String str = childGroup.optJSONArray(j).optString(0);
+                                                            String str2 = childGroup.optJSONArray(j).optString(1);
                                                             if (str != null) {
-                                                                //if (str.length() == 0)
-                                                                //    map.put("data" + j, " ");
-                                                                //else
                                                                 map.put("data" + j, str);
                                                                 if (TextUtils.isEmpty(str2)) {
                                                                     str2 = " ";
@@ -266,10 +267,11 @@ public class BillDetailActivity extends BaseActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     BillDetailList billDetail = (BillDetailList) lv.getItemAtPosition(position);
-                    if (billDetail.getFatherId() != 0) {
+                    if (!billDetail.getIsHref().equals("0")) {
                         Intent intent = new Intent(BillDetailActivity.this, BillDetailActivity.class);
                         intent.putExtra("billId", billDetail.getBillId());
                         intent.putExtra("displayLevel", level);
+                        intent.putExtra("fatherId",billDetail.getId());
                         startActivity(intent);
                     }
                 }
@@ -299,10 +301,22 @@ public class BillDetailActivity extends BaseActivity {
     /*
      * 展示可扩展的数据行式
      */
-    private void showData(DetailExpandableAdapter adapter) {
+    private void showData(final DetailExpandableAdapter adapter) {
         setCenterView(R.layout.activity_expand_detail);
         expandableListView = (ExpandableListView)findViewById(R.id.expanded_list);
         expandableListView.setAdapter(adapter);
+
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                Intent intent = new Intent(BillDetailActivity.this,BillDetailActivity.class);
+                intent.putExtra("fatherId",adapter.getmList().get(groupPosition).get("fatherId"));
+                intent.putExtra("billId",billId);
+                intent.putExtra("displayLevel",level);
+                startActivity(intent);
+                return false;
+            }
+        });
     }
 
 
@@ -431,6 +445,7 @@ public class BillDetailActivity extends BaseActivity {
                 }
                 needLine = true;
                 ((TextView)holders[i]).setText(this.datas.get(position).get(from[i]).toString());
+                //((TextView)holders[i]).setTag(position+" "+i);
                 root.addView(holders[i]);
             }
 
@@ -443,12 +458,20 @@ public class BillDetailActivity extends BaseActivity {
     protected View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            //v.setBackgroundResource(R.drawable.linearlayout_green_round_selector);
             //Toast.makeText(BillDetailActivity.this, "点击了:" + ((TextView) v).getText(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(BillDetailActivity.this,BillDetailActivity.class);
-            intent.putExtra("displayLevel",level);
-            intent.putExtra("billId",billId);
-            startActivity(intent);
+//            String index = (String) ((TextView)v).getTag();
+//            int position = Integer.parseInt(index.split(" ")[0]);
+//            int i = Integer.parseInt(index.split(" ")[1]);
+//
+//            int num = position * cols + i;
+//
+//            //if (gridData.get(position).get("data"+i))
+//            Intent intent = new Intent(BillDetailActivity.this,BillDetailActivity.class);
+//
+//            intent.putExtra("displayLevel",level);
+//            intent.putExtra("billId",billId);
+//            intent.putExtra("fatherId",fatherId);
+//            startActivity(intent);
         }
     };
 

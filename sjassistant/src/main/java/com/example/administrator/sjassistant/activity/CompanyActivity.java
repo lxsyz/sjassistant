@@ -74,7 +74,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         if (savedInstanceState != null)
             id = savedInstanceState.getInt("id");
         else
-            id = getIntent().getIntExtra("id",0);
+            id = getIntent().getIntExtra("id", 0);
     }
 
     @Override
@@ -253,31 +253,47 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                                     text_add_person.setText("没有更多的联系人了");
                                 }
 
-                                departmentAdapter = new CommonAdapter<Department>(CompanyActivity.this, departmentData, R.layout.item_company) {
-                                    @Override
-                                    public void convert(ViewHolder holder, Department department) {
-                                        holder.getView(R.id.phone).setVisibility(View.GONE);
-                                        holder.getView(R.id.group).setVisibility(View.GONE);
-                                        holder.getView(R.id.right_arrow1).setVisibility(View.VISIBLE);
-                                        holder.setText(R.id.name, department.getName());
-                                    }
-                                };
+                                if (departmentAdapter != null) {
+                                    departmentAdapter.updateListView(departmentData);
+                                } else {
+                                    departmentAdapter = new CommonAdapter<Department>(CompanyActivity.this, departmentData, R.layout.item_company) {
+                                        @Override
+                                        public void convert(ViewHolder holder, Department department) {
+                                            holder.getView(R.id.phone).setVisibility(View.GONE);
+                                            holder.getView(R.id.group).setVisibility(View.GONE);
+                                            holder.getView(R.id.right_arrow1).setVisibility(View.VISIBLE);
+                                            holder.setText(R.id.name, department.getName());
+                                        }
+                                    };
 
-                                apartment_list.setAdapter(departmentAdapter);
+                                    apartment_list.setAdapter(departmentAdapter);
+                                }
                                 OperatorUtil.setListViewHeight(apartment_list);
 
-                                contactAdapter = new CommonAdapter<MyContacts>(CompanyActivity.this, contactData, R.layout.item_company) {
-                                    @Override
-                                    public void convert(ViewHolder holder, MyContacts contact) {
-                                        holder.getView(R.id.phone).setVisibility(View.VISIBLE);
-                                        holder.getView(R.id.right_arrow1).setVisibility(View.GONE);
-                                        holder.setText(R.id.name, contact.getTrueName());
-                                        holder.setText(R.id.group,contact.getDeptName());
-                                    }
-                                };
+                                if (contactAdapter != null) {
+                                    contactAdapter.updateListView(contactData);
+                                } else {
+                                    contactAdapter = new CommonAdapter<MyContacts>(CompanyActivity.this, contactData, R.layout.item_company) {
+                                        @Override
+                                        public void convert(final ViewHolder holder, MyContacts contact) {
+                                            holder.getView(R.id.phone).setVisibility(View.VISIBLE);
+                                            holder.getView(R.id.right_arrow1).setVisibility(View.GONE);
+                                            holder.setText(R.id.name, contact.getTrueName());
+                                            holder.setText(R.id.group, contact.getDeptName());
 
-                                contact_list.setAdapter(contactAdapter);
+                                            holder.getView(R.id.phone).setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    Intent intent = new Intent(CompanyActivity.this, MoreContact.class);
+                                                }
+                                            });
+                                        }
+                                    };
+
+                                    contact_list.setAdapter(contactAdapter);
+                                }
                                 OperatorUtil.setListViewHeight(contact_list);
+
 
                             } else {
                                 ToastUtil.showShort(CompanyActivity.this, "服务器异常");
@@ -301,14 +317,18 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         if (TextUtils.isEmpty(text)) {
             filterList = contactData;
         } else {
+            filterList.clear();
             for (MyContacts contacts:contactData) {
-                if (contacts.getUsername().contains(text)) {
-                    filterList.add(contacts);
+                if (contacts.getTrueName() != null) {
+                    if (contacts.getTrueName().contains(text)) {
+                        filterList.add(contacts);
+                    }
                 }
             }
         }
 
         contactAdapter.updateListView(filterList);
+        OperatorUtil.setListViewHeight(contact_list);
     }
 
     @Override

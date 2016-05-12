@@ -1,12 +1,12 @@
 package com.example.administrator.sjassistant.util;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.example.administrator.sjassistant.R;
+import cn.jpush.android.api.BasicPushNotificationBuilder;
+import cn.jpush.android.api.JPushInterface;
 
 /**
  * Created by Administrator on 2016/4/10.
@@ -16,40 +16,43 @@ public class Notifier {
 
     private SharedPreferences sp;
 
-    private NotificationManager notificationManager;
-
+    //private NotificationManager notificationManager;
+    private BasicPushNotificationBuilder builder;
     public Notifier(Context context) {
         this.context = context;
         this.sp = context.getSharedPreferences(Constant.SETTING_SP,Context.MODE_PRIVATE);
-        this.notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        //this.notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        builder = new BasicPushNotificationBuilder(context);
     }
 
-    public void notify(String notificationId,String title,String message,String uri) {
+    public void noti() {
         Log.d("tag","notify()");
 
         if (isNotificationEnabled()) {
 
-            Notification.Builder builder = new Notification.Builder(context);
-            builder.setContentText(message);
-            builder.setContentTitle("Test");
-            builder.setSmallIcon(R.mipmap.ic_launcher);
-            builder.setTicker("Test2");
-            builder.setSubText("haha");
-            builder.setWhen(System.currentTimeMillis());
+//            Notification.Builder builder = new Notification.Builder(context);
+//            builder.setContentText(message);
+//            builder.setContentTitle("Test");
+//            builder.setSmallIcon(R.mipmap.ic_launcher);
+//            builder.setTicker("Test2");
+//            builder.setSubText("haha");
+//            builder.setWhen(System.currentTimeMillis());
             //builder.setDefaults(Notification.DEFAULT_LIGHTS);
-            Notification notification = builder.build();
-            notification.defaults = Notification.DEFAULT_LIGHTS;
+            builder.notificationDefaults = Notification.DEFAULT_LIGHTS;
+            //Notification notification = builder.build();
+            //notification.defaults = Notification.DEFAULT_LIGHTS;
             if (isNotificationSoundEnabled()) {
-                notification.defaults |= Notification.DEFAULT_SOUND;
-
+                //notification.defaults |= Notification.DEFAULT_SOUND;
+                builder.notificationDefaults |= Notification.DEFAULT_SOUND;
             }
 
             if (isNotificationVibrateEnabled()) {
                 Log.d("tag","vibrate true");
-                notification.defaults |= Notification.DEFAULT_VIBRATE;
+                builder.notificationDefaults |= Notification.DEFAULT_VIBRATE;
             }
-
-            notificationManager.notify(0,notification);
+            //JPushInterface.setPushNotificationBuilder(1,builder);
+            JPushInterface.setDefaultPushNotificationBuilder(builder);
+            //notificationManager.notify(0,notification);
         }
     }
 
