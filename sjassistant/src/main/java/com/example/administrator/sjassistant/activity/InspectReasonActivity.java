@@ -1,5 +1,6 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,16 +10,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
+import com.example.administrator.sjassistant.bean.FilterCondition;
 import com.example.administrator.sjassistant.bean.InspectPerson;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +44,16 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
 
     private CommonAdapter<InspectPerson> commonAdapter;
 
+    /*
+     * 选中的下一环节审批人的名字
+     */
     private List<String> resultList = new ArrayList<String>();
 
     private int billId;
-
+    private String billType;
     private LinearLayout prompt_layout;
-
+    private RelativeLayout next_name_layout,next_role_layout;
+    private TextView next_role_text,next_name_text;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +61,11 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
         if (savedInstanceState != null) {
             billId = savedInstanceState.getInt("billId");
             datalist = (List<InspectPerson>) savedInstanceState.getSerializable("inspectPersons");
+            billType = savedInstanceState.getString("billType");
         } else {
             billId = getIntent().getIntExtra("billId", -1);
             datalist = (ArrayList<InspectPerson>) getIntent().getSerializableExtra("inspectPersons");
+            billType = getIntent().getStringExtra("billType");
         }
 
         if (datalist == null) {
@@ -73,7 +85,14 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
         button = (Button)findViewById(R.id.confirm);
         prompt_layout = (LinearLayout)findViewById(R.id.prompt_layout);
 
+        next_name_layout = (RelativeLayout)findViewById(R.id.next_name_layout);
+        next_role_layout = (RelativeLayout)findViewById(R.id.next_role_layout);
 
+        next_name_text = (TextView)findViewById(R.id.next_name_text);
+        next_role_text = (TextView)findViewById(R.id.next_role_text);
+
+        next_name_layout.setOnClickListener(this);
+        next_role_layout.setOnClickListener(this);
         button.setOnClickListener(this);
     }
 
@@ -124,9 +143,22 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
+        Intent intent = null;
         switch (v.getId()) {
             case R.id.confirm:
                 postReason();
+                break;
+            case R.id.next_name_layout:
+                intent = new Intent(InspectReasonActivity.this,EditActivity.class);
+                intent.putExtra("top","选择下一环节名称").putExtra("result",4).
+                        putExtra("billType",billType)
+                        .putExtra("billId",billId);
+                startActivityForResult(intent, 4);
+                break;
+            case R.id.next_role_layout:
+                intent = new Intent(InspectReasonActivity.this,EditActivity.class);
+                intent.putExtra("top","选择下一环节角色").putExtra("result",5);
+                startActivityForResult(intent,4);
                 break;
         }
     }
@@ -159,10 +191,10 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d("activity","saveInstance");
-        outState.putInt("billId",billId);
-        outState.putSerializable("inspectPersons",(ArrayList<InspectPerson>)datalist);
-
+        Log.d("activity", "saveInstance");
+        outState.putInt("billId", billId);
+        outState.putSerializable("inspectPersons", (ArrayList<InspectPerson>) datalist);
+        outState.putString("billType",billType);
     }
 
     private String getApprover() {
@@ -180,5 +212,22 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        FilterCondition fc = null;
+        switch (resultCode) {
+            case 4:
+                fc = (FilterCondition)data.getSerializableExtra("result");
+                next_name_text.setText(fc.getName());
+                break;
+            case 5:
+                fc = (FilterCondition)data.getSerializableExtra("result");
+                next_role_text.setText(fc.getName());
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

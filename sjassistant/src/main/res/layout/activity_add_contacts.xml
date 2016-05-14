@@ -3,14 +3,12 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:background="@color/white"
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
         <RelativeLayout
+            android:padding="12dp"
+            android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="公司名称"
@@ -35,7 +33,7 @@
 
         </RelativeLayout>
 
-    </LinearLayout>
+
 
     <View
         android:layout_marginLeft="12dp"
@@ -44,15 +42,13 @@
         android:layout_width="match_parent"
         android:layout_height="0.8dp"/>
 
-    <LinearLayout
-        android:id="@+id/customer_type_layout"
-        android:background="@color/white"
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
         <RelativeLayout
+            android:id="@+id/customer_type_layout"
+            android:background="@color/white"
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="客户类型"
@@ -76,8 +72,6 @@
                 />
         </RelativeLayout>
 
-    </LinearLayout>
-
     <View
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
@@ -85,15 +79,12 @@
         android:layout_width="match_parent"
         android:layout_height="0.8dp"/>
 
-    <LinearLayout
-        android:id="@+id/apartment_layout"
-        android:background="@color/white"
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
         <RelativeLayout
+            android:id="@+id/apartment_layout"
+            android:background="@color/white"
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="人员部门"
@@ -116,7 +107,7 @@
                 style="@style/right_arrow"
                 />
         </RelativeLayout>
-    </LinearLayout>
+
 
     <View
         android:layout_marginLeft="12dp"
@@ -125,15 +116,13 @@
         android:layout_width="match_parent"
         android:layout_height="0.8dp"/>
 
-    <LinearLayout
-        android:id="@+id/person_work_layout"
-        android:background="@color/white"
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
         <RelativeLayout
+            android:id="@+id/person_work_layout"
+            android:background="@color/white"
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="人员职位"
@@ -156,18 +145,16 @@
                 style="@style/right_arrow"
                 />
         </RelativeLayout>
-    </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_marginTop="15dp"
-        android:background="@color/white"
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
+
         <RelativeLayout
+            android:layout_marginTop="15dp"
+            android:background="@color/white"
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="联系人姓名"
@@ -190,7 +177,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
-    </LinearLayout>
+
 
     <View
         android:layout_marginLeft="12dp"
@@ -199,14 +186,12 @@
         android:layout_width="match_parent"
         android:layout_height="0.8dp"/>
 
-    <LinearLayout
-        android:background="@color/white"
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
         <RelativeLayout
+            android:background="@color/white"
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="联系人电话"
@@ -230,7 +215,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
-    </LinearLayout>
 
 
 

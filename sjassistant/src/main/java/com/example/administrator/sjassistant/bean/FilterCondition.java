@@ -7,9 +7,19 @@ import java.io.Serializable;
  */
 public class FilterCondition implements Serializable {
 
+    private String code;
+
     private String name;
 
     private int id;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public int getId() {
         return id;

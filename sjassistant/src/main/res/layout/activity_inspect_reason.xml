@@ -14,9 +14,97 @@
         android:layout_width="fill_parent"
         android:layout_height="150dp" />
 
-    <LinearLayout android:layout_width="fill_parent"
+    <View
+        android:background="@color/line"
+        android:layout_width="match_parent"
+        android:layout_height="12dp" />
+    <LinearLayout
+        android:background="@drawable/layout_select"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:paddingLeft="15dp"
+            android:paddingRight="10dp"
+            android:id="@+id/next_name_layout"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+
+            <TextView
+                android:text="请选择下一环节名称"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#BABABA"
+                />
+
+            <TextView
+                android:id="@+id/next_name_text"
+                android:text=""
+                android:layout_marginRight="13dp"
+                android:layout_marginEnd="13dp"
+                android:textColor="@color/my_black"
+                android:textSize="15sp"
+                android:layout_toLeftOf="@+id/right_arrow1"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/right_arrow1"
+                style="@style/right_arrow"
+                />
+
+            <View
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="0.2dp"
+                android:background="@color/line" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:paddingLeft="15dp"
+            android:paddingRight="10dp"
+            android:id="@+id/next_role_layout"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+
+            <TextView
+                android:text="请选择下一环节角色"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#BABABA"
+                />
+
+            <TextView
+                android:id="@+id/next_role_text"
+                android:text=""
+                android:layout_marginRight="13dp"
+                android:layout_marginEnd="13dp"
+                android:textColor="@color/my_black"
+                android:textSize="15sp"
+                android:layout_toLeftOf="@+id/right_arrow2"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/right_arrow2"
+                style="@style/right_arrow"
+                />
+
+            <View
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="0.2dp"
+                android:background="@color/line" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
         android:background="@color/white"
         android:orientation="vertical"
         android:id="@+id/prompt_layout"
@@ -26,11 +114,11 @@
             android:layout_height="38dp">
 
             <TextView
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:layout_centerVertical="true"
-                android:textColor="#979797"
+                android:textColor="#BABABA"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:text="选择下一环节审批人员"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent" />
@@ -40,6 +128,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.2dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:background="@color/line" />
     </LinearLayout>
 

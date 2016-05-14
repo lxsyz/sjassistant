@@ -87,6 +87,8 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
         //tabs.setTextColorResource(R.drawable.background_tab_text);
         //tabs.setActivateTextColor(R.color.background_text_selected);
         //tabs.setDeactivateTextColor(R.color.background_text);
+        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        tabs.setViewPager(viewPager);
     }
 
     @Override
@@ -118,12 +120,12 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    //finishedBillFragment = new FinishedBillFragment();
+                    finishedBillFragment = new FinishedBillFragment();
                     //Bundle bundle = new Bundle();
 
                     return finishedBillFragment;
                 case 1:
-                    //unfinishedBillFragment = new UnfinishedBillFragment();
+                    unfinishedBillFragment = new UnfinishedBillFragment();
                     return unfinishedBillFragment;
                 default:
                     return null;
@@ -143,9 +145,12 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
+        datalist.clear();
         //unfinshDatalist.clear();
-        if (finishedBillFragment == null || unfinishedBillFragment == null)
+        if (finishedBillFragment == null || unfinishedBillFragment == null) {
             getUnfinishedWork();
+            getFinished();
+        }
     }
 
     /*
@@ -153,7 +158,7 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
          */
     private void getUnfinishedWork() {
         //unfinshDatalist.clear();
-        datalist.clear();
+        //datalist.clear();
 
         String url = Constant.SERVER_URL + "bill/show";
 
@@ -180,35 +185,37 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
                                 Gson gson = new Gson();
                                 int len = list.length();
                                 if (len != 0) {
-                                    datalist = gson.fromJson(list.toString(), new TypeToken<List<Bill>>() {
-                                    }.getType());
                                     List<Bill> unfinishedList = new ArrayList<Bill>();
-                                    List<Bill> finishedList = new ArrayList<Bill>();
-                                    for (Bill bill:datalist) {
-                                        if (TextUtils.isEmpty(bill.getDealResult())) {
-                                            bill.setDealResult("未读");
-                                            unfinishedList.add(bill);
-                                        } else if (bill.getDealResult().equals("已读")) {
-                                            finishedList.add(bill);
-                                        } else {
-                                            unfinishedList.add(bill);
-                                        }
-                                    }
+                                    unfinishedList = gson.fromJson(list.toString(), new TypeToken<List<Bill>>() {
+                                    }.getType());
 
-                                    finishedBillFragment = new FinishedBillFragment();
-                                    unfinishedBillFragment = new UnfinishedBillFragment();
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("data", (ArrayList) unfinishedList);
-                                    unfinishedBillFragment.setArguments(bundle);
+                                    datalist.addAll(unfinishedList);
+//                                    List<Bill> finishedList = new ArrayList<Bill>();
+
+//                                    for (Bill bill:datalist) {
+//                                        if (TextUtils.isEmpty(bill.getDealResult())) {
+//                                            bill.setDealResult("未读");
+//                                            unfinishedList.add(bill);
+//                                        } else if (bill.getDealResult().equals("已读")) {
+//                                            finishedList.add(bill);
+//                                        } else {
+//                                            unfinishedList.add(bill);
+//                                        }
+//                                    }
+
+//                                    finishedBillFragment = new FinishedBillFragment();
+//                                    unfinishedBillFragment = new UnfinishedBillFragment();
+//                                    Bundle bundle = new Bundle();
+//                                    bundle.putSerializable("data", (ArrayList) unfinishedList);
+//                                    unfinishedBillFragment.setArguments(bundle);
 
 
-                                    Bundle bundle2 = new Bundle();
-                                    bundle2.putSerializable("data",(ArrayList) finishedList);
-                                    finishedBillFragment.setArguments(bundle2);
+//                                    Bundle bundle2 = new Bundle();
+//                                    bundle2.putSerializable("data",(ArrayList) finishedList);
+//                                    finishedBillFragment.setArguments(bundle2);
 
                                 }
-                                viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-                                tabs.setViewPager(viewPager);
+
 
 
                             } else {
@@ -222,6 +229,59 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
                 });
     }
 
+    private void getFinished() {
+        String url = Constant.SERVER_URL + "bill/showFinish";
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("userCode", Constant.username)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage() + " ");
+                        ErrorUtil.NetWorkToast(InspectActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response + " ");
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            JSONObject data = object.getJSONObject("data");
+                            JSONArray list = data.getJSONArray("list");
+                            if (statusCode == 0) {
+                                Gson gson = new Gson();
+                                int len = list.length();
+                                if (len != 0) {
+                                    List<Bill> finishedList = new ArrayList<Bill>();
+                                    finishedList = gson.fromJson(list.toString(), new TypeToken<List<Bill>>() {
+                                    }.getType());
+                                    datalist.addAll(finishedList);
+
+//                                    finishedBillFragment = new FinishedBillFragment();
+                                    //unfinishedBillFragment = new UnfinishedBillFragment();
+//                                    Bundle bundle = new Bundle();
+//                                    bundle.putSerializable("data", (ArrayList) unfinishedList);
+//                                    unfinishedBillFragment.setArguments(bundle);
+
+
+//                                    Bundle bundle = new Bundle();
+//                                    bundle.putSerializable("data",(ArrayList) finishedList);
+//                                    finishedBillFragment.setArguments(bundle);
+                                }
+
+                            } else {
+                                ToastUtil.showShort(InspectActivity.this, "服务器异常");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
 
     protected void initWindow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

@@ -4,22 +4,19 @@
     android:background="@color/background"
     android:layout_height="match_parent">
 
-    <LinearLayout android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical"
-        >
+
         <RelativeLayout
+            android:background="@color/white"
+            android:id="@+id/prompt_layout"
             android:layout_width="fill_parent"
             android:layout_height="38dp">
 
             <TextView
                 android:id="@+id/tip"
                 android:textSize="13sp"
-                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
                 android:textColor="#979797"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
                 android:text="选择部门"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent" />
@@ -31,7 +28,6 @@
                 android:background="@color/line" />
         </RelativeLayout>
 
-    </LinearLayout>
 
     <ListView
         android:id="@+id/edit_list"

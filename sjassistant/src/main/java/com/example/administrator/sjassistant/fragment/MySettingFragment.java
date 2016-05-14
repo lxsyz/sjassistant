@@ -347,7 +347,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
         Glide.with(getActivity()).load(url)
                 .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .placeholder(R.drawable.customer_de)
+                //.placeholder(R.drawable.customer_de)
                 .error(R.drawable.customer_de)
                 .into(user_photo);
 //        Glide.with(getActivity()).load(url)

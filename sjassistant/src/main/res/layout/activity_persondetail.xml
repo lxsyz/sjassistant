@@ -5,15 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:padding="12dp"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
+
 
         <RelativeLayout
+            android:padding="12dp"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="联系人姓名"
@@ -32,7 +31,7 @@
         </RelativeLayout>
 
 
-    </LinearLayout>
+
 
     <View
         android:layout_marginRight="12dp"
@@ -41,13 +40,11 @@
         android:layout_height="0.5dp"
         android:background="@color/line" />
 
-    <LinearLayout
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
         <RelativeLayout
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="联系人电话"
@@ -75,20 +72,18 @@
                 />
         </RelativeLayout>
 
-    </LinearLayout>
+
 
     <View
         android:background="@color/background"
         android:layout_width="fill_parent"
         android:layout_height="14dp" />
 
-    <LinearLayout
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
         <RelativeLayout
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="公司名称"
@@ -106,20 +101,18 @@
 
         </RelativeLayout>
 
-    </LinearLayout>
+
     <View
         android:layout_marginRight="12dp"
         android:layout_marginLeft="12dp"
         android:layout_width="fill_parent"
         android:layout_height="0.5dp"
         android:background="@color/line" />
-    <LinearLayout
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
         <RelativeLayout
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="客户类型"
@@ -135,7 +128,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
-    </LinearLayout>
+
     <View
         android:layout_marginRight="12dp"
         android:layout_marginLeft="12dp"
@@ -143,13 +136,11 @@
         android:layout_height="0.5dp"
         android:background="@color/line" />
 
-    <LinearLayout
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
         <RelativeLayout
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="人员部门"
@@ -165,20 +156,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
-    </LinearLayout>
+
     <View
         android:layout_marginRight="12dp"
         android:layout_marginLeft="12dp"
         android:layout_width="fill_parent"
         android:layout_height="0.5dp"
         android:background="@color/line" />
-    <LinearLayout
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
         <RelativeLayout
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="人员职位"
@@ -194,7 +183,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
-    </LinearLayout>
+
 
     <View
         android:background="@color/background"

@@ -47,9 +47,9 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
         bt_left = (ImageView) layout_top.findViewById(R.id.bt_left);
         title = (TextView)findViewById(R.id.tv_center);
 
-        LinearLayout customer_type_layout = (LinearLayout) findViewById(R.id.customer_type_layout);
-        LinearLayout person_work_layout = (LinearLayout) findViewById(R.id.person_work_layout);
-        LinearLayout person_apartment_layout = (LinearLayout) findViewById(R.id.person_apartment_layout);
+        RelativeLayout customer_type_layout = (RelativeLayout) findViewById(R.id.customer_type_layout);
+        RelativeLayout person_work_layout = (RelativeLayout) findViewById(R.id.person_work_layout);
+        RelativeLayout person_apartment_layout = (RelativeLayout) findViewById(R.id.person_apartment_layout);
 
         person_work = (TextView)findViewById(R.id.person_work);
         customer_type = (TextView)findViewById(R.id.customer_type);

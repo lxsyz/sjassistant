@@ -4,14 +4,12 @@
     android:background="@color/white"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:background="@color/white"
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
         <RelativeLayout
+            android:background="@color/white"
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="接收新消息通知"
@@ -29,7 +27,7 @@
                 />
 
         </RelativeLayout>
-    </LinearLayout>
+
 
     <View android:layout_width="match_parent"
         android:layout_height="0.2dp"
@@ -38,15 +36,13 @@
         android:id="@+id/v"
         android:background="@color/line" />
 
-    <LinearLayout
-        android:id="@+id/voice_layout"
-        android:background="@color/white"
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
         <RelativeLayout
+            android:id="@+id/voice_layout"
+            android:background="@color/white"
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="声音"
@@ -64,7 +60,7 @@
                 />
         </RelativeLayout>
 
-    </LinearLayout>
+
 
     <View android:layout_width="match_parent"
         android:layout_height="0.2dp"
@@ -72,15 +68,13 @@
         android:layout_marginRight="12dp"
         android:background="@color/line" />
 
-    <LinearLayout
-        android:id="@+id/vibrate_layout"
-        android:background="@color/white"
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+
         <RelativeLayout
+            android:id="@+id/vibrate_layout"
+            android:background="@color/white"
+            android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="55dp">
 
             <TextView
                 android:text="震动"
@@ -98,7 +92,7 @@
                 />
         </RelativeLayout>
 
-    </LinearLayout>
+
 
     <LinearLayout
         android:background="@color/background"

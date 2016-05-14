@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.HorizontalScrollView;
@@ -288,6 +289,7 @@ public class BillDetailActivity extends BaseActivity {
 
         setCenterView(R.layout.activity_bill_detail);
         lv = (ListView)findViewById(R.id.list);
+
 
         lv.setAdapter(new CommonAdapter<BillDetailList>(BillDetailActivity.this,list,R.layout.list_item) {
             @Override

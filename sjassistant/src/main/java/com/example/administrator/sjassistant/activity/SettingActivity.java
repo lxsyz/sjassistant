@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,7 @@ import okhttp3.Call;
  */
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
-    private LinearLayout changeEmail,changePwd,changeServer,clearCache,update,noDisturb,prompt;
+    private RelativeLayout changeEmail,changePwd,changeServer,clearCache,update,noDisturb,prompt;
     private Button quit;
 
     private TextView cache_size,changeEmail_text;
@@ -46,13 +47,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         setCenterView(R.layout.activity_setting);
         setTopText("设置");
 
-        changeEmail = (LinearLayout)findViewById(R.id.changeEmail);
-        changeServer = (LinearLayout)findViewById(R.id.changeServer);
-        changePwd = (LinearLayout)findViewById(R.id.changePwd);
-        clearCache = (LinearLayout)findViewById(R.id.clearCache);
-        update = (LinearLayout)findViewById(R.id.update);
-        noDisturb = (LinearLayout)findViewById(R.id.noDisturb);
-        prompt = (LinearLayout)findViewById(R.id.prompt);
+        changeEmail = (RelativeLayout) findViewById(R.id.changeEmail);
+        changeServer = (RelativeLayout) findViewById(R.id.changeServer);
+        changePwd = (RelativeLayout) findViewById(R.id.changePwd);
+        clearCache = (RelativeLayout) findViewById(R.id.clearCache);
+        update = (RelativeLayout) findViewById(R.id.update);
+        noDisturb = (RelativeLayout) findViewById(R.id.noDisturb);
+        prompt = (RelativeLayout) findViewById(R.id.prompt);
         quit = (Button)findViewById(R.id.quit);
 
         cache_size = (TextView)findViewById(R.id.cache_size);

@@ -60,7 +60,7 @@ public class ContactAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder)convertView.getTag();
         }
-        String name = person.getLinkName();
+        final String name = person.getLinkName();
         if (name.length() >= 3)
             viewHolder.name.setText(name);
         else if (name.length() == 2) {
@@ -76,7 +76,7 @@ public class ContactAdapter extends BaseAdapter {
                 ChangeNumberDialog d = new ChangeNumberDialog(context);
                         d.setFlag(1);
                         d.show();
-                        d.setContentText("删除XXX此次的电话会议");
+                        d.setContentText("删除 " + name + " 此次的电话会议");
                         d.setOnDeleteClickListener(new ChangeNumberDialog.OnDeleteClickListener() {
                             @Override
                             public void onDelete(int i) {

@@ -210,7 +210,7 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        AddPersonManager.getInstance().finishActivity();
+        //AddPersonManager.getInstance().finishActivity();
     }
 
     protected void initWindow() {

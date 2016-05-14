@@ -7,15 +7,12 @@
     <include layout="@layout/search_contacts"
         android:id="@+id/search_layout" />
 
-    <LinearLayout
-        android:layout_marginTop="14dp"
-        android:background="@color/white"
-        android:layout_width="fill_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
 
         <RelativeLayout
+            android:layout_marginTop="14dp"
+            android:background="@color/white"
             android:layout_width="fill_parent"
+            android:orientation="vertical"
             android:layout_height="38dp">
 
             <TextView
@@ -45,7 +42,7 @@
             android:layout_height="wrap_content">
 
         </ListView>-->
-    </LinearLayout>
+
 
     <ListView
         android:id="@+id/customer_list"

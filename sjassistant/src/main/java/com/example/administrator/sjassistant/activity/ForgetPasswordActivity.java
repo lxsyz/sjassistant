@@ -254,6 +254,11 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
             return;
         }
 
+        if (TextUtils.isEmpty(message)) {
+            ToastUtil.showShort(ForgetPasswordActivity.this,"请先获取验证码");
+            return;
+        }
+
         if (pd != null) {
             pd.createDialog().show();
         }
@@ -287,6 +292,8 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                                     editor.putString("password",et_password.getText().toString());
                                     editor.apply();
                                     ForgetPasswordActivity.this.finish();
+                                } else if (statusCode == 1) {
+                                    ToastUtil.showShort(ForgetPasswordActivity.this,"用户不存在");
                                 } else if (statusCode == 4) {
                                     ToastUtil.showShort(ForgetPasswordActivity.this,"邮箱错误");
                                 }
@@ -352,7 +359,8 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                                     intent.putExtra("email",et_username.getText().toString());
                                     setResult(1,intent);
                                     ForgetPasswordActivity.this.finish();
-                                } else if (statusCode == 4) {
+                                }
+                                else if (statusCode == 4) {
                                     ToastUtil.showShort(ForgetPasswordActivity.this,"密码错误");
                                 } else if (statusCode == 16) {
                                     ToastUtil.showShort(ForgetPasswordActivity.this,"邮箱已存在");

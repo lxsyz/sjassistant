@@ -64,34 +64,35 @@ public class UnfinishedBillFragment extends Fragment {
         lv = (ListView) v.findViewById(R.id.unfinished_list);
         prompt = (TextView)v.findViewById(R.id.prompt);
 
-        Bundle bundle = getArguments();
+        //Bundle bundle = getArguments();
 
-        datalist = (ArrayList<Bill>)bundle.getSerializable("data");
-        if (datalist != null) {
-            commonAdapter = new CommonAdapter<Bill>(getActivity(), datalist, R.layout.item_a) {
-                @Override
-                public void convert(ViewHolder holder, Bill bill) {
-                    String title = bill.getUserCode() + "的单据需要你审批";
-                    holder.setText(R.id.id_title, title);
-                    holder.setText(R.id.id_type_value, bill.getBillType());
-                    holder.setText(R.id.id_time_value, bill.getDealTime());
-                    holder.setText(R.id.read_flag, bill.getDealResult());
-
-                    if (TextUtils.isEmpty(bill.getDealResult()) || bill.getDealResult().equals("null")) {
-                        holder.setText(R.id.read_flag, "未读");
-                        ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
-                    } else if (bill.getDealResult().equals("未读") || bill.getDealResult().equals("退回未提交")) {
-                        ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
-                    } else if (bill.getDealResult().equals("通过未提交") || bill.getDealResult().equals("已读")) {
-                        ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.read));
-                    }
-                }
-            };
-            lv.setAdapter(commonAdapter);
-        } else {
-            lv.setVisibility(View.GONE);
-            prompt.setVisibility(View.VISIBLE);
-        }
+        //datalist = (ArrayList<Bill>)bundle.getSerializable("data");
+//        if (datalist != null) {
+//            commonAdapter = new CommonAdapter<Bill>(getActivity(), datalist, R.layout.item_a) {
+//                @Override
+//                public void convert(ViewHolder holder, Bill bill) {
+//                    String title = bill.getUserCode() + "的单据需要你审批";
+//                    holder.setText(R.id.id_title, title);
+//                    holder.setText(R.id.id_type_value, bill.getBillType());
+//                    holder.setText(R.id.id_time_value, bill.getDealTime());
+//                    holder.getView(R.id.read_flag).setVisibility(View.GONE);
+//                    //holder.setText(R.id.read_flag, bill.getDealResult());
+//
+////                    if (TextUtils.isEmpty(bill.getDealResult()) || bill.getDealResult().equals("null")) {
+////                        holder.setText(R.id.read_flag, "未读");
+////                        ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
+////                    } else if (bill.getDealResult().equals("未读") || bill.getDealResult().equals("退回未提交")) {
+////                        ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
+////                    } else if (bill.getDealResult().equals("通过未提交") || bill.getDealResult().equals("已读")) {
+////                        ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.read));
+////                    }
+//                }
+//            };
+//            lv.setAdapter(commonAdapter);
+//        } else {
+//            lv.setVisibility(View.GONE);
+//            prompt.setVisibility(View.VISIBLE);
+//        }
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -105,6 +106,12 @@ public class UnfinishedBillFragment extends Fragment {
         });
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getUnfinishedWork();
     }
 
     @Override
@@ -164,28 +171,35 @@ public class UnfinishedBillFragment extends Fragment {
                                         bill.setDealResult(o.getString("dealResult"));
                                         datalist.add(bill);
                                     }
-                                }
-                                commonAdapter = new CommonAdapter<Bill>(getActivity(), datalist, R.layout.item_a) {
-                                    @Override
-                                    public void convert(ViewHolder holder, Bill bill) {
-                                        String title = bill.getUserCode() + "的单据需要你审批";
-                                        holder.setText(R.id.id_title, title);
-                                        holder.setText(R.id.id_type_value, bill.getBillType());
-                                        holder.setText(R.id.id_time_value, bill.getDealTime());
-                                        holder.setText(R.id.read_flag, bill.getDealResult());
 
-                                        if (TextUtils.isEmpty(bill.getDealResult()) || bill.getDealResult().equals("null")) {
-                                            holder.setText(R.id.read_flag, "未读");
-                                            ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
-                                        } else if (bill.getDealResult().equals("未读") || bill.getDealResult().equals("退回未提交")) {
-                                            ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
-                                        } else if (bill.getDealResult().equals("通过未提交") || bill.getDealResult().equals("通过")) {
-                                            ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.read));
-                                        }
+                                    if (commonAdapter != null) {
+                                        commonAdapter.updateListView(datalist);
+                                    } else {
+                                        commonAdapter = new CommonAdapter<Bill>(getActivity(), datalist, R.layout.item_a) {
+                                            @Override
+                                            public void convert(ViewHolder holder, Bill bill) {
+                                                String title = bill.getUserCode() + "的单据需要你审批";
+                                                holder.setText(R.id.id_title, title);
+                                                holder.setText(R.id.id_type_value, bill.getBillType());
+                                                holder.setText(R.id.id_time_value, bill.getDealTime());
+//                                                holder.setText(R.id.read_flag, bill.getDealResult());
+                                                holder.getView(R.id.read_flag).setVisibility(View.GONE);
+//                                                if (TextUtils.isEmpty(bill.getDealResult()) || bill.getDealResult().equals("null")) {
+//                                                    holder.setText(R.id.read_flag, "未读");
+//                                                    ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
+//                                                } else if (bill.getDealResult().equals("未读") || bill.getDealResult().equals("退回未提交")) {
+//                                                    ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.unread));
+//                                                } else if (bill.getDealResult().equals("通过未提交") || bill.getDealResult().equals("通过")) {
+//                                                    ((TextView) holder.getView(R.id.read_flag)).setTextColor(getResources().getColor(R.color.read));
+//                                                }
+                                            }
+                                        };
+                                        lv.setAdapter(commonAdapter);
                                     }
-                                };
-                                lv.setAdapter(commonAdapter);
-
+                                } else {
+                                        lv.setVisibility(View.GONE);
+                                        prompt.setVisibility(View.VISIBLE);
+                                }
                             } else {
                                 ToastUtil.showShort(getActivity(), "服务器异常");
                             }

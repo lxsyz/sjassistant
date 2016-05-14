@@ -107,16 +107,27 @@ public class SearchBillActivity extends BaseActivity implements View.OnClickList
             filterData = datalist;
         } else {
             for (Bill bill : datalist) {
-                if (bill.getDealTime().contains(text)
-                        || bill.getDealResult().contains(text)
-                        || bill.getUserCode().contains(text)
-                        || bill.getBillType().contains(text)) {
+                if (!TextUtils.isEmpty(bill.getDealTime()) && bill.getDealTime().contains(text)) {
                     filterData.add(bill);
+                    continue;
+                }
+                if (!TextUtils.isEmpty(bill.getDealResult()) && bill.getDealResult().contains(text)) {
+                    filterData.add(bill);
+                    continue;
+                }
+
+                if (!TextUtils.isEmpty(bill.getUserCode()) && bill.getUserCode().contains(text)) {
+                    filterData.add(bill);
+                    continue;
+                }
+                if (!TextUtils.isEmpty(bill.getBillType()) && bill.getBillType().contains(text)) {
+                    filterData.add(bill);
+                    continue;
                 }
             }
         }
 
-        listView.setAdapter(new CommonAdapter<Bill>(SearchBillActivity.this,datalist,R.layout.item_a) {
+        listView.setAdapter(new CommonAdapter<Bill>(SearchBillActivity.this,filterData,R.layout.item_a) {
 
             @Override
             public void convert(ViewHolder holder, Bill bill) {

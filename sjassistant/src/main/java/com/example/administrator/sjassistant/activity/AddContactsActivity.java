@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
@@ -29,7 +30,7 @@ import okhttp3.Call;
  */
 public class AddContactsActivity extends BaseActivity implements View.OnClickListener {
 
-    private LinearLayout customer_type_layout,apartment_layout,person_work_layout;
+    private RelativeLayout customer_type_layout,apartment_layout,person_work_layout;
 
     private EditText company_name,name,phone;
 
@@ -51,9 +52,9 @@ public class AddContactsActivity extends BaseActivity implements View.OnClickLis
         setCenterView(R.layout.activity_add_contacts);
         setTopText("创建新联系人");
 
-        customer_type_layout = (LinearLayout)findViewById(R.id.customer_type_layout);
-        apartment_layout = (LinearLayout)findViewById(R.id.apartment_layout);
-        person_work_layout = (LinearLayout)findViewById(R.id.person_work_layout);
+        customer_type_layout = (RelativeLayout) findViewById(R.id.customer_type_layout);
+        apartment_layout = (RelativeLayout) findViewById(R.id.apartment_layout);
+        person_work_layout = (RelativeLayout) findViewById(R.id.person_work_layout);
 
         company_name = (EditText)findViewById(R.id.company_name);
         name = (EditText)findViewById(R.id.name);

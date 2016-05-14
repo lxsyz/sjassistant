@@ -6,15 +6,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
 import com.example.administrator.sjassistant.bean.FilterCondition;
+import com.example.administrator.sjassistant.bean.Role;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -40,14 +45,19 @@ public class EditActivity extends BaseActivity {
     private String title;
     private int request;
 
+    private String billType;
+    private int billId;
+
     private List<FilterCondition> datalist = new ArrayList<>();
 
-
+    private RelativeLayout prompt_layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         title = getIntent().getStringExtra("top");
+        billId = getIntent().getIntExtra("billId", -1);
+        billType = getIntent().getStringExtra("billType");
         setTopText(title);
         tip.setText("选择" + title);
         request = getIntent().getIntExtra("result",-1);
@@ -82,7 +92,7 @@ public class EditActivity extends BaseActivity {
 
         lv = (ListView)findViewById(R.id.edit_list);
         tip  = (TextView)findViewById(R.id.tip);
-
+        prompt_layout = (RelativeLayout)findViewById(R.id.prompt_layout);
     }
 
     private void getData(int request) {
@@ -96,6 +106,14 @@ public class EditActivity extends BaseActivity {
                 break;
             case 3:
                 getCustomerType("customerPost");
+                break;
+            case 4:
+                prompt_layout.setVisibility(View.GONE);
+                getNextName();
+                break;
+            case 5:
+                prompt_layout.setVisibility(View.GONE);
+                showRoles();
                 break;
         }
     }
@@ -113,13 +131,13 @@ public class EditActivity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error",e.getMessage()+" ");
+                        Log.d("error", e.getMessage() + " ");
                         ErrorUtil.NetWorkToast(EditActivity.this);
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        Log.d("response",response);
+                        Log.d("response", response);
                         JSONObject object = null;
                         try {
                             object = new JSONObject(response);
@@ -129,7 +147,7 @@ public class EditActivity extends BaseActivity {
                                 JSONArray list = data.optJSONArray("list");
                                 if (list != null && list.length() != 0) {
                                     int len = list.length();
-                                    for (int i = 0;i < len;i++) {
+                                    for (int i = 0; i < len; i++) {
                                         FilterCondition fc = new FilterCondition();
                                         fc.setId(list.optJSONObject(i).optInt("id"));
                                         fc.setName(list.optJSONObject(i).optString("name"));
@@ -151,6 +169,100 @@ public class EditActivity extends BaseActivity {
                 });
     }
 
+    /*
+     * 获取角色列表
+     *
+     */
+    private void showRoles() {
+        String url = Constant.SERVER_URL + "bill/showRoles";
+
+        OkHttpUtils.post()
+                .url(url)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error",e.getMessage()+" ");
+                        ErrorUtil.NetWorkToast(EditActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response);
+                        JSONObject object = null;
+                        try {
+                            object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            if (statusCode == 0) {
+                                JSONObject data = object.optJSONObject("data");
+                                JSONArray list = data.optJSONArray("list");
+                                if (list != null && list.length() != 0) {
+                                   // List<Role> roleList = new ArrayList<Role>();
+                                    Gson gson = new Gson();
+                                    datalist = gson.fromJson(list.toString(),new TypeToken<List<FilterCondition>>(){}.getType());
+                                    lv.setAdapter(new CommonAdapter<FilterCondition>(EditActivity.this, datalist, R.layout.item_edit) {
+                                        @Override
+                                        public void convert(ViewHolder holder, FilterCondition s) {
+                                            holder.setText(R.id.type_name, s.getName());
+                                        }
+                                    });
+                                }
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    /*
+     * 获取下一环节名称
+     */
+    private void getNextName() {
+        String url = Constant.SERVER_URL + "bill/showNextStep";
+
+        OkHttpUtils.post()
+                .addParams("billId",String.valueOf(billId))
+                .addParams("billType",billType)
+                .url(url)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error",e.getMessage()+" ");
+                        ErrorUtil.NetWorkToast(EditActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response",response);
+                        JSONObject object = null;
+                        try {
+                            object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            if (statusCode == 0) {
+                                JSONObject data = object.optJSONObject("data");
+                                JSONArray list = data.optJSONArray("list");
+                                if (list != null && list.length() != 0) {
+                                    // List<Role> roleList = new ArrayList<Role>();
+                                    Gson gson = new Gson();
+                                    datalist = gson.fromJson(list.toString(),new TypeToken<List<FilterCondition>>(){}.getType());
+                                    lv.setAdapter(new CommonAdapter<FilterCondition>(EditActivity.this, datalist, R.layout.item_edit) {
+                                        @Override
+                                        public void convert(ViewHolder holder, FilterCondition s) {
+                                            holder.setText(R.id.type_name, s.getName());
+                                        }
+                                    });
+                                }
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

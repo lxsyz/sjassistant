@@ -8,13 +8,11 @@
         android:id="@+id/search_layout"
         layout="@layout/search_contacts" />
 
-    <LinearLayout android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:background="@color/white"
-        android:orientation="vertical"
-        >
+
         <RelativeLayout
+            android:layout_marginTop="14dp"
+            android:background="@color/white"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="38dp">
 
@@ -35,7 +33,7 @@
                 android:background="@color/line" />
         </RelativeLayout>
 
-    </LinearLayout>
+
 
     <ListView
         android:id="@+id/apartment_list"

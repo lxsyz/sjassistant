@@ -19,6 +19,7 @@ import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.view.ChangeNumberDialog;
+import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.view.MyListView;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -28,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import okhttp3.Call;
@@ -50,7 +52,7 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
 
     private TextView master;
 
-    private TextView rest_time;
+    private TextView rest_time,user_time,company_time;
 
     ContactAdapter adapter;
     int result = 0;
@@ -97,6 +99,8 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
         master = (TextView)findViewById(R.id.master);
 
         rest_time = (TextView)findViewById(R.id.rest_time);
+        user_time = (TextView)findViewById(R.id.currentmonth_time);
+        company_time = (TextView)findViewById(R.id.currentCompany);
 
         btn_right = (ImageView)findViewById(R.id.bt_right);
         btn_right.setImageResource(R.drawable.add_link_person);
@@ -124,6 +128,11 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
                     return;
                 }
 
+                if (datalist == null || datalist.size() == 0) {
+                    ToastUtil.showShort(MoreContact.this,"请添加参与人");
+                    return;
+                }
+
                 intent = new Intent(MoreContact.this,StartChattingActivity.class);
                 Bundle bundle = new Bundle();
                 //bundle.putString("master",master.getText().toString());
@@ -137,15 +146,21 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
             case R.id.add:
                 //最多添加八人
                 if (adapter.getCount() >= 8) {
-                    dialog2.show();
-                    dialog2.setFlag(2);
-                    dialog2.setContentText("最多添加八人");
+                    MyDialog dialog = new MyDialog(MoreContact.this, R.style.dialog_style);
+                    dialog.show();
+                    dialog.setMain_text("多方通话最多允许添加8个人");
+                    dialog.setVisibility(View.GONE);
+                    dialog.setCenterVisibility(View.VISIBLE);
                     return;
                 }
 
                 if (!TextUtils.isEmpty(number.getText().toString())) {
                     if (OperatorUtil.isPhoneNumber(number.getText().toString())) {
-                        getUser(number.getText().toString(),0);
+                        if (!isExist(number.getText().toString(),datalist)) {
+                            getUser(number.getText().toString(), 0);
+                        } else {
+                            ToastUtil.showShort(MoreContact.this,"该用户已经添加过了");
+                        }
                     } else {
                         ToastUtil.showShort(MoreContact.this,"手机号码格式不正确");
                     }
@@ -174,13 +189,16 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
             case R.id.bt_right:
                 //最多添加八人
                 if (adapter.getCount() >= 8) {
-                    dialog2.show();
-                    dialog2.setFlag(2);
-                    dialog2.setContentText("最多添加八人");
+                    MyDialog dialog = new MyDialog(MoreContact.this, R.style.dialog_style);
+                    dialog.show();
+                    dialog.setMain_text("多方通话最多允许添加8个人");
+                    dialog.setVisibility(View.GONE);
+                    dialog.setCenterVisibility(View.VISIBLE);
                     return;
                 }
                 intent = new Intent(MoreContact.this,AddChatContact.class);
                 intent.putExtra("count",adapter.getCount());
+                intent.putExtra("data",(ArrayList)datalist);
                 startActivityForResult(intent, 1);
                 break;
         }
@@ -192,16 +210,22 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
 
         Log.d("response", "onnewintent");
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        queryResources();
+        queryCurrentMonth();
     }
 
     /*
-     * 查询用户
-     *
-     * @param num
-     * @param flag 标记主持人  参与人
-     */
+         * 查询用户
+         *
+         * @param num
+         * @param flag 标记主持人  参与人
+         */
     private void getUser(final String num, final int flag) {
         String url = Constant.SERVER_URL + "phoneBook/getUserByPhone";
         OkHttpUtils.post()
@@ -298,20 +322,20 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error",e.getMessage()+" ");
+                        Log.d("error", e.getMessage() + " ");
                         ErrorUtil.NetWorkToast(MoreContact.this);
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        Log.d("response",response);
+                        Log.d("response", response);
                         JSONObject object = null;
                         try {
                             object = new JSONObject(response);
                             int statusCode = object.optInt("statusCode");
                             if (statusCode == 0) {
                                 JSONObject data = object.optJSONObject("data");
-                                int resource_num = data.optInt("resource_name");
+                                int resource_num = data.optInt("resource_num");
                                 String text = "剩余分钟数：" + resource_num;
                                 rest_time.setText(text);
                             }
@@ -324,4 +348,72 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
                 });
     }
 
+    /*
+     * 查询当月所用时长
+     */
+    public void queryCurrentMonth() {
+        String url = Constant.SERVER_URL + "phone/queryCurrentMonth";
+
+        OkHttpUtils.get()
+                .url(url)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error",e.getMessage()+ " ");
+                        ErrorUtil.NetWorkToast(MoreContact.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response);
+                        JSONObject object = null;
+                        try {
+                            object = new JSONObject(response);
+                            int statusCode = object.optInt("statusCode");
+                            if (statusCode == 0) {
+                                JSONObject data = object.optJSONObject("data");
+                                int user_call_time = data.optInt("user_call_time");
+                                int admin_call_time = data.optInt("admin_call_time");
+                                String text = "当月用户时长："+user_call_time;
+                                user_time.setText(text);
+                                text = "当月企业时长：" + admin_call_time;
+                                company_time.setText(text);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                });
+    }
+
+    /*
+	 * 判断自身数据是否重复
+	 */
+    public ArrayList<Person> removeMethod(ArrayList<Person> array) {
+        ArrayList<Person> arr = new ArrayList<Person>();
+        Iterator<Person> it = array.iterator();
+        while (it.hasNext()) {
+            Person obj = it.next();
+            if (!arr.contains(obj))
+                arr.add(obj);
+        }
+        return arr;
+    }
+
+    /*
+     * 判断电话号码是否已经存在
+     * @param String
+     * @return
+     */
+    public boolean isExist(String phone,List<Person> list) {
+        for (Person p : list) {
+            if (p.getLinkPhone().equals(phone)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

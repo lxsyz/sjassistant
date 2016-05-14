@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.util.Constant;
@@ -17,7 +18,7 @@ public class PromptActivity extends BaseActivity implements View.OnClickListener
 
     private ImageView toggle_newMessage,toggle_voice,toggle_vibrate;
 
-    private LinearLayout voice_layout,vibrate_layout;
+    private RelativeLayout voice_layout,vibrate_layout;
 
     private View v_line;
 
@@ -39,8 +40,8 @@ public class PromptActivity extends BaseActivity implements View.OnClickListener
         toggle_newMessage = (ImageView)findViewById(R.id.toggle_newMessage);
         toggle_voice = (ImageView)findViewById(R.id.toggle_voice);
         toggle_vibrate = (ImageView)findViewById(R.id.toggle_vibrate);
-        voice_layout = (LinearLayout)findViewById(R.id.voice_layout);
-        vibrate_layout = (LinearLayout)findViewById(R.id.vibrate_layout);
+        voice_layout = (RelativeLayout)findViewById(R.id.voice_layout);
+        vibrate_layout = (RelativeLayout)findViewById(R.id.vibrate_layout);
 
         v_line = findViewById(R.id.v);
 

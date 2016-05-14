@@ -20,6 +20,7 @@ import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.AddContactAdapter;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.bean.MyContacts;
+import com.example.administrator.sjassistant.bean.Person;
 import com.example.administrator.sjassistant.bean.SortModel;
 import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.Constant;
@@ -71,7 +72,7 @@ public class AddChatContact extends Activity implements View.OnClickListener {
 
     private PinyinComparator pinyinComparator;
 
-
+    private List<Person> personDatas = new ArrayList<>();
 
     private int count = 0;
 
@@ -90,6 +91,7 @@ public class AddChatContact extends Activity implements View.OnClickListener {
         from = getIntent().getIntExtra("from",0);
 
         count = getIntent().getIntExtra("count",0);
+        personDatas = (ArrayList<Person>)getIntent().getSerializableExtra("data");
         if (count != 0) {
             bt_right.setText("确定(" + count + ")");
         } else bt_right.setText("确定");
@@ -272,15 +274,16 @@ public class AddChatContact extends Activity implements View.OnClickListener {
                                     contactData = gson.fromJson(list.toString(), new TypeToken<List<MyContacts>>() {
                                     }.getType());
 
-//                                    for (int i = 0; i < len; i++) {
-//                                        JSONObject user = list.optJSONObject(i);
-////                                        MyContacts contact = new MyContacts();
-////                                        contact.setId(user.optInt("id"));
-////                                        contact.setUsername(user.optString("username"));
-////                                        contact.setTrueName(user.optString("trueName"));
-////                                        contact.setPhone(user.optString("phone"));
-//                                        contactData.add(contact);
+//                                    for (MyContacts c : contactData) {
+//                                        for (Person p : personDatas) {
+//                                            if (c.getPhone().equals(p.getLinkPhone())) {
+//                                                c.setCheckState(true);
+//                                                //result.add(c);
+//                                                break;
+//                                            }
+//                                        }
 //                                    }
+//
 
                                     datalist = dealData(contactData);
 //                                    contactAdapter = new CommonAdapter<MyContacts>(AddChatContact.this, contactData, R.layout.item_add_person) {
@@ -293,7 +296,7 @@ public class AddChatContact extends Activity implements View.OnClickListener {
 //                                        }
 //                                    };
                                     Collections.sort(datalist, pinyinComparator);
-                                    adapter = new AddContactAdapter(AddChatContact.this,datalist);
+                                    adapter = new AddContactAdapter(AddChatContact.this, datalist);
                                     sortListView.setAdapter(adapter);
 
                                 }
@@ -321,6 +324,7 @@ public class AddChatContact extends Activity implements View.OnClickListener {
             sortModel.setPhoneNumber(data.get(i).getPhone());
             sortModel.setGroup(data.get(i).getDeptName());
             sortModel.setUserCode(data.get(i).getUserCode());
+            sortModel.setChecked(data.get(i).isCheckState()?1:0);
             //sortModel.setCustomerDept(data.get(i).getCustomerDept());
             //sortModel.setCustomerPost(data.get(i).getCustomerPost());
             //sortModel.setCustomerType(data.get(i).getCustomerType());

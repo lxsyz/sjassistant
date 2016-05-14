@@ -223,6 +223,7 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
                 .addParams("billId",String.valueOf(bill.getBillId()))
                 .addParams("auditPerson",Constant.username)
                 .addParams("ispass",String.valueOf(isPass))
+                .addParams("billType",bill.getBillType())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -262,7 +263,7 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
                                     Intent intent = new Intent(BillInspectActivity.this, InspectReasonActivity.class);
 
                                     intent.putExtra("inspectPersons", (ArrayList) inspectPersons);
-
+                                    intent.putExtra("billType",bill.getBillType());
                                     intent.putExtra("billId", bill.getBillId());
                                     startActivity(intent);
                                 }
@@ -298,6 +299,7 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
                 .addParams("displayLevel", "1")
                 .addParams("billId", String.valueOf(bill.getBillId()))
                 .addParams("fatherId","0")
+                .addParams("billType",bill.getBillType())
                 .build()
                 .execute(new StringCallback() {
                     @Override

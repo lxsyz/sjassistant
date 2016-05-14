@@ -160,7 +160,7 @@
                     android:paddingBottom="6dp" />
 
                 <TextView
-                    android:text="欢迎使用电话会议"
+                    android:text="剩余分钟数"
                     android:id="@+id/rest_time"
                     android:textColor="@color/red"
                     android:textSize="13sp"
@@ -169,14 +169,16 @@
                     android:paddingBottom="6dp" />
 
                 <TextView
-                    android:text="欢迎使用电话会议"
+                    android:text="当月用户时长"
+                    android:id="@+id/currentmonth_time"
                     android:textColor="@color/red"
                     android:textSize="13sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="6dp" />
                 <TextView
-                    android:text="欢迎使用电话会议"
+                    android:text="当月企业时长"
+                    android:id="@+id/currentCompany"
                     android:textColor="@color/red"
                     android:textSize="13sp"
                     android:layout_width="wrap_content"
