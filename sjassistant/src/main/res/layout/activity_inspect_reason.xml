@@ -15,7 +15,7 @@
         android:layout_height="150dp" />
 
     <View
-        android:background="@color/line"
+        android:background="@color/background"
         android:layout_width="match_parent"
         android:layout_height="12dp" />
     <LinearLayout
@@ -114,7 +114,7 @@
             android:layout_height="38dp">
 
             <TextView
-                android:textSize="15sp"
+                android:textSize="13sp"
                 android:layout_centerVertical="true"
                 android:textColor="#BABABA"
                 android:layout_marginLeft="15dp"

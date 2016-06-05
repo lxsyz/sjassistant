@@ -1,6 +1,8 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -43,6 +45,8 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
 
     private List<Person> datalist = new ArrayList<Person>();
 
+    private List<Person> personList = new ArrayList<>();
+
     private RelativeLayout change_layout;
 
     private ImageView iv_start,add;
@@ -67,6 +71,7 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
 
         resultPerson = (Person) getIntent().getSerializableExtra("person");
         sortPerson = (SortModel)getIntent().getSerializableExtra("sortPerson");
+        personList = (ArrayList<Person>)getIntent().getSerializableExtra("personlist");
         if (resultPerson != null) {
             datalist.add(resultPerson);
             adapter.addView(datalist);
@@ -81,6 +86,14 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
             adapter.addView(datalist);
             OperatorUtil.setListViewHeight(listView);
         }
+
+        if (personList != null) {
+            datalist.addAll(personList);
+            adapter.addView(datalist);
+            OperatorUtil.setListViewHeight(listView);
+        }
+
+        initData();
     }
 
     @Override
@@ -115,6 +128,18 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
         iv_start.setOnClickListener(this);
         add.setOnClickListener(this);
         btn_right.setOnClickListener(this);
+    }
+
+    /*
+     *
+     */
+    private void initData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        String phone = sharedPreferences.getString("phone",null);
+        if (!TextUtils.isEmpty(phone)) {
+
+            getUser(phone,1);
+        }
     }
 
     @Override
@@ -220,12 +245,12 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
         queryCurrentMonth();
     }
 
-    /*
-         * 查询用户
-         *
-         * @param num
-         * @param flag 标记主持人  参与人
-         */
+    /**
+     * 查询用户
+     *
+     * @param num  手机号
+     * @param flag 1 标记主持人  0标记参与人
+     */
     private void getUser(final String num, final int flag) {
         String url = Constant.SERVER_URL + "phoneBook/getUserByPhone";
         OkHttpUtils.post()
@@ -272,6 +297,12 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
                                     } else {
                                         if (user != null) {
                                             masterPerson = gson.fromJson(user.toString(), Person.class);
+                                            master.setText(masterPerson.getLinkPhone());
+                                        } else {
+                                            //Person person = new Person();
+                                            masterPerson.setUserCode(" ");
+                                            masterPerson.setLinkPhone(num);
+                                            masterPerson.setLinkName(" ");
                                         }
                                     }
 
@@ -287,18 +318,35 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            List<SortModel> modelList = new ArrayList<>();
+            List<SortModel> modelList;
             modelList = (ArrayList<SortModel>)data.getSerializableExtra("result");
+
             if (modelList != null) {
+                //datalist.clear();
+                List<Person> tempList = new ArrayList<>();
+                //处理返回结果 去除重复号码
                 for (SortModel sm:modelList) {
-                    Person person = new Person();
-                    person.setLinkName(sm.getName());
-                    person.setUserCode(sm.getUserCode());
-                    person.setLinkPhone(sm.getPhoneNumber());
+                    if (!isExist(sm.getPhoneNumber(),datalist)) {
+                        Person person = new Person();
+                        person.setLinkName(sm.getName());
+                        person.setUserCode(sm.getUserCode());
+                        person.setLinkPhone(sm.getPhoneNumber());
 
-                    datalist.add(person);
-
+                        tempList.add(person);
+                    }
+//                    for (Person p:datalist) {
+//                        if (!sm.getPhoneNumber().equals(p.getLinkPhone())) {
+//                            Person person = new Person();
+//                            person.setLinkName(sm.getName());
+//                            person.setUserCode(sm.getUserCode());
+//                            person.setLinkPhone(sm.getPhoneNumber());
+//
+//                            tempList.add(person);
+//                        }
+//                    }
                 }
+                datalist.addAll(tempList);
+
                 adapter.addView(datalist);
                 OperatorUtil.setListViewHeight(listView);
             }

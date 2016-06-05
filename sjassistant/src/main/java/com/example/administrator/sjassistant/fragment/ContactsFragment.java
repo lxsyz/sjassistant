@@ -26,8 +26,8 @@ import com.example.administrator.sjassistant.activity.SearchResultActivity;
 public class ContactsFragment extends Fragment implements View.OnClickListener {
 
     private LinearLayout search_layout,company_layout,customer_layout,group_layout;
-    private ImageView search,delete;
-    private EditText ed_name;
+//    private ImageView search,delete;
+//    private EditText ed_name;
 
     private ImageView btn_left,btn_right;
     private TextView title;
@@ -55,15 +55,15 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
         customer_layout = (LinearLayout)root.findViewById(R.id.customer_layout);
         group_layout = (LinearLayout)root.findViewById(R.id.group_layout);
 
-        search_layout = (LinearLayout)root.findViewById(R.id.search_layout);
-        search = (ImageView)search_layout.findViewById(R.id.search);
-        ed_name = (EditText)search_layout.findViewById(R.id.search_content);
-        delete = (ImageView)search_layout.findViewById(R.id.delete_word);
+//        search_layout = (LinearLayout)root.findViewById(R.id.search_layout);
+//        search = (ImageView)search_layout.findViewById(R.id.search);
+//        ed_name = (EditText)search_layout.findViewById(R.id.search_content);
+//        delete = (ImageView)search_layout.findViewById(R.id.delete_word);
 
-        search.setOnClickListener(this);
+        /*search.setOnClickListener(this);
         ed_name.setOnClickListener(this);
-        delete.setOnClickListener(this);
-        search_layout.setOnClickListener(this);
+        delete.setOnClickListener(this);*/
+        //search_layout.setOnClickListener(this);
         company_layout.setOnClickListener(this);
         customer_layout.setOnClickListener(this);
         group_layout.setOnClickListener(this);
@@ -75,16 +75,16 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
         fm = getActivity().getSupportFragmentManager();
         switch (v.getId()) {
 
-            case R.id.search:
-                if (!TextUtils.isEmpty(ed_name.getText().toString())) {
-                    intent = new Intent(getActivity(), SearchResultActivity.class);
-                    intent.putExtra("name",ed_name.getText().toString());
-                    startActivity(intent);
-                }
-                break;
-            case R.id.delete_word:
-                ed_name.setText("");
-                break;
+//            case R.id.search:
+//                if (!TextUtils.isEmpty(ed_name.getText().toString())) {
+////                    intent = new Intent(getActivity(), SearchResultActivity.class);
+////                    intent.putExtra("name",ed_name.getText().toString());
+////                    startActivity(intent);
+//                }
+//                break;
+//            case R.id.delete_word:
+//                ed_name.setText("");
+//                break;
             case R.id.company_layout:
 //                CompanyFragment cf = new CompanyFragment();
 //                fm.beginTransaction().replace(R.id.content,cf)

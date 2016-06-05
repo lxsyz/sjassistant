@@ -1,6 +1,7 @@
 package com.example.administrator.sjassistant.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/4/5.
@@ -24,6 +25,46 @@ public class Bill implements Serializable{
     private String dealOpinion;
 
     private String nextStepDealPerson;
+
+    private String phone;
+
+    private String billTypeChina;
+
+    private boolean deal = false;
+
+    public boolean isDeal() {
+        return deal;
+    }
+
+    public void setDeal(boolean deal) {
+        this.deal = deal;
+    }
+
+    public String getBillTypeChina() {
+        return billTypeChina;
+    }
+
+    public void setBillTypeChina(String billTypeChina) {
+        this.billTypeChina = billTypeChina;
+    }
+
+    private List<BillDetail> listbf;
+
+    public List<BillDetail> getListbf() {
+        return listbf;
+    }
+
+    public void setListbf(List<BillDetail> listbf) {
+        this.listbf = listbf;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public int getBillId() {
         return billId;

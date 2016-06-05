@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">sjassistant</string>
+    <string name="app_name">用友审计助理</string>
     <string name="login">登 录</string>
     <string name="serverConfig">服务器配置</string>
     <string name="forgetPassword">忘记密码?</string>
@@ -51,7 +51,7 @@
         该审批环节有必填字段，请在pc端审批
     </string>
     <string name="warn2">
-        审批环节需报告盖章，请在Pc端审批
+        审批环节需报告盖章，请在pc端审批
     </string>
     <string name="warn3">
         审批环节需报告贴标，请在pc端审批

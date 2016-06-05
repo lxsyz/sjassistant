@@ -29,6 +29,6 @@
 
     <color name="postInspect">#AFD4F2</color>
     <color name="inspectd">#ECA6A7</color>
-    <color name="inpectedPost">#E8BB5B</color>
+    <color name="inpectPost">#E8BB5B</color>
     <color name="waitInspect">#ACD4F2</color>
 </resources>

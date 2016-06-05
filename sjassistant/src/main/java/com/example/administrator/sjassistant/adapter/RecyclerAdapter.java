@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.bean.Person;
 import com.example.administrator.sjassistant.util.Constant;
@@ -51,10 +52,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             holder.itemView.setTag("add");
 
         } else {
-
-            if (mDatas.get(position).getUserCode() != null) {
+            if (position == 0) {
+                String imgUrl =  Constant.SERVER_URL + "images/" + mDatas.get(0).getUserCode() + ".jpg";
+                Glide.with(mContext).load(imgUrl)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .error(R.drawable.customer_de).into(holder.iv);
+            } else if (mDatas.get(position).getUserCode() != null) {
                 String imgUrl = Constant.SERVER_URL + "images/" + mDatas.get(position).getUserCode() + ".jpg";
-                Glide.with(mContext).load(imgUrl).error(R.drawable.customer_de).into(holder.iv);
+                Glide.with(mContext).load(imgUrl)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .error(R.drawable.customer_de).into(holder.iv);
             } else {
                 holder.iv.setImageResource(R.drawable.customer_de);
             }

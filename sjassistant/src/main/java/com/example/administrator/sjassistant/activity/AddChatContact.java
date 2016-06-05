@@ -1,7 +1,9 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,8 +14,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
@@ -27,6 +31,7 @@ import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.PinyinComparator;
+import com.example.administrator.sjassistant.util.ServerConfigUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.view.SideBar;
@@ -66,15 +71,19 @@ public class AddChatContact extends Activity implements View.OnClickListener {
 
     private List<MyContacts> contactData = new ArrayList<MyContacts>();
 
-    private CommonAdapter<MyContacts> contactAdapter;
+    //private CommonAdapter<MyContacts> contactAdapter;
 
     private List<SortModel> datalist = new ArrayList<SortModel>();
 
+    private RelativeLayout prompt_layout;
+    private FrameLayout contacts_layout;
     private PinyinComparator pinyinComparator;
 
     private List<Person> personDatas = new ArrayList<>();
 
     private int count = 0;
+
+
 
     //from = 1表示来自于添加发送消息的联系人
     private int from = 0;
@@ -87,11 +96,22 @@ public class AddChatContact extends Activity implements View.OnClickListener {
         AppManager.getInstance().addActivity(this);
         initWindow();
         initView();
+        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        Constant.username = sp.getString("username", null);
+
+        if (TextUtils.isEmpty(sp.getString("server_address", null))) {
+            Constant.SERVER_URL = Constant.TEST_SERVER_URL;
+        } else {
+            ServerConfigUtil.setServerConfig(this);
+        }
 
         from = getIntent().getIntExtra("from",0);
 
         count = getIntent().getIntExtra("count",0);
         personDatas = (ArrayList<Person>)getIntent().getSerializableExtra("data");
+
+
+
         if (count != 0) {
             bt_right.setText("确定(" + count + ")");
         } else bt_right.setText("确定");
@@ -122,9 +142,13 @@ public class AddChatContact extends Activity implements View.OnClickListener {
 
         pinyinComparator = new PinyinComparator();
 
+        prompt_layout = (RelativeLayout)findViewById(R.id.prompt_layout);
+        contacts_layout = (FrameLayout)findViewById(R.id.contacts_layout);
         sortListView = (ListView)findViewById(R.id.contacts_list);
         sideBar = (SideBar)findViewById(R.id.sidebar);
 
+        adapter = new AddContactAdapter(this,datalist);
+        sortListView.setAdapter(adapter);
         sideBar.setmOnTouching(new SideBar.OnTouchingLetterChangeListener() {
             @Override
             public void onTouchingLetterChanged(String s) {
@@ -159,7 +183,17 @@ public class AddChatContact extends Activity implements View.OnClickListener {
                     v.setImageResource(R.drawable.radio_unchecked);
                     sm.setChecked(0);
                     count--;
-                    result.remove(sm);
+                    int len = result.size();
+
+                    for (int i = 0;i < len;i++) {
+                        SortModel s = result.get(i);
+                        if (s.getPhoneNumber().equals(sm.getPhoneNumber())
+                                && s.getName().equals(sm.getName())) {
+                            result.remove(s);
+                            break;
+                        }
+                    }
+
 
                     //if (from == 1) {
                     //}
@@ -185,6 +219,7 @@ public class AddChatContact extends Activity implements View.OnClickListener {
 //                    intent = new Intent(this, SearchResultActivity.class);
 //                    intent.putExtra("name",ed_name.getText().toString());
 //                    startActivity(intent);
+                    filterData(ed_name.getText().toString());
                 }
                 break;
             case R.id.delete_word:
@@ -274,18 +309,28 @@ public class AddChatContact extends Activity implements View.OnClickListener {
                                     contactData = gson.fromJson(list.toString(), new TypeToken<List<MyContacts>>() {
                                     }.getType());
 
-//                                    for (MyContacts c : contactData) {
-//                                        for (Person p : personDatas) {
-//                                            if (c.getPhone().equals(p.getLinkPhone())) {
-//                                                c.setCheckState(true);
-//                                                //result.add(c);
-//                                                break;
-//                                            }
-//                                        }
-//                                    }
+                                    for (MyContacts c : contactData) {
+                                        if (personDatas != null && personDatas.size() != 0) {
+                                            for (Person p : personDatas) {
+                                                if (c.getPhone().equals(p.getLinkPhone()) &&
+                                                        c.getTrueName().equals(p.getLinkName())) {
+                                                    c.setCheckState(true);
+                                                    SortModel sortModel = new SortModel();
+                                                    sortModel.setPhoneNumber(c.getPhone());
+                                                    sortModel.setName(c.getTrueName());
+                                                    sortModel.setUserCode(c.getUserCode());
+                                                    result.add(sortModel);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
 //
-
-                                    datalist = dealData(contactData);
+                                    if (contactData.size() == 0) {
+                                        prompt_layout.setVisibility(View.VISIBLE);
+                                        contacts_layout.setVisibility(View.GONE);
+                                    } else {
+                                        datalist = dealData(contactData);
 //                                    contactAdapter = new CommonAdapter<MyContacts>(AddChatContact.this, contactData, R.layout.item_add_person) {
 //                                        @Override
 //                                        public void convert(ViewHolder holder, MyContacts contact) {
@@ -295,9 +340,12 @@ public class AddChatContact extends Activity implements View.OnClickListener {
 //
 //                                        }
 //                                    };
-                                    Collections.sort(datalist, pinyinComparator);
+
+                                        Collections.sort(datalist, pinyinComparator);
+                                    }
                                     adapter = new AddContactAdapter(AddChatContact.this, datalist);
                                     sortListView.setAdapter(adapter);
+
 
                                 }
 
@@ -366,8 +414,16 @@ public class AddChatContact extends Activity implements View.OnClickListener {
             }
         }
 
-        Collections.sort(filterDataList,pinyinComparator);
-        adapter.updateListView(filterDataList);
+        if (filterDataList.size() == 0) {
+            prompt_layout.setVisibility(View.VISIBLE);
+            contacts_layout.setVisibility(View.GONE);
+        } else {
+            prompt_layout.setVisibility(View.GONE);
+            contacts_layout.setVisibility(View.VISIBLE);
+            Collections.sort(filterDataList, pinyinComparator);
+            adapter.updateListView(filterDataList);
+        }
+
     }
 
     protected void initWindow() {

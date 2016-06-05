@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
@@ -44,7 +45,7 @@ public class GroupActivity extends BaseActivity implements View.OnClickListener 
 
     private List<GroupPerson> datalist = new ArrayList<>();
 
-
+    private TextView prompt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +59,7 @@ public class GroupActivity extends BaseActivity implements View.OnClickListener 
 
         search = (ImageView)findViewById(R.id.search);
         ed_name = (EditText)findViewById(R.id.search_content);
+        prompt = (TextView)findViewById(R.id.customer_prompt);
         ed_name.setHint("搜索小组");
         delete = (ImageView)findViewById(R.id.delete_word);
         search.setOnClickListener(this);
@@ -155,7 +157,7 @@ public class GroupActivity extends BaseActivity implements View.OnClickListener 
                                 if (data != null && data.length() != 0) {
                                     JSONArray list = data.optJSONArray("list");
                                     if (list.length() != 0) {
-
+                                        prompt.setText("我可以查看的小组");
                                         datalist = gson.fromJson(list.toString(), new TypeToken<List<GroupPerson>>() {
                                         }.getType());
 
@@ -170,6 +172,8 @@ public class GroupActivity extends BaseActivity implements View.OnClickListener 
                                             };
                                             customer_list.setAdapter(commonAdapter);
                                         }
+                                    } else {
+                                        prompt.setText("没有小组");
                                     }
                                 }
                             } else {

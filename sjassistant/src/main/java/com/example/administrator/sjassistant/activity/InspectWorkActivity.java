@@ -25,6 +25,7 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2016/4/6.
+ * 已废弃
  */
 public class InspectWorkActivity extends FragmentActivity implements View.OnClickListener {
 

@@ -8,11 +8,10 @@
         android:id="@+id/title_layout"
         layout="@layout/top_layout" />
 
-    <include android:id="@+id/search_layout"
-        layout="@layout/search_contacts" />
+    <!--<include android:id="@+id/search_layout"-->
+        <!--layout="@layout/search_contacts" />-->
 
     <LinearLayout
-        android:layout_marginTop="18dp"
         android:id="@+id/company_layout"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"

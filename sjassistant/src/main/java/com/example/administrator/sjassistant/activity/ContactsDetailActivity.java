@@ -9,8 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.SortAdapter;
@@ -63,6 +66,9 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
     //from 1  2  3 分别代表来自  公司  小组  客户
     private int from;
 
+    private RelativeLayout prompt_layout;
+    private FrameLayout contacts_layout;
+    private TextView prompt_text;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +85,79 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
             id = getIntent().getStringExtra("id");
             from = getIntent().getIntExtra("from", 0);
         }
+
+
+
+    }
+
+    @Override
+    protected void initView() {
+        super.initView();
+        setCenterView(R.layout.activity_contacts_detail);
+
+        prompt_layout = (RelativeLayout)findViewById(R.id.prompt_layout);
+        contacts_layout = (FrameLayout)findViewById(R.id.contacts_layout);
+        prompt_text = (TextView)findViewById(R.id.prompt_text);
+
+        search = (ImageView)findViewById(R.id.search);
+        ed_name = (EditText)findViewById(R.id.search_content);
+        delete = (ImageView)findViewById(R.id.delete_word);
+        search.setOnClickListener(this);
+        ed_name.setOnClickListener(this);
+        delete.setOnClickListener(this);
+
+
+        pinyinComparator = new PinyinComparator();
+
+        sortListView = (ListView)findViewById(R.id.contacts_list);
+        sideBar = (SideBar)findViewById(R.id.sidebar);
+
+
+
+        adapter = new SortAdapter(ContactsDetailActivity.this, datalist);
+        sortListView.setAdapter(adapter);
+
+        sideBar.setmOnTouching(new SideBar.OnTouchingLetterChangeListener() {
+            @Override
+            public void onTouchingLetterChanged(String s) {
+
+                int position = adapter.getPositionForSection(s.charAt(0));
+
+                if (position != -1) {
+                    sortListView.setSelection(position);
+                }
+            }
+        });
+
+        //获取数据
+        //datalist = dealData(getResources().getStringArray(R.array.test));
+
+
+
+
+//        sortListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Log.d("position", position + " ");
+//                Person person = new Person();
+//                Intent intent = new Intent(ContactsDetailActivity.this, PersonDetail.class);
+//                Bundle bundle = new Bundle();
+//                person.setLinkName(datalist.get(position).getName());
+//                person.setLinkPhone(datalist.get(position).getPhoneNumber());
+//                person.setCustomerType(datalist.get(position).getCustomerType());
+//                person.setCustomerDept(datalist.get(position).getCustomerDept());
+//                person.setCustomerPost(datalist.get(position).getCustomerPost());
+//                bundle.putSerializable("person", person);
+//                intent.putExtras(bundle);
+//                startActivity(intent);
+//            }
+//        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         switch (from) {
             case 0:
@@ -104,67 +183,6 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
                 break;
         }
 
-    }
-
-    @Override
-    protected void initView() {
-        super.initView();
-        setCenterView(R.layout.activity_contacts_detail);
-
-
-        search = (ImageView)findViewById(R.id.search);
-        ed_name = (EditText)findViewById(R.id.search_content);
-        delete = (ImageView)findViewById(R.id.delete_word);
-        search.setOnClickListener(this);
-        ed_name.setOnClickListener(this);
-        delete.setOnClickListener(this);
-
-
-        pinyinComparator = new PinyinComparator();
-
-        sortListView = (ListView)findViewById(R.id.contacts_list);
-        sideBar = (SideBar)findViewById(R.id.sidebar);
-
-        sideBar.setmOnTouching(new SideBar.OnTouchingLetterChangeListener() {
-            @Override
-            public void onTouchingLetterChanged(String s) {
-                Log.d("tag","touch");
-                int position = adapter.getPositionForSection(s.charAt(0));
-                if (position != -1) {
-                    sortListView.setSelection(position);
-                }
-            }
-        });
-
-        //获取数据
-        //datalist = dealData(getResources().getStringArray(R.array.test));
-
-
-
-
-        sortListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("position",position+" ");
-                Person person = new Person();
-                Intent intent = new Intent(ContactsDetailActivity.this,PersonDetail.class);
-                Bundle bundle = new Bundle();
-                person.setLinkName(datalist.get(position).getName());
-                person.setLinkPhone(datalist.get(position).getPhoneNumber());
-                person.setCustomerType(datalist.get(position).getCustomerType());
-                person.setCustomerDept(datalist.get(position).getCustomerDept());
-                person.setCustomerPost(datalist.get(position).getCustomerPost());
-                bundle.putSerializable("person",person);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         ed_name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -192,6 +210,7 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
 //                    intent = new Intent(this, SearchResultActivity.class);
 //                    intent.putExtra("name",ed_name.getText().toString());
 //                    startActivity(intent);
+                    filterData(ed_name.getText().toString());
                 }
                 break;
             case R.id.delete_word:
@@ -206,7 +225,6 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
      */
     private void getContacts() {
         String url = Constant.SERVER_URL + "phoneBook/showCustomerUser";
-        Log.d("customer_name", customer_name);
         OkHttpUtils.post()
                 .url(url)
                 .addParams("userCode", Constant.username)
@@ -231,18 +249,26 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
                                 if (data != null && data.length() != 0) {
                                     JSONArray list = data.optJSONArray("list");
                                     if (list.length() != 0) {
-                                        List<ContactsPerson> contactsPersonsList = new ArrayList<>();
+                                        List<ContactsPerson> contactsPersonsList;
 //
                                         contactsPersonsList = gson.fromJson(list.toString(), new TypeToken<List<ContactsPerson>>() {
                                         }.getType());
+
                                         datalist = dealData(contactsPersonsList);
                                         Collections.sort(datalist, pinyinComparator);
+
                                         if (adapter != null) {
                                             adapter.updateListView(datalist);
                                         } else {
                                             adapter = new SortAdapter(ContactsDetailActivity.this, datalist);
                                             sortListView.setAdapter(adapter);
                                         }
+
+                                    } else {
+                                        prompt_text.setText("暂无联系人");
+                                        prompt_layout.setVisibility(View.VISIBLE);
+                                        contacts_layout.setVisibility(View.GONE);
+
                                     }
                                 }
                             } else {
@@ -299,6 +325,10 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
                                             adapter = new SortAdapter(ContactsDetailActivity.this, datalist);
                                             sortListView.setAdapter(adapter);
                                         }
+                                    } else {
+                                        prompt_text.setText("暂无联系人");
+                                        prompt_layout.setVisibility(View.VISIBLE);
+                                        contacts_layout.setVisibility(View.GONE);
                                     }
                                 }
                             } else {
@@ -323,6 +353,7 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
             sortModel.setName(name);
             sortModel.setPhoneNumber(data.get(i).getPhone());
             sortModel.setGroup(data.get(i).getDeptName());
+            sortModel.setUserCode(data.get(i).getUserCode());
             //sortModel.setCustomerDept(data.get(i).get);
             //汉字转换成拼音
             String pinyin = OperatorUtil.getFirstChar(name);
@@ -395,8 +426,15 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
             }
         }
 
-        Collections.sort(filterDataList, pinyinComparator);
-        adapter.updateListView(filterDataList);
+        if (filterDataList.size() == 0) {
+            prompt_layout.setVisibility(View.VISIBLE);
+            contacts_layout.setVisibility(View.GONE);
+        } else {
+            prompt_layout.setVisibility(View.GONE);
+            contacts_layout.setVisibility(View.VISIBLE);
+            Collections.sort(filterDataList, pinyinComparator);
+            adapter.updateListView(filterDataList);
+        }
 
     }
 

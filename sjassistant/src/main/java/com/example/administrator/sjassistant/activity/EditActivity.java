@@ -178,6 +178,8 @@ public class EditActivity extends BaseActivity {
 
         OkHttpUtils.post()
                 .url(url)
+                .addParams("billId", String.valueOf(billId))
+                .addParams("billType",billType)
                 .build()
                 .execute(new StringCallback() {
                     @Override

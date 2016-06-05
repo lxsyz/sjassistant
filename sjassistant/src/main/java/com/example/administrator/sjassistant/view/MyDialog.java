@@ -2,6 +2,7 @@ package com.example.administrator.sjassistant.view;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +14,15 @@ import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/3/30.
@@ -31,6 +41,8 @@ public class MyDialog extends Dialog implements View.OnClickListener {
 
     //private RadioButton radioButton;
     private boolean isOpen = false;
+
+
 
     public MyDialog(Context context) {
         super(context, theme);
@@ -85,9 +97,12 @@ public class MyDialog extends Dialog implements View.OnClickListener {
 
             case R.id.confirm:
                 if (content.getVisibility() == View.VISIBLE) {
+
                     switch (flag) {
                         case 1:
                             Constant.nickname = content.getText().toString();
+                            changeNickName(Constant.nickname);
+
                             break;
                         case 2:
                             Constant.apartment = content.getText().toString();
@@ -110,6 +125,47 @@ public class MyDialog extends Dialog implements View.OnClickListener {
                 break;
         }
 
+    }
+
+    /*
+     * 修改昵称
+     */
+    private void changeNickName(final String name) {
+        final SharedPreferences.Editor editor = context.getSharedPreferences("userinfo",Context.MODE_PRIVATE).edit();
+        String url = Constant.SERVER_URL + "user/settings/changeUserName";
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("userCode",Constant.username)
+                .addParams("newUserName",name)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error",e.getMessage()+" ");
+                        ErrorUtil.NetWorkToast(context);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response",response);
+                        JSONObject object = null;
+                        try {
+                            object = new JSONObject(response);
+                            int statusCode = object.optInt("statusCode");
+                            if (statusCode == 0) {
+                                ToastUtil.showShort(context,"更换成功");
+
+                                editor.putString("name", name);
+                                editor.apply();
+                            } else {
+                                ToastUtil.showShort(context,"更换失败");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     public void setMain_text(CharSequence text) {

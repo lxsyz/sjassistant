@@ -12,4 +12,8 @@ public class ServerConfigUtil {
         SharedPreferences sp2 = context.getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         Constant.SERVER_URL = "http://"+sp2.getString("server_address",null)+":"+sp2.getString("server_port",null)+"/app/";
     }
+
+    public static void setServerConfig(String address,String port) {
+        Constant.SERVER_URL = "http://"+address+":"+port+"/app/";
+    }
 }

@@ -1,6 +1,8 @@
 package com.example.administrator.sjassistant.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,9 +23,11 @@ import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.bean.Bill;
 import com.example.administrator.sjassistant.fragment.FinishedBillFragment;
 import com.example.administrator.sjassistant.fragment.UnfinishedBillFragment;
+import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.OperatorUtil;
+import com.example.administrator.sjassistant.util.ServerConfigUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -43,7 +47,7 @@ import okhttp3.Call;
 /**
  * Created by Administrator on 2016/4/27.
  */
-public class InspectActivity extends FragmentActivity implements View.OnClickListener {
+public class InspectActivity extends FragmentActivity implements View.OnClickListener,UnfinishedBillFragment.DataListener ,FinishedBillFragment.FinishDataListener{
 
     ViewPager viewPager;
     PagerSlidingTabStrip tabs;
@@ -65,6 +69,17 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_inspect);
         initWindow();
+        AppManager.getInstance().addActivity(this);
+
+        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        Constant.username = sp.getString("username", null);
+
+        if (TextUtils.isEmpty(sp.getString("server_address", null))) {
+            Constant.SERVER_URL = Constant.TEST_SERVER_URL;
+            ServerConfigUtil.setServerConfig("219.234.5.13", "8080");
+        } else {
+            ServerConfigUtil.setServerConfig(this);
+        }
 
         viewPager = (ViewPager)findViewById(R.id.pager);
 
@@ -106,6 +121,20 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
         }
     }
 
+    @Override
+    public void onDataFinish(List<Bill> list) {
+        datalist.addAll(list);
+    }
+
+    public void addData(List<Bill> list) {
+        datalist.addAll(list);
+    }
+
+    @Override
+    public void FinishBill(List<Bill> list) {
+        datalist.addAll(list);
+    }
+
     class MyPagerAdapter extends FragmentPagerAdapter {
         String[] title = {"已审批单据","未审批单据"};
 
@@ -121,7 +150,6 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
             switch (position) {
                 case 0:
                     finishedBillFragment = new FinishedBillFragment();
-                    //Bundle bundle = new Bundle();
 
                     return finishedBillFragment;
                 case 1:
@@ -145,20 +173,19 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d("response","activity resume");
         datalist.clear();
         //unfinshDatalist.clear();
-        if (finishedBillFragment == null || unfinishedBillFragment == null) {
-            getUnfinishedWork();
-            getFinished();
-        }
+        //if (finishedBillFragment == null || unfinishedBillFragment == null) {
+        //    getUnfinishedWork();
+         //   getFinished();
+        //}
     }
 
     /*
          * 获取未完成
          */
     private void getUnfinishedWork() {
-        //unfinshDatalist.clear();
-        //datalist.clear();
 
         String url = Constant.SERVER_URL + "bill/show";
 
@@ -190,29 +217,10 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
                                     }.getType());
 
                                     datalist.addAll(unfinishedList);
-//                                    List<Bill> finishedList = new ArrayList<Bill>();
 
-//                                    for (Bill bill:datalist) {
-//                                        if (TextUtils.isEmpty(bill.getDealResult())) {
-//                                            bill.setDealResult("未读");
-//                                            unfinishedList.add(bill);
-//                                        } else if (bill.getDealResult().equals("已读")) {
-//                                            finishedList.add(bill);
-//                                        } else {
-//                                            unfinishedList.add(bill);
-//                                        }
-//                                    }
-
-//                                    finishedBillFragment = new FinishedBillFragment();
-//                                    unfinishedBillFragment = new UnfinishedBillFragment();
-//                                    Bundle bundle = new Bundle();
-//                                    bundle.putSerializable("data", (ArrayList) unfinishedList);
-//                                    unfinishedBillFragment.setArguments(bundle);
-
-
-//                                    Bundle bundle2 = new Bundle();
-//                                    bundle2.putSerializable("data",(ArrayList) finishedList);
-//                                    finishedBillFragment.setArguments(bundle2);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("data", (ArrayList) unfinishedList);
+                                    unfinishedBillFragment.setArguments(bundle);
 
                                 }
 
@@ -260,16 +268,10 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
                                     }.getType());
                                     datalist.addAll(finishedList);
 
-//                                    finishedBillFragment = new FinishedBillFragment();
-                                    //unfinishedBillFragment = new UnfinishedBillFragment();
-//                                    Bundle bundle = new Bundle();
-//                                    bundle.putSerializable("data", (ArrayList) unfinishedList);
-//                                    unfinishedBillFragment.setArguments(bundle);
 
-
-//                                    Bundle bundle = new Bundle();
-//                                    bundle.putSerializable("data",(ArrayList) finishedList);
-//                                    finishedBillFragment.setArguments(bundle);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("data",(ArrayList) finishedList);
+                                    finishedBillFragment.setArguments(bundle);
                                 }
 
                             } else {

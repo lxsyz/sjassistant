@@ -92,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <ImageView
+                    <com.example.administrator.sjassistant.view.CircleImageView
                         android:id="@+id/iv_person"
                         android:src="@drawable/customer_de"
                         android:layout_width="47dp"

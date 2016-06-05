@@ -295,10 +295,18 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
     public void onStop() {
         Log.d("activity","message fragment stop");
         super.onStop();
     }
+
+
 
     public class MainReceiver extends BroadcastReceiver {
         private static final String TAG = "JPush";

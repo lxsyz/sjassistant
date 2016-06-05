@@ -355,6 +355,10 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                                 Log.d("statusCode",statusCode+" ");
                                 if (statusCode == 0) {
                                     ToastUtil.showShort(ForgetPasswordActivity.this, "邮箱修改成功");
+                                    SharedPreferences.Editor sp = getSharedPreferences("userinfo",MODE_PRIVATE).edit();
+                                    sp.putString("email",et_username.getText().toString());
+                                    sp.apply();
+
                                     Intent intent = new Intent();
                                     intent.putExtra("email",et_username.getText().toString());
                                     setResult(1,intent);

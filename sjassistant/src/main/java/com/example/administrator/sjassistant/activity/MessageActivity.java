@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
@@ -236,10 +237,12 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                                             if (TextUtils.isEmpty(message.getHeadImg())) {
                                                 holder.setImageResource(R.id.user_photo, R.drawable.customer_de);
                                             } else {
-                                                String imgurl = Constant.SERVER_URL + message.getHeadImg().substring(3);
-                                                Log.d("imgurl",imgurl);
+                                                String imgurl = Constant.SERVER_URL + "images/" + message.getMessagePublisher() + ".jpg";
                                                 Glide.with(MessageActivity.this)
                                                         .load(imgurl)
+                                                        .skipMemoryCache(true)
+                                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                                        .error(R.drawable.customer_de)
                                                         .into((CircleImageView) holder.getView(R.id.user_photo));
                                                 //holder.setImageResource(R.id.user_photo, R.drawable.customer_de);
 //                                                OkHttpUtils.get()

@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,7 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.util.AbsolutePathUtil;
 import com.example.administrator.sjassistant.util.FileUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
 
 
 /**
@@ -174,7 +178,7 @@ public class ChoosePhotoWindow implements OnClickListener {
 
 	public void showChoosePhotoWindow2(View view) {
         if (choosePhotoWindow != null) {
-            choosePhotoWindow.showAtLocation(view, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
+            choosePhotoWindow.showAtLocation(view, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         }
     }
 
@@ -191,12 +195,16 @@ public class ChoosePhotoWindow implements OnClickListener {
 	 * 转跳到相机
 	 */
 	public void toCamera() {
-		tempPath = Environment.getExternalStorageDirectory() + FileUtil.getPhotoFileName();
-		imageUri = Uri.parse(tempPath);
-		//LogHelper.i("tempPath:" + tempPath);
-		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-		((Activity) context).startActivityForResult(intent, REQUESTCODE_CAMERA);
+		if (FileUtil.avaiableMedia()) {
+			tempPath = "file:///sdcard/"+ FileUtil.getPhotoFileName();
+
+			imageUri = Uri.parse(tempPath);
+			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+			((Activity) context).startActivityForResult(intent, REQUESTCODE_CAMERA);
+		} else {
+			ToastUtil.showShort(context,"请确认插入了SD卡");
+		}
 	}
 
 	/**
@@ -209,8 +217,6 @@ public class ChoosePhotoWindow implements OnClickListener {
 		intent.setType("image/*");//从所有图片中进行选择
 		((Activity) context).startActivityForResult(intent, REQUESTCODE_IMAGE);
 //		Intent i = new Intent(Intent.ACTION_GET_CONTENT, null);
-//
-//
 //		i.setType("image/*");
 //		((Activity) context).startActivityForResult(i, REQUESTCODE_IMAGE);
 	}
@@ -224,41 +230,49 @@ public class ChoosePhotoWindow implements OnClickListener {
 	 */
 	public void onActivityResult(int requestCode, int resultCode, Intent data,
 			Upload upload) {
-		//LogHelper.d("requestCode:" + requestCode + ",resultCode:" + resultCode);
+
 		if (resultCode != Activity.RESULT_OK) {
 			return;
 		}
 		if (requestCode == REQUESTCODE_IMAGE) {
-			if (data == null) {
-				return;
+			try {
+				Uri uri = data.getData();
+				path = AbsolutePathUtil.getAbsolutePath(context, uri);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			Uri uri = data.getData();
-			// 手机root RE 管理器
-			String strURl = uri.toString();
-			if (strURl.startsWith("file:///")) {
-				path = strURl.substring(7, strURl.length());
-			} else if (strURl.startsWith("content://")) {
-				// 图库
-				String[] projection = { MediaStore.Images.Media.DATA };
-				final Cursor cursor = ((Activity) context).managedQuery(uri,
-						projection, null, null, null);
-				final int column_index = cursor
-						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-				cursor.moveToFirst();
-				path = cursor.getString(column_index);
-				imageUri = Uri.parse(path);
-			}
-			startPhotoZoom(imageUri);
+//			if (data == null) {
+//				return;
+//			}
+//			Uri uri = data.getData();
+//			// 手机root RE 管理器
+//			String strURl = uri.toString();
+//			if (strURl.startsWith("file:///")) {
+//				path = strURl.substring(7, strURl.length());
+//			} else if (strURl.startsWith("content://")) {
+//				// 图库
+//				String[] projection = { MediaStore.Images.Media.DATA };
+//				final Cursor cursor = ((Activity) context).managedQuery(uri,
+//						projection, null, null, null);
+//				final int column_index = cursor
+//						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//				cursor.moveToFirst();
+//				path = cursor.getString(column_index);
+//				imageUri = Uri.parse(path);
+//			}
+			//startPhotoZoom(imageUri);
             //upload(upload);
 		} else if (requestCode == REQUESTCODE_CAMERA) {
-			startPhotoZoom(imageUri);
-            upload(upload);
+			//startPhotoZoom(imageUri);
+            //upload(upload);
+			Log.d("response","temppath->"+tempPath+" ");
+			path = imageUri.getPath();
 		} else if (requestCode == CROP_IMAGE) {
 			// 调用图片剪切程序返回数据
 			path = data.getStringExtra("path");
 			//upload(upload);
 		}
-		path = imageUri.getPath();
+
 		upload(upload);
 	}
 
@@ -283,16 +297,18 @@ public class ChoosePhotoWindow implements OnClickListener {
 
 		//LogHelper.i("imageUri:" + imageUri);
 
-        if (tempPath != null && !tempPath.equals("")) {
-			File file = new File(tempPath);
-			if (file.exists())
-				file.delete();
-		}
+//        if (tempPath != null && !tempPath.equals("")) {
+//			File file = new File(tempPath);
+//			if (file.exists())
+//				file.delete();
+//		}
 
 		if (path != null) {
 			upload.upload(path);
 		}
 	}
+
+
 
 	/**
 	 * 上传

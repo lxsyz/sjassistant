@@ -155,7 +155,7 @@ public class AddContactsActivity extends BaseActivity implements View.OnClickLis
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error",e.getMessage());
+                        Log.d("error",e.getMessage()+" ");
                         ErrorUtil.NetWorkToast(AddContactsActivity.this);
                     }
 

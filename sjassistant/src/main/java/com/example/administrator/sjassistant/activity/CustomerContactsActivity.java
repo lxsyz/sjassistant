@@ -6,16 +6,21 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
 import com.example.administrator.sjassistant.bean.ContactsPerson;
+import com.example.administrator.sjassistant.bean.MyContacts;
+import com.example.administrator.sjassistant.bean.Person;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.OperatorUtil;
@@ -48,11 +53,12 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
     private AddContactsWin add_contacts;
 
     private ListView customer_list;
+    private ListView search_list;
     //private List<String> datalist = new ArrayList<String>();
 
     private List<ContactsPerson> datalist = new ArrayList<>();
 
-
+    private TextView text;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +89,7 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
         search = (ImageView)findViewById(R.id.search);
         ed_name = (EditText)findViewById(R.id.search_content);
         delete = (ImageView)findViewById(R.id.delete_word);
+        text = (TextView)findViewById(R.id.customer_prompt);
         search.setOnClickListener(this);
         delete.setOnClickListener(this);
 
@@ -93,7 +100,7 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
         bt_right.setOnClickListener(this);
 
         customer_list = (ListView)findViewById(R.id.customer_list);
-
+        search_list = (ListView)findViewById(R.id.search_list);
 
 
         customer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -107,6 +114,20 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
             }
         });
 
+        ed_name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || actionId == EditorInfo.IME_ACTION_GO) {
+
+                    queryUserByType(ed_name.getText().toString());
+
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 
@@ -131,9 +152,6 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
             case R.id.search:
                 if (!TextUtils.isEmpty(ed_name.getText().toString())) {
 
-//                    intent = new Intent(this, SearchResultActivity.class);
-//                    intent.putExtra("name",ed_name.getText().toString());
-//                    startActivity(intent);
                 }
                 break;
             case R.id.delete_word:
@@ -148,6 +166,8 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
         if (add_contacts.isShowing()) {
             add_contacts.dismiss();
         }
+
+
 
         getCompany();
 
@@ -182,7 +202,7 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error", e.getMessage());
+                        Log.d("error", e.getMessage() + " ");
                         ErrorUtil.NetWorkToast(CustomerContactsActivity.this);
                     }
 
@@ -196,9 +216,10 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
                                 Gson gson = new Gson();
                                 JSONObject data = object.optJSONObject("data");
                                 if (data != null && data.length() != 0) {
+
                                     JSONArray list = data.optJSONArray("list");
                                     if (list.length() != 0) {
-
+                                        text.setText("选择客户");
                                         datalist = gson.fromJson(list.toString(), new TypeToken<List<ContactsPerson>>() {
                                         }.getType());
 
@@ -213,6 +234,8 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
                                             };
                                             customer_list.setAdapter(commonAdapter);
                                         }
+                                    } else {
+                                        text.setText("没有客户");
                                     }
                                 }
                             } else {
@@ -227,22 +250,112 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
     }
 
     /*
-     * 搜索公司
+     * 所有联系人搜索
      */
-    private void filterData(String text) {
+    private void queryUserByType(String name) {
+
+        customer_list.setVisibility(View.GONE);
+
+        String url = Constant.SERVER_URL + "phoneBook/queryUserByType";
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("userCode",Constant.username)
+                .addParams("trueName",name)
+                .addParams("roleName","customer")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage()+" ");
+                        ErrorUtil.NetWorkToast(CustomerContactsActivity.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response);
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            if (statusCode == 0) {
+                                Gson gson = new Gson();
+                                JSONObject data = object.optJSONObject("data");
+                                if (data != null && data.length() != 0) {
+
+                                    JSONArray list = data.optJSONArray("list");
+                                    if (list.length() != 0) {
+                                        text.setText("选择客户");
+                                        search_list.setVisibility(View.VISIBLE);
+                                        List<ContactsPerson> searchlist = gson.fromJson(list.toString(), new TypeToken<List<ContactsPerson>>() {
+                                        }.getType());
+
+                                        if (searchAdapter != null) {
+                                            searchAdapter.updateListView(searchlist);
+                                        } else {
+                                            searchAdapter = new CommonAdapter<ContactsPerson>(CustomerContactsActivity.this, searchlist, R.layout.item_company) {
+                                                @Override
+                                                public void convert(final ViewHolder holder, final ContactsPerson contact) {
+                                                    holder.getView(R.id.phone).setVisibility(View.VISIBLE);
+                                                    holder.getView(R.id.right_arrow1).setVisibility(View.GONE);
+                                                    holder.setText(R.id.name, contact.getLinkName());
+                                                    //holder.setText(R.id.group, contact.getCustomerDept());
+
+                                                    holder.getView(R.id.phone).setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            Intent intent = new Intent(CustomerContactsActivity.this, MoreContact.class);
+                                                            Person person = new Person();
+                                                            person.setLinkPhone(contact.getLinkPhone());
+                                                            person.setLinkName(contact.getLinkName());
+                                                            person.setUserCode(contact.getUserCode());
+                                                            Bundle bundle = new Bundle();
+                                                            bundle.putSerializable("person", person);
+                                                            intent.putExtras(bundle);
+                                                            startActivity(intent);
+                                                        }
+                                                    });
+                                                }
+                                            };
+                                            search_list.setAdapter(searchAdapter);
+                                        }
+                                    } else {
+                                        search_list.setVisibility(View.GONE);
+                                        text.setText("没有客户");
+                                    }
+                                }
+                            } else {
+                                ToastUtil.showShort(CustomerContactsActivity.this, "获取用户列表失败");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    /*
+     * 搜索
+     */
+    private void filterData(String tex) {
+        customer_list.setVisibility(View.VISIBLE);
+        search_list.setVisibility(View.GONE);
         List<ContactsPerson> filterList = new ArrayList<>();
 
-        if (TextUtils.isEmpty(text)) {
+        if (TextUtils.isEmpty(tex)) {
             filterList = datalist;
+            text.setText("选择客户");
         } else {
-            for (ContactsPerson person:datalist) {
-                if (person.getCustomerName().contains(text)) {
-                    filterList.add(person);
-                }
-            }
+            filterList.clear();
+//            for (ContactsPerson person:datalist) {
+//                if (person.getCustomerName().contains(tex)) {
+//                    filterList.add(person);
+//                }
+//            }
         }
         commonAdapter.updateListView(filterList);
     }
 
     private CommonAdapter<ContactsPerson> commonAdapter;
+    private CommonAdapter<ContactsPerson> searchAdapter;
 }

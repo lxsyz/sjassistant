@@ -53,12 +53,12 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
 
         //初始界面搜索跳转过来的
-//        String content = getIntent().getStringExtra("name");
-//        if (!TextUtils.isEmpty(content)) {
-//            ed_name.setText(content);
-//            setTopText("搜索结果");
-//            number.setText(personList.size()+"个搜索结果");
-//        }
+        String content = getIntent().getStringExtra("name");
+        if (!TextUtils.isEmpty(content)) {
+            ed_name.setText(content);
+            setTopText("搜索结果");
+            number.setText(personList.size()+"个搜索结果");
+        }
 
 
         String type = getIntent().getStringExtra("type");

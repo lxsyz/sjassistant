@@ -19,6 +19,7 @@ public class InspectPerson implements Serializable{
 
     private String sex;
 
+    private int depId;
     private String deptName;
 
     private String title;
@@ -30,6 +31,26 @@ public class InspectPerson implements Serializable{
     private String roleName;
 
     private String portrait;
+
+    private String trueName;
+
+    private String zw;
+
+    public String getZw() {
+        return zw;
+    }
+
+    public void setZw(String zw) {
+        this.zw = zw;
+    }
+
+    public String getTrueName() {
+        return trueName;
+    }
+
+    public void setTrueName(String trueName) {
+        this.trueName = trueName;
+    }
 
     public int getId() {
         return id;
@@ -147,5 +168,13 @@ public class InspectPerson implements Serializable{
 
     public boolean isCheckState() {
         return checkState;
+    }
+
+    public int getDepId() {
+        return depId;
+    }
+
+    public void setDepId(int depId) {
+        this.depId = depId;
     }
 }

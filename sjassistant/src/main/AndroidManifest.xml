@@ -97,7 +97,7 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.PostInformActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.PostMessageActivity"
@@ -116,11 +116,13 @@
         <activity android:name=".activity.ContactsDetailActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.AddContactsActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.EditActivity"
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.BillInspectActivity"
+
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.InspectReasonActivity"
@@ -129,6 +131,7 @@
         <activity android:name=".activity.PersonDetail"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.UnfinishedWorkActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.BillDetailActivity"
@@ -163,15 +166,30 @@
         <activity android:name=".activity.GroupActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".activity.DownloadActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity android:name=".activity.FileDownloadActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.BillFileActivity"
+            android:screenOrientation="portrait" />
+
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name=".activity.WelcomeActivity"
+            android:theme="@style/WelcomeTheme"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -209,6 +227,8 @@
                 <category android:name="com.example.administrator.sjassistant" />
             </intent-filter>
         </activity>
+
+        <service android:name=".service.DownLoadService" />
         <!-- Required  SDK核心功能-->
         <service
             android:name="cn.jpush.android.service.DownloadService"

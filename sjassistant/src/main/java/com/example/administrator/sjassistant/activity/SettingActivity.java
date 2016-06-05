@@ -59,6 +59,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         cache_size = (TextView)findViewById(R.id.cache_size);
         changeEmail_text = (TextView)findViewById(R.id.changeEmail_text);
 
+        SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
+        String email = sp.getString("email",null);
+        if (email != null) {
+            changeEmail_text.setText(email);
+        }
+
 
         changeEmail.setOnClickListener(this);
         changeServer.setOnClickListener(this);
@@ -141,20 +147,22 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                         if (i == 1) {
                             //确定退出清掉所有信息
                             SharedPreferences.Editor editor = getSharedPreferences("userinfo",MODE_PRIVATE).edit();
-                            editor.putString("phonenumber",null);
+                            editor.putString("phone",null);
                             editor.putString("password",null);
-                            editor.putString("imgPath",null);
+                            editor.putString("username",null);
+                            editor.putString("name",null);
+                            editor.putString("dept_id",null);
+                            editor.putString("dept_name",null);
+                            editor.putString("role_name",null);
+                            editor.putString("last_username",Constant.username);
                             editor.apply();
 
                             AppManager.getInstance().AppExit(SettingActivity.this);
+                            startActivity(new Intent(SettingActivity.this,LoginActivity.class));
                         }
                     }
                 });
-//                new MyDialog(this,R.style.dialog_style);
-//                dialog.show();
-//                dialog.setMain_text("是否确定退出APP");
-//                dialog.setCenterVisibility(View.GONE);
-//                dialog.show();
+
                 break;
         }
     }

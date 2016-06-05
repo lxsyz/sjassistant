@@ -1,5 +1,12 @@
 package com.example.administrator.sjassistant.util;
 
+import android.util.SparseArray;
+
+import com.example.administrator.sjassistant.bean.DownloadHandler;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Administrator on 2016/3/28.
  */
@@ -27,5 +34,13 @@ public class Constant {
 
     public static final String TEST_SERVER_URL = "http://219.234.5.13:8080/app/";
 
-    public static String communicateTime;
+    //public static String communicateTime;
+
+    public static int NOTE_DOWNLOAD = 0;
+    public static Map<Integer,DownloadHandler> mItemLoadHandlers = new HashMap<>();
+    public static SparseArray<DownloadHandler> messageArray = new SparseArray<>();
+    public static SparseArray<DownloadHandler> billArray = new SparseArray<>();
+
+    //判断是否是主持人
+    public static boolean isMaster = false;
 }

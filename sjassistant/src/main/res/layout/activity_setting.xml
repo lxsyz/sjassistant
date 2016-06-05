@@ -249,7 +249,7 @@
             android:layout_marginRight="12dp"
             android:textColor="@color/white"
             android:layout_alignParentBottom="true"
-            android:text="退出登录"
+            android:text="退出当前账号"
             android:background="@drawable/yuanjiao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

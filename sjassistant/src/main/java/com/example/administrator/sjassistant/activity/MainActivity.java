@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -34,6 +35,8 @@ import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ExampleUtil;
 import com.example.administrator.sjassistant.util.ServerConfigUtil;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -64,6 +67,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public static boolean isForeground = false;
     //PhoneReceiver phoneReceiver;
+
+    private String portraitPath = Environment.getExternalStorageDirectory() + "/审计助理";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,10 +86,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         } else {
             ServerConfigUtil.setServerConfig(this);
         }
-//        Intent intent = new Intent(MainActivity.this,MessageService.class);
-//
-//        startService(intent);
         int dept_id = sp.getInt("dept_id",1);
+
+        File f = new File(portraitPath);
+        if (!f.exists()) {
+            f.mkdir();
+        }
         initWindow();
         initView();
 
@@ -141,7 +148,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         viewPager.setCurrentItem(0);
         message_iv.setImageResource(R.drawable.message_checked);
         message_tv.setTextColor(Color.rgb(103, 197, 170));
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 

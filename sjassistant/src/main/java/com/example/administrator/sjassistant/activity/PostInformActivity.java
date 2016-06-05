@@ -44,7 +44,7 @@ public class PostInformActivity extends Activity implements View.OnClickListener
     private TextView btn_right;
     private TextView btn_left,gonggao_type;
 
-
+    private String departmentId;
     private int id;
 
     @Override
@@ -113,7 +113,8 @@ public class PostInformActivity extends Activity implements View.OnClickListener
                 break;
             case R.id.add_contacts:
                 intent = new Intent(PostInformActivity.this,ChooseApartmentActivity.class);
-                startActivityForResult(intent, 1);
+                //startActivityForResult(intent, 1);
+                startActivity(intent);
                 break;
             case R.id.gonggaotype_layout:
                 intent = new Intent(PostInformActivity.this,ChooseGonggaoType.class);
@@ -123,11 +124,22 @@ public class PostInformActivity extends Activity implements View.OnClickListener
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String result = "";
+        result = intent.getStringExtra("result");
+        departmentId = intent.getStringExtra("departmentId");
+        search_content.setText(result);
+        search_content.setSelection(search_content.getText().length());
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         String result = "";
         switch (resultCode) {
             case 1:
                 result = data.getStringExtra("result");
+                departmentId = data.getStringExtra("departmentId");
                 search_content.setText(result);
                 search_content.setSelection(search_content.getText().length());
                 break;
@@ -150,28 +162,29 @@ public class PostInformActivity extends Activity implements View.OnClickListener
 
         if (TextUtils.isEmpty(message_title.getText().toString())) {
             ToastUtil.showShort(PostInformActivity.this,"公告标题不能为空");
+            return;
         }
         if (TextUtils.isEmpty(message_content.getText().toString())) {
             ToastUtil.showShort(PostInformActivity.this,"公告内容不能为空");
+            return;
         }
 
         if(TextUtils.isEmpty(search_content.getText().toString())) {
             ToastUtil.showShort(PostInformActivity.this,"接收部门不能为空");
+            return;
         }
 
         if (TextUtils.isEmpty(gonggao_type.getText().toString())) {
             ToastUtil.showShort(PostInformActivity.this,"公告类型不能为空");
+            return;
         }
-
-        SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
-        String username = sp.getString("username",null);
 
         OkHttpUtils.post()
                 .url(url)
-                .addParams("notePublisher",username)
+                .addParams("notePublisher",Constant.username)
                 .addParams("noteTitle", message_title.getText().toString())
                 .addParams("noteDetail",message_content.getText().toString())
-                .addParams("noteDepartment",search_content.getText().toString())
+                .addParams("noteDepartment",departmentId)
                 .addParams("notetypeId",String.valueOf(id))
                 .build()
                 .execute(new StringCallback() {

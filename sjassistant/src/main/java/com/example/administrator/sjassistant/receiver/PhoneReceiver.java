@@ -33,14 +33,18 @@ public class PhoneReceiver extends BroadcastReceiver {
                     Log.d(TAG, "Ringing  " + mIncomingNumber);
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
-                    //if (mIncomingFlag) {
+
                     Log.d(TAG,"incoming accept: " + mIncomingNumber);
-                    // }
-                    //Constant.communicateTime = String.valueOf(System.currentTimeMillis());
-                    if (mIncomingNumber.equals("059527143030")) {
-                        Intent i = new Intent(context, StartChattingActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(i);
+
+                    if (Constant.isMaster) {
+                        if (mIncomingNumber.equals("18060248088")
+                                || mIncomingNumber.equals("13375909998")
+                                || mIncomingNumber.equals("18046240558")
+                                || mIncomingNumber.equals("18060248288")) {
+                            Intent i = new Intent(context, StartChattingActivity.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(i);
+                        }
                     }
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:

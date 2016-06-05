@@ -1,6 +1,7 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
@@ -18,11 +19,16 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Log.d("activity","main application create");
+        Log.d("activity", "main application create");
 
         JPushInterface.setDebugMode(true);
         JPushInterface.init(getApplicationContext());
-
+        SharedPreferences editor = getSharedPreferences("disturb",MODE_PRIVATE);
+        int beginTime = editor.getInt("beginTime", -1);
+        int endTime = editor.getInt("endTime", -1);
+        if (beginTime != -1 && endTime != -1) {
+            JPushInterface.setSilenceTime(getApplicationContext(),beginTime,0,endTime,59 );
+        }
         PackageManager packageManager = getPackageManager();
         PackageInfo packageInfo;
         try {
@@ -31,6 +37,7 @@ public class MainApplication extends Application {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+
 
     }
 }

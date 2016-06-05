@@ -1,7 +1,9 @@
 package com.example.administrator.sjassistant.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,6 +27,7 @@ import com.bumptech.glide.signature.StringSignature;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.activity.HelpActivity;
 import com.example.administrator.sjassistant.activity.SettingActivity;
+import com.example.administrator.sjassistant.util.BitmapCrop;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.FileUtil;
@@ -70,7 +73,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
 
     private String imgPath;
 
-    private String portraitPath = Environment.getExternalStorageDirectory() + "/审计助理/Portrait/portrait.jpg";
+    private String portraitPath = Environment.getExternalStorageDirectory() + "/审计助理/portrait.jpg";
 //    private SharedPreferences sp;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,7 +93,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_mysetting,container,false);
         initView(rootView);
-        Log.d("response","oncreatevbi");
+        initData();
         return rootView;
     }
 
@@ -139,6 +142,25 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
         btn_right.setOnClickListener(this);
         //user_photo.setOnClickListener(this);
         photo_layout.setOnClickListener(this);
+    }
+
+    /*
+     * 初始化本地数据
+     */
+    private void initData() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        String phone = sharedPreferences.getString("phone",null);
+        String dept_name = sharedPreferences.getString("dept_name",null);
+        String role_name = sharedPreferences.getString("role_name",null);
+        String name = sharedPreferences.getString("name",null);
+
+        nickname_text.setText(name);
+        username.setText(name);
+        apartment_text.setText(dept_name);
+        apartment_top.setText(dept_name);
+        work_text.setText(role_name);
+        work_top.setText(role_name);
+
     }
 
     @Override
@@ -213,7 +235,6 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0X11:
-                    Log.d("tag",Constant.gender+" haahah");
                     if (Constant.gender == 1)
                         sex_text.setText("男");
                     else sex_text.setText("女");
@@ -247,11 +268,12 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                     @Override
                     public void upload(String path) {
                         // TODO Auto-generated method stub
-                        Log.d("tag", "path=" + path);
-                        //imgPath = path;
+                        Log.d("response", "path=" + path);
+
                         if (path != null) {
 
                             Bitmap bitmap1 = FileUtil.getSmallBitmap(path, 200, 200);
+                            bitmap1 = BitmapCrop.SquareCrop(bitmap1,false);
                             if (bitmap1 == null) {
                                 Toast.makeText(getActivity(), "头像文件不存在", Toast.LENGTH_SHORT).show();
                                 user_photo.setImageResource(R.drawable.customer_de);
@@ -266,19 +288,29 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                                         e.printStackTrace();
                                     }
                                 }
-                                if (FileUtil.compressBitmap(bitmap1, portraitPath, 90)) {
-                                    if (f.exists()) {
+                                try {
 
-                                        uploadImg(f);
-
-                                    } else {
-                                        ToastUtil.showShort(getActivity(),"上传失败");
-                                    }
+                                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
+                                    bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                                    bos.flush();
+                                    bos.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
+                                uploadImg(f);
+                                if (!bitmap1.isRecycled())
+                                    bitmap1.recycle();
+//                                if (FileUtil.compressBitmap(bitmap1, portraitPath, 90)) {
+//                                    if (f.exists()) {
+//
+//                                        uploadImg(f);
+//
+//                                    } else {
+//                                        ToastUtil.showShort(getActivity(), "上传失败");
+//                                    }
+//                                }
                                 //bitmap1 = null;
                             }
-                           // editor.commit();
-
                         }
 
 
@@ -350,43 +382,8 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                 //.placeholder(R.drawable.customer_de)
                 .error(R.drawable.customer_de)
                 .into(user_photo);
-//        Glide.with(getActivity()).load(url)
-//                .skipMemoryCache(true)
-//                .diskCacheStrategy(DiskCacheStrategy.NONE).into(user_photo);
-//        String url = Constant.SERVER_URL + "user/getPortrait";
 
-//        OkHttpUtils.get()
-//                .url(url)
-//                .addParams("userCode",Constant.username)
-//                .build()
-//                .execute(new Callback() {
-//                    @Override
-//                    public Object parseNetworkResponse(Response response) throws Exception {
-//                        InputStream stream = response.body().byteStream();
-//                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
-//                        stream.close();
-//                        return bitmap;
-//                    }
-//
-//                    @Override
-//                    public void onError(Call call, Exception e) {
-//                        Log.d("error", e.getMessage() + " ");
-//                    }
-//
-//                    @Override
-//                    public void onResponse(Object response) {
-//                        Log.d("response", response + " ");
-//                        //writeToFile((InputStream) response, portraitPath);
-//                        Bitmap bitmap = (Bitmap)response;
-//                        user_photo.setImageBitmap(bitmap);
-////                        FileUtil.saveBitmap2file(bitmap,portraitPath);
-////                        if (bitmap != null && !bitmap.isRecycled()) {
-////                            bitmap.recycle();
-////                            bitmap = null;
-////                        }
-//
-//                    }
-//                });
+
     }
     /*
      * 获取用户信息
@@ -419,23 +416,20 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                                 String department = data.optString("dept_name");
                                 String role = data.optString("role_name");
                                 String address = data.optString("address");
+                                String email = data.optString("email");
+                                SharedPreferences.Editor editor = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE).edit();
+                                editor.putString("email",email);
 
-//                                SharedPreferences.Editor editor = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE).edit();
-//                                editor.putString("nickname",user);
-//                                editor.putString("sex",sex);
-//                                editor.putString("dept_name",department);
-//                                editor.putString("role_name",role);
-//                                editor.putString("address",address);
-//                                editor.commit();
+                                editor.commit();
                                 if (!TextUtils.isEmpty(user)) {
                                     nickname_text.setText(user);
                                     username.setText(user);
                                 }
                                 if (!TextUtils.isEmpty(sex)) {
-                                    if (sex.equals("1"))
-                                        sex_text.setText("男");
-                                    else
-                                        sex_text.setText("女");
+                                    //if (sex.equals("1"))
+                                    sex_text.setText(sex);
+                                    //else
+                                    //    sex_text.setText("女");
                                 }
 
                                 if (!TextUtils.isEmpty(department) && !department.equals("null")) {

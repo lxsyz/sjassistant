@@ -81,7 +81,6 @@
                 android:layout_height="12dp" />
 
             <ListView
-                android:layout_marginTop="12dp"
                 android:background="@color/white"
                 android:id="@+id/manager_list"
                 android:fadingEdge="none"

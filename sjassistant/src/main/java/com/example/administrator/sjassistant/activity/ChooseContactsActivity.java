@@ -1,9 +1,12 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,6 +18,8 @@ import android.widget.TextView;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.bean.FilterCondition;
 import com.example.administrator.sjassistant.util.AppManager;
+import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ServerConfigUtil;
 
 /**
  * 筛选联系人
@@ -37,6 +42,16 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choosecontacts);
         AppManager.getInstance().addActivity(this);
+
+        SharedPreferences sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        Constant.username = sp.getString("username", null);
+
+        if (TextUtils.isEmpty(sp.getString("server_address", null))) {
+            Constant.SERVER_URL = Constant.TEST_SERVER_URL;
+        } else {
+            ServerConfigUtil.setServerConfig(this);
+        }
+
         initWindow();
         initView();
     }

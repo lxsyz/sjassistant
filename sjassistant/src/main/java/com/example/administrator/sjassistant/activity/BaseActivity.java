@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 
@@ -49,6 +50,7 @@ public class BaseActivity extends Activity {
 
         if (TextUtils.isEmpty(sp.getString("server_address", null))) {
             Constant.SERVER_URL = Constant.TEST_SERVER_URL;
+            ServerConfigUtil.setServerConfig("219.234.5.13","8080");
         } else {
             ServerConfigUtil.setServerConfig(this);
         }

@@ -67,23 +67,24 @@ public class AppManager {
         try {
             finishAllActivity();
 
-            ActivityManager activityMgr = (ActivityManager) context
-                    .getSystemService(Context.ACTIVITY_SERVICE);
-            int currentVersion = android.os.Build.VERSION.SDK_INT;
-            if (currentVersion > android.os.Build.VERSION_CODES.ECLAIR_MR1) {
-                Intent startMain = new Intent(Intent.ACTION_MAIN);
-                startMain.addCategory(Intent.CATEGORY_HOME);
-                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(startMain);
-                activityMgr.killBackgroundProcesses(context.getPackageName());
-            } else {// android2.1
-                activityMgr.restartPackage(context.getPackageName());
-            }
-            android.os.Process.killProcess(android.os.Process.myPid());
-            activityMgr.killBackgroundProcesses(context.getPackageName());
+
+//            ActivityManager activityMgr = (ActivityManager) context
+//                    .getSystemService(Context.ACTIVITY_SERVICE);
+//            int currentVersion = android.os.Build.VERSION.SDK_INT;
+//            if (currentVersion > android.os.Build.VERSION_CODES.ECLAIR_MR1) {
+//                Intent startMain = new Intent(Intent.ACTION_MAIN);
+//                startMain.addCategory(Intent.CATEGORY_HOME);
+//                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                context.startActivity(startMain);
+//                activityMgr.killBackgroundProcesses(context.getPackageName());
+//            } else {// android2.1
+//                activityMgr.restartPackage(context.getPackageName());
+//            }
+//            android.os.Process.killProcess(android.os.Process.myPid());
+//            activityMgr.killBackgroundProcesses(context.getPackageName());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.exit(0);
+        //System.exit(0);
     }
 }

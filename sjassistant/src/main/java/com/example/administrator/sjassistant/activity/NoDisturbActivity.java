@@ -9,6 +9,8 @@ import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.view.TimeSetting;
 
+import cn.jpush.android.api.JPushInterface;
+
 /**
  * Created by Administrator on 2016/3/30.
  */
@@ -39,13 +41,15 @@ public class NoDisturbActivity extends BaseActivity implements View.OnClickListe
 
         timeSetting.setOnHandUpListener(new TimeSetting.OnHandUpListener() {
             @Override
-            public void onHandUp(int beginTime, int endTime,float startX,float endX) {
+            public void onHandUp(int beginTime, int endTime,float startX,float endX,float offsetX) {
                 if (beginTime != -1 && endTime != -1) {
+                    JPushInterface.setSilenceTime(getApplicationContext(),beginTime,0,endTime,59);
                     SharedPreferences.Editor editor = getSharedPreferences("disturb",MODE_PRIVATE).edit();
                     editor.putInt("beginTime",-1);
                     editor.putInt("endTime", -1);
-                    editor.putFloat("startX",startX);
+                    editor.putFloat("startX", startX);
                     editor.putFloat("endX",endX);
+                    editor.putFloat("offsetX",offsetX);
                     editor.apply();
                 }
             }
@@ -71,6 +75,7 @@ public class NoDisturbActivity extends BaseActivity implements View.OnClickListe
                     timeSetting.setVisibility(View.GONE);
 
                     clearTime();
+                    JPushInterface.setSilenceTime(getApplicationContext(),0,0,0,0);
                 }
                 ed.putInt(Constant.SETTING_DISTURB,flag);
                 ed.commit();
@@ -95,8 +100,8 @@ public class NoDisturbActivity extends BaseActivity implements View.OnClickListe
             disturbSp = getSharedPreferences("disturb",MODE_PRIVATE);
             float startX = disturbSp.getFloat("startX",-20);
             float endX = disturbSp.getFloat("endX",0);
-
-            timeSetting.setValue(startX,endX);
+            float offsetX = disturbSp.getFloat("offsetX",0);
+            timeSetting.setValue(startX,endX,offsetX);
         }
     }
 
@@ -108,8 +113,9 @@ public class NoDisturbActivity extends BaseActivity implements View.OnClickListe
 
         disturbEditor.putInt("beginTime",-1);
         disturbEditor.putInt("endTime", -1);
-        disturbEditor.putFloat("startX",-20);
-        disturbEditor.putFloat("endX",0);
+        disturbEditor.putFloat("startX", -20);
+        disturbEditor.putFloat("endX",-20);
+        disturbEditor.putFloat("offsetX",-20);
         disturbEditor.apply();
     }
 }

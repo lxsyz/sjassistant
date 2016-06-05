@@ -1,9 +1,11 @@
 package com.example.administrator.sjassistant.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2016/4/20.
  */
-public class Department {
+public class Department implements Serializable{
     private int id;
 
     private String code;

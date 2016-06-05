@@ -58,6 +58,8 @@ public class TimeSetting extends View {
     //圆半径
     private float radius = 20.0f;
 
+
+    Paint paint;
     public TimeSetting(Context context) {
         this(context, null);
     }
@@ -75,6 +77,7 @@ public class TimeSetting extends View {
 
         margin =  (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         padding = getPaddingLeft();
+       paint = new Paint();
     }
 
     @Override
@@ -115,23 +118,25 @@ public class TimeSetting extends View {
         //抬起
         if (count == 3) {
             Log.d("tag","draw");
-            if (endX - startX > 100) {
-                //小球在最左边防止文字出界
-                if (startX < 40) {
-                    drawText(canvas, startX + 20, startY, 3);
-                    //drawEndText(canvas, endX + 40, startY, 3);
+            if (endX > startX) {
+                if (endX - startX > 100) {
+                    //小球在最左边防止文字出界
+                    if (startX < 40) {
+                        drawText(canvas, startX + 40, startY, 3);
+                        //drawEndText(canvas, endX + 40, startY, 3);
+                    } else {
+                        drawText(canvas, startX, startY, 3);
+
+                    }
+                    drawEndText(canvas, endX, startY, 3);
+
                 } else {
-                    drawText(canvas, startX, startY, 3);
-
+                    if (startX < 40) {
+                        drawText(canvas, startX + 40, startY, 3);
+                    } else
+                        drawText(canvas, startX, startY, 3);
+                    drawEndText(canvas, endX, startY, 4);
                 }
-                drawEndText(canvas, endX, startY, 3);
-
-            } else {
-                if (startX < 40) {
-                    drawText(canvas, startX + 40, startY, 3);
-                } else
-                    drawText(canvas, startX, startY,3);
-                drawEndText(canvas,endX,startY,4);
             }
         }
     }
@@ -140,7 +145,7 @@ public class TimeSetting extends View {
      * 画时间线
      */
     private void drawLine(Canvas canvas) {
-        Paint paint = new Paint();
+
         paint.setStrokeWidth(15);
         paint.setAntiAlias(true);
         paint.setColor(Color.parseColor("#e3e3e3"));
@@ -176,7 +181,7 @@ public class TimeSetting extends View {
                 invalidate();
 
                 if (onHandUpListener != null) {
-                    onHandUpListener.onHandUp(beginTime,endTime,startX,endX);
+                    onHandUpListener.onHandUp(beginTime,endTime,startX,endX,offsetX);
                 }
                 break;
         }
@@ -187,11 +192,11 @@ public class TimeSetting extends View {
      * 画起始的圆
      */
     private void drawCircle(Canvas canvas,float startX,float startY) {
-        Paint mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setColor(Color.parseColor("#2EB690"));
+
+        paint.setAntiAlias(true);
+        paint.setColor(Color.parseColor("#2EB690"));
         if (startY < height / 2 + 15 || startY > height / 2 - 15) {
-            canvas.drawCircle(startX,radius , radius, mPaint);
+            canvas.drawCircle(startX,radius , radius, paint);
         }
     }
 
@@ -199,12 +204,12 @@ public class TimeSetting extends View {
      * 画松手的圆
      */
     private void drawEndCircle(Canvas canvas,float endX,float endY) {
-        Paint mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setColor(Color.parseColor("#2EB690"));
+
+        paint.setAntiAlias(true);
+        paint.setColor(Color.parseColor("#2EB690"));
         if (endX > startX && endX < width - 2 * padding) {
 
-            canvas.drawCircle(endX, radius, radius, mPaint);
+            canvas.drawCircle(endX, radius, radius, paint);
         }
     }
 
@@ -212,12 +217,11 @@ public class TimeSetting extends View {
      * 画手指移动时的线
      */
     private void drawRedLine(Canvas canvas,float offsetX,float startX) {
-        Paint mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(16);
-        mPaint.setColor(Color.parseColor("#2EB690"));
+        paint.setAntiAlias(true);
+        paint.setStrokeWidth(16);
+        paint.setColor(Color.parseColor("#2EB690"));
         if (offsetX > startX) {
-            canvas.drawLine(startX, radius, offsetX, radius, mPaint);
+            canvas.drawLine(startX, radius, offsetX, radius,  paint);
         }
     }
 
@@ -225,13 +229,12 @@ public class TimeSetting extends View {
      * 画开始的文本
      */
     private void drawText(Canvas canvas,float startX,float startY,int n) {
-        Paint mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setColor(Color.parseColor("#6D6D6D"));
-        mPaint.setTextSize(textSize);
+        paint.setAntiAlias(true);
+        paint.setColor(Color.parseColor("#6D6D6D"));
+        paint.setTextSize(textSize);
 
 
-        Paint.FontMetrics fm = mPaint.getFontMetrics();
+        Paint.FontMetrics fm = paint.getFontMetrics();
         textHeight = fm.descent-fm.ascent;
 
         percent = (startX-padding) / lineWidth;
@@ -241,7 +244,7 @@ public class TimeSetting extends View {
         rect.set(startX - 20, startY, startX + 20, startY + n * textHeight);
 
         beginTime = value;
-        canvas.drawText(String.valueOf(value)+"点开始",startX - 40,rect.bottom - fm.descent,mPaint);
+        canvas.drawText(String.valueOf(value)+"点开始",startX - 40,rect.bottom - fm.descent,paint);
 
     }
 
@@ -250,12 +253,11 @@ public class TimeSetting extends View {
      * 画结尾的文本
      */
     private void drawEndText(Canvas canvas,float endX,float startY,int n) {
-        Paint mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setColor(Color.parseColor("#6D6D6D"));
-        mPaint.setTextSize(textSize);
+        paint.setAntiAlias(true);
+        paint.setColor(Color.parseColor("#6D6D6D"));
+        paint.setTextSize(textSize);
 
-        Paint.FontMetrics fm = mPaint.getFontMetrics();
+        Paint.FontMetrics fm = paint.getFontMetrics();
         textHeight = fm.descent-fm.ascent;
 
         percent = (endX-padding) / lineWidth;
@@ -266,11 +268,11 @@ public class TimeSetting extends View {
 
         endTime = value;
 
-        canvas.drawText(String.valueOf(value) + "点结束", endX - 40, rect.bottom - fm.descent, mPaint);
+        canvas.drawText(String.valueOf(value) + "点结束", endX - 40, rect.bottom - fm.descent, paint);
     }
 
     public interface OnHandUpListener {
-        public void onHandUp(int beginTime,int endTime,float startX,float endX);
+        public void onHandUp(int beginTime,int endTime,float startX,float endX,float offsetX);
     }
 
     private OnHandUpListener onHandUpListener;
@@ -282,9 +284,10 @@ public class TimeSetting extends View {
     /*
      * Resume后的设置值  并重绘
      */
-    public void setValue (float startX,float endX) {
+    public void setValue (float startX,float endX,float offsetX) {
         this.startX = startX;
         this.endX = endX;
+        this.offsetX = offsetX;
         count = 3;
         invalidate();
     }

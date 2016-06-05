@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.bean.MyContacts;
 import com.example.administrator.sjassistant.util.AddPersonManager;
 import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.Constant;
@@ -28,6 +29,9 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 
@@ -45,6 +49,7 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
 
     private MyPromptDialog pd;
 
+    private List<MyContacts> readerList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,10 +105,26 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
 
     @Override
     protected void onNewIntent(Intent intent) {
-        String result = "";
-        result = intent.getStringExtra("result");
-        message_reader.setText(result);
+        readerList.clear();
+        readerList = (ArrayList<MyContacts>)intent.getSerializableExtra("result");
+
+        StringBuilder sb = new StringBuilder();
+
+        if (readerList.size() > 0) {
+            boolean need = false;
+
+            for (MyContacts i : readerList) {
+                if (need) {
+                    sb.append(",");
+                }
+                sb.append(i.getTrueName());
+                need = true;
+            }
+        }
+
+        message_reader.setText(sb.toString());
         message_reader.setSelection(message_reader.getText().length());
+
         super.onNewIntent(intent);
     }
 
@@ -170,15 +191,14 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
     private void send() {
         String url = Constant.SERVER_URL + "message/addMessage";
 
-        //SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
-        //String username = sp.getString("username", null);
+
 
         OkHttpUtils.post()
                 .url(url)
                 .addParams("messagePublisher",Constant.username)
                 .addParams("messageTitle",message_title.getText().toString())
                 .addParams("messageDetail",message_content.getText().toString())
-                .addParams("messageReader",message_reader.getText().toString())
+                .addParams("messageReader",getReader())
                 .build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
@@ -205,6 +225,28 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
                 }
             }
         });
+    }
+
+    /*
+     * 按照用户名发送消息
+     */
+    private String getReader() {
+
+        StringBuilder sb = new StringBuilder();
+
+        if (readerList.size() > 0) {
+            boolean need = false;
+
+            for (MyContacts i : readerList) {
+                if (need) {
+                    sb.append(",");
+                }
+                sb.append(i.getUserCode());
+                need = true;
+            }
+        }
+
+        return sb.toString();
     }
 
     @Override

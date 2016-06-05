@@ -27,6 +27,16 @@ public class BillDetailList implements Serializable{
 
     private String isHref;
 
+    private String nextType;
+
+    public String getNextType() {
+        return nextType;
+    }
+
+    public void setNextType(String nextType) {
+        this.nextType = nextType;
+    }
+
     public String getIsHref() {
         return isHref;
     }

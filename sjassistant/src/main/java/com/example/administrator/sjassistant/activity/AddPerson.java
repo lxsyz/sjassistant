@@ -239,6 +239,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
         OkHttpUtils.post()
                 .url(url)
                 .addParams("id",String.valueOf(id))
+                .addParams("userCode",Constant.username)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -268,6 +269,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
                                         contact.setUsername(user.optString("username"));
                                         contact.setTrueName(user.optString("trueName"));
                                         contact.setPhone(user.optString("phone"));
+                                        contact.setUserCode(user.optString("userCode"));
                                         contactData.add(contact);
                                     }
                                 }
@@ -286,6 +288,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
                                     v.setVisibility(View.GONE);
                                     text_add_person.setText("选择联系人");
                                 } else {
+                                    v.setVisibility(View.GONE);
                                     text_add_person.setText("没有更多的联系人了");
                                 }
 
@@ -373,18 +376,19 @@ public class AddPerson extends Activity implements View.OnClickListener {
                             if (need) {
                                 sb.append(",");
                             }
-                            sb.append(i.getUsername());
+                            sb.append(i.getTrueName());
                             need = true;
                         }
                     }
                     Intent intent = new Intent(AddPerson.this,PostMessageActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("result",sb.toString());
+                    bundle.putSerializable("result",(ArrayList)result);
+                    //bundle.putString("result",sb.toString());
                     intent.putExtras(bundle);
                     startActivity(intent);
                     //AddPersonManager.getInstance().finishAllActivity();
                 } else {
-                    Log.d("message","morecontact");
+                    //已废弃
                     if (count > 8) {
                         MyDialog dialog = new MyDialog(AddPerson.this, R.style.dialog_style);
                         dialog.show();

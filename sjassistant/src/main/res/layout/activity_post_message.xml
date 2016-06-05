@@ -29,6 +29,8 @@
             android:singleLine="true"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:focusable="false"
+            android:enabled="false"
             android:layout_height="match_parent" />
 
         <ImageView
@@ -102,8 +104,8 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/border"
             android:textSize="15sp"
-            android:hint="消息内容"
-            android:text="各位同事,本所在2016-3-30收到一批预付款，情况如下，届时查收"
+            android:text=""
+            android:hint="请填写消息内容"
             android:lineSpacingExtra="4dp"
             android:gravity="top"
             android:layout_weight="1"

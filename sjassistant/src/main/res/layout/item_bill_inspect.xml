@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="12dp"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:padding="12dp"
-        android:orientation="horizontal"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
+
         <TextView
             android:textColor="@color/my_light_gray"
             android:textSize="13dp"
             android:id="@+id/bill_detail"
-            android:text="单据详情"
+            android:text="单据详情ha"
+            android:maxEms="6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="100dp"
             android:id="@+id/bill_value"
             android:textColor="@color/my_black"
             android:textSize="13dp"
             android:text="something"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </LinearLayout>
 
-</LinearLayout>
+    <!--<View-->
+        <!--android:layout_below="@+id/bill_detail"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0.4dp"-->
+        <!--android:layout_marginTop="12dp"-->
+        <!--android:background="@color/line" />-->
+
+</RelativeLayout>

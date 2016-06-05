@@ -265,15 +265,16 @@
                     android:textColor="@color/my_black"
                     android:textSize="16sp"
                     android:layout_alignTop="@+id/apartment"
-                    android:layout_toLeftOf="@+id/right_arrow3"
+                    android:layout_alignParentRight="true"
+
                     android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <ImageView
-                    android:id="@+id/right_arrow3"
-                    style="@style/right_arrow"
-                    />
+                <!--<ImageView-->
+                    <!--android:id="@+id/right_arrow3"-->
+                    <!--style="@style/right_arrow"-->
+                    <!--/>-->
             </RelativeLayout>
         </LinearLayout>
 
@@ -331,15 +332,15 @@
                     android:textColor="@color/my_black"
                     android:textSize="16sp"
                     android:layout_alignTop="@+id/work"
-                    android:layout_toLeftOf="@+id/right_arrow4"
                     android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <ImageView
-                    android:id="@+id/right_arrow4"
-                    style="@style/right_arrow"
-                    />
+                <!--<ImageView-->
+                    <!--android:id="@+id/right_arrow4"-->
+                    <!--style="@style/right_arrow"-->
+                    <!--/>-->
             </RelativeLayout>
         </LinearLayout>
 
@@ -397,15 +398,15 @@
                     android:textColor="@color/my_black"
                     android:textSize="16sp"
                     android:layout_alignTop="@+id/address"
-                    android:layout_toLeftOf="@+id/right_arrow5"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <ImageView
-                    android:id="@+id/right_arrow5"
-                    style="@style/right_arrow"
-                    />
+                <!--<ImageView-->
+                    <!--android:id="@+id/right_arrow5"-->
+                    <!--style="@style/right_arrow"-->
+                    <!--/>-->
             </RelativeLayout>
         </LinearLayout>
 
@@ -414,6 +415,7 @@
         <LinearLayout
             android:layout_marginTop="14dp"
             android:id="@+id/help_layout"
+            android:visibility="gone"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:paddingBottom="12dp"

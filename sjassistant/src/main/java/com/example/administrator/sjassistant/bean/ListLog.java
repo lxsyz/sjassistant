@@ -19,6 +19,15 @@ public class ListLog {
     private String nextStepDealPerson;
     private String userCode;
     private String userImg;
+    private String phone;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getUserImg() {
         return userImg;

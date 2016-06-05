@@ -18,9 +18,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.bean.ListLog;
+import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.view.CircleImageView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 
@@ -87,7 +91,7 @@ public class TimeAxisAdapter extends BaseAdapter {
 			viewHolder.top_line = convertView.findViewById(R.id.top_line);
 			viewHolder.icon_image = (ImageView)convertView.findViewById(R.id.img_icon);
 			viewHolder.time = (TextView)convertView.findViewById(R.id.dealTime);
-			viewHolder.iv_person = (ImageView)convertView.findViewById(R.id.iv_person);
+			viewHolder.iv_person = (CircleImageView)convertView.findViewById(R.id.iv_person);
 			viewHolder.apartment = (TextView)convertView.findViewById(R.id.dealResult);
             viewHolder.dealOpinion = (TextView)convertView.findViewById(R.id.dealOpinion);
             viewHolder.dealOpinion_layout = (LinearLayout)convertView.findViewById(R.id.deal_opinion_layout);
@@ -102,14 +106,14 @@ public class TimeAxisAdapter extends BaseAdapter {
 		viewHolder.apartment.setText(list.get(position).getDealResult());
 
         String dealResult = list.get(position).getDealResult();
-
-        if (dealResult.equals("提交审批")) {
+		Log.d("response","dealResult "+ dealResult);
+        if (dealResult.equals("已提交")) {
             viewHolder.apartment.setTextColor(context.getResources().getColor(R.color.postInspect));
-        } else if (dealResult.equals("已审批")){
-            viewHolder.apartment.setTextColor(Color.parseColor("#ECA6A7"));
-        } else if (dealResult.equals("审批并提交")){
-            viewHolder.apartment.setTextColor(Color.parseColor("#E8BB5B"));
-        } else if (dealResult.equals("等待我的审批")){
+        } else if (dealResult.equals("审核通过")){
+            viewHolder.apartment.setTextColor(context.getResources().getColor(R.color.inspectd));
+        } else if (dealResult.equals("已完成")){
+            viewHolder.apartment.setTextColor(context.getResources().getColor(R.color.inpectPost));
+        } else if (dealResult.equals("审核不通过")){
 			viewHolder.apartment.setTextColor(context.getResources().getColor(R.color.waitInspect));
 		} else {
 			viewHolder.apartment.setTextColor(context.getResources().getColor(R.color.postInspect));
@@ -121,27 +125,18 @@ public class TimeAxisAdapter extends BaseAdapter {
 			viewHolder.icon_image.setImageResource(R.drawable.inspect_finish);
 		}
 
-        String userImg = list.get(position).getUserImg();
-        if (TextUtils.isEmpty(userImg)) {
+        //String userImg = list.get(position).getUserImg();
+        if (TextUtils.isEmpty(list.get(position).getDealPerson())) {
             viewHolder.iv_person.setImageResource(R.drawable.customer_de);
         } else {
-            final ViewHolder finalViewHolder = viewHolder;
-            OkHttpUtils
-                    .get()
-                    .url(userImg)
-                    .build()
-                    .execute(new BitmapCallback() {
-                        @Override
-                        public void onError(Call Call, Exception e) {
-                            Log.d("error",e.getMessage());
-                            ErrorUtil.NetWorkToast(context);
-                        }
-
-                        @Override
-                        public void onResponse(Bitmap bitmap) {
-                            finalViewHolder.iv_person.setImageBitmap(bitmap);
-                        }
-                    });
+			String url = Constant.SERVER_URL + "images/" + list.get(position).getDealPerson()+".jpg";
+			Log.d("response",url);
+			if (context != null) {
+				Glide.with(context).load(url)
+						.skipMemoryCache(true)
+						.diskCacheStrategy(DiskCacheStrategy.NONE)
+						.error(R.drawable.customer_de).into(viewHolder.iv_person);
+			}
         }
 
         String dealOpinion = list.get(position).getDealOpinion();

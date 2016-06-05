@@ -4,32 +4,29 @@
     android:background="@color/white"
     android:layout_height="match_parent">
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="70dp"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:paddingLeft="15dp"
-            android:paddingRight="20dp">
+        android:layout_height="70dp"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="20dp">
+
 
             <ImageView
                 android:id="@+id/password_iv"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/password" />
 
             <EditText
                 android:id="@+id/oldPassword"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="23dp"
-                android:layout_toRightOf="@id/password_iv"
                 android:inputType="textPassword"
                 android:text=""
                 android:hint="输入原密码"
@@ -38,17 +35,15 @@
                 android:textSize="17sp"
                 />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.8dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignLeft="@+id/password_iv"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:background="@color/line" />
-        </RelativeLayout>
 
-        <RelativeLayout
+        </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:background="@color/line" />
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="70dp"
             android:background="@color/white"
@@ -60,17 +55,17 @@
                 android:id="@+id/newPassword_iv"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/password" />
 
             <EditText
                 android:id="@+id/newPassword"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="23dp"
-                android:layout_toRightOf="@id/newPassword_iv"
                 android:inputType="textPassword"
                 android:text=""
                 android:hint="输入6-12位密码"
@@ -79,17 +74,16 @@
                 android:textSize="17sp"
                 />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.8dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignLeft="@+id/newPassword_iv"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:background="@color/line" />
-        </RelativeLayout>
 
-        <RelativeLayout
+        </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:background="@color/line" />
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="70dp"
             android:background="@color/white"
@@ -101,17 +95,17 @@
                 android:id="@+id/sureNewPassword_iv"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/password" />
 
             <EditText
                 android:id="@+id/sureNewPassword"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="23dp"
-                android:layout_toRightOf="@id/sureNewPassword_iv"
                 android:inputType="textPassword"
                 android:text=""
                 android:hint="确定输入6-12位密码"
@@ -120,17 +114,16 @@
                 android:textSize="17sp"
                 />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.8dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignLeft="@+id/sureNewPassword_iv"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:background="@color/line" />
-        </RelativeLayout>
 
-    </LinearLayout>
+        </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:background="@color/line" />
+
 
     <Button
         android:layout_marginTop="50dp"

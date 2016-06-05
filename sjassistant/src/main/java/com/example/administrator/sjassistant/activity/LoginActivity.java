@@ -9,6 +9,8 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,15 +41,28 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     WatcherUtil watcherUtil;
 
     private int flag = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //initView();
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
     @Override
     protected void initView() {
         super.initView();
+
+        SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
+        String username = sp.getString("username",null);
+        String last_username = sp.getString("last_username",null);
+        if (username != null) {
+            Constant.username = username;
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+        }
+
+
         setCenterView(R.layout.activity_login);
         setTopText("登录");
         et_username = (EditText)findViewById(R.id.username);
@@ -59,6 +74,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         tv_serverConfig = (TextView)findViewById(R.id.serverConfig);
         tv_forgetPassword = (TextView)findViewById(R.id.forgetPassword);
 
+        if (last_username != null) {
+            et_username.setText(last_username);
+            et_username.setSelection(et_username.getText().length());
+        }
 //        et_username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //            @Override
 //            public void onFocusChange(View v, boolean hasFocus) {
@@ -89,13 +108,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onPause() {
         super.onPause();
-        JPushInterface.onPause(this);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        JPushInterface.onResume(this);
+
     }
 
     @Override
@@ -192,15 +211,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 JSONObject data = object.optJSONObject("data");
                                 if (data != null) {
                                     int dept_id = data.optInt("dept_id");
+                                    String phone = data.optString("phone");
+                                    String dept_name = data.optString("dept_name");
+                                    String role_name = data.optString("role_name");
+                                    String name = data.optString("userName");
                                     SharedPreferences sp = getSharedPreferences("userinfo", MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sp.edit();
                                     Constant.username = et_username.getText().toString();
                                     editor.putString("username", et_username.getText().toString());
+                                    editor.putString("last_username",et_username.getText().toString());
+                                    editor.putString("name",name);
                                     editor.putString("password", et_password.getText().toString());
                                     editor.putInt("dept_id", dept_id);
-
+                                    editor.putString("phone",phone);
+                                    editor.putString("dept_name",dept_name);
+                                    editor.putString("role_name",role_name);
                                     editor.apply();
-                                    Log.d("response","asd");
+
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                     startActivity(intent);
                                     ToastUtil.showShort(LoginActivity.this, "登录成功");

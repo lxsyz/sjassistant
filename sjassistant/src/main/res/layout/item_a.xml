@@ -39,61 +39,85 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/id_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
             android:layout_below="@id/id_title"
-            android:paddingTop="8dp"
-            android:singleLine="true"
-            android:text="单据类型："
-            android:textColor="#88444444"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/id_type_value"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            android:id="@+id/container"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/id_title"
-            android:layout_toRightOf="@id/id_type"
-            android:paddingTop="8dp"
-            android:singleLine="true"
-            android:text="财务报表"
-            android:textColor="@color/my_black"
-            android:textSize="12sp" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/id_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/id_type"
-            android:paddingTop="5dp"
-            android:singleLine="true"
-            android:text="提交时间："
-            android:textColor="#88444444"
-            android:textSize="12sp" />
+        </LinearLayout>
+        <!--<TextView-->
+            <!--android:id="@+id/id_type"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/id_title"-->
+            <!--android:paddingTop="8dp"-->
+            <!--android:singleLine="true"-->
+            <!--android:text="单据类型："-->
+            <!--android:textColor="#88444444"-->
+            <!--android:textSize="12sp" />-->
 
-        <TextView
-            android:id="@+id/id_time_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/id_type"
-            android:layout_toRightOf="@id/id_type"
-            android:paddingTop="5dp"
-            android:singleLine="true"
-            android:text="2016-03-02"
-            android:textColor="@color/my_black"
-            android:textSize="12sp" />
-        
-        <ImageView 
+        <!--<TextView-->
+            <!--android:id="@+id/id_type_value"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/id_title"-->
+            <!--android:layout_toRightOf="@id/id_type"-->
+            <!--android:paddingTop="8dp"-->
+            <!--android:singleLine="true"-->
+            <!--android:text="财务报表"-->
+            <!--android:textColor="@color/my_black"-->
+            <!--android:textSize="12sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/id_time"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/id_type"-->
+            <!--android:paddingTop="5dp"-->
+            <!--android:singleLine="true"-->
+            <!--android:text="提交时间："-->
+            <!--android:textColor="#88444444"-->
+            <!--android:textSize="12sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/id_time_value"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/id_type"-->
+            <!--android:layout_toRightOf="@id/id_type"-->
+            <!--android:paddingTop="5dp"-->
+            <!--android:singleLine="true"-->
+            <!--android:text="2016-03-02"-->
+            <!--android:textColor="@color/my_black"-->
+            <!--android:textSize="12sp" />-->
+        <ImageView
+            android:visibility="gone"
+            android:layout_marginRight="12dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/finished"
+            android:id="@+id/iv_inspect"
+            android:layout_width="58dp"
+            android:layout_height="58dp" />
+
+        <ImageView
             android:id="@+id/line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#15444444"
-            android:layout_below="@id/id_time"
+            android:layout_below="@id/container"
             android:layout_marginTop="10dp"
             />
+        <!--<ImageView-->
+            <!--android:id="@+id/line"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="#15444444"-->
 
+            <!--android:layout_marginTop="10dp"-->
+            <!--/>-->
 
         <TextView
             android:id="@+id/id_more"

@@ -3,6 +3,7 @@ package com.example.administrator.sjassistant.activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,6 +42,22 @@ public class ServerConfigActivity extends BaseActivity implements View.OnClickLi
         btn_confirm = (Button)findViewById(R.id.confirm);
 
 
+        SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
+        String server_address = sp.getString("server_address", null);
+        String server_port = sp.getString("server_port",null);
+
+        Log.d("response",server_address+" ");
+
+        if (server_address != null) {
+            et_server_address.setText(server_address);
+            et_server_address.setSelection(et_server_address.getText().length());
+        }
+
+        if (server_port != null) {
+            et_server_port.setText(server_port);
+            et_server_port.setSelection(et_server_port.getText().length());
+        }
+
         et_server_address.addTextChangedListener(new WatcherUtil(et_server_address,"text"));
 
         et_server_port.addTextChangedListener(new WatcherUtil(et_server_port,"text"));
@@ -68,9 +85,9 @@ public class ServerConfigActivity extends BaseActivity implements View.OnClickLi
 
                 sp.apply();
 
-                SharedPreferences sp2 = getSharedPreferences("userinfo",MODE_PRIVATE);
+                //SharedPreferences sp2 = getSharedPreferences("userinfo",MODE_PRIVATE);
 
-                Constant.SERVER_URL = "http://"+sp2.getString("server_address",null)+":"+sp2.getString("server_port",null)+"/app/";
+                Constant.SERVER_URL = "http://"+et_server_address.getText().toString()+":"+et_server_port.getText().toString()+"/app/";
                 ToastUtil.showShort(ServerConfigActivity.this,"配置成功");
 
                 ServerConfigActivity.this.finish();

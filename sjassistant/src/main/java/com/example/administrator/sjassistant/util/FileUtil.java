@@ -1,10 +1,15 @@
 package com.example.administrator.sjassistant.util;
 
+import android.app.Notification;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 //import org.apache.poi.hwpf.HWPFDocument;
 //import org.apache.poi.hwpf.converter.PicturesManager;
@@ -18,6 +23,9 @@ import android.util.Log;
 //import org.apache.poi.hwpf.usermodel.PictureType;
 //import org.w3c.dom.Document;
 
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.FileCallBack;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -25,6 +33,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import okhttp3.Call;
 
 //import javax.xml.parsers.DocumentBuilderFactory;
 //import javax.xml.parsers.ParserConfigurationException;
@@ -85,9 +95,9 @@ public class FileUtil {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
 
-        if (BitmapFactory.decodeFile(filePath,options) == null) {
-            return null;
-        }
+        //if (BitmapFactory.decodeFile(filePath,options) == null) {
+        //    return null;
+        //}
         return BitmapFactory.decodeFile(filePath, options);
     }
 
@@ -100,6 +110,10 @@ public class FileUtil {
      * @return
      */
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        if (reqWidth == 0 || reqHeight == 0) {
+            return 1;
+        }
+
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -109,14 +123,21 @@ public class FileUtil {
 
             // Calculate ratios of height and width to requested height and
             // width
-            final int heightRatio = Math.round((float) height / (float) reqHeight);
-            final int widthRatio = Math.round((float) width / (float) reqWidth);
+//            final int heightRatio = Math.round((float) height / (float) reqHeight);
+//            final int widthRatio = Math.round((float) width / (float) reqWidth);
+//
+//            // Choose the smallest ratio as inSampleSize value, this will
+//            // guarantee
+//            // a final image with both dimensions larger than or equal to the
+//            // requested height and width.
+//            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+            final int halfHeight = height / 2;
+            final int halfWidth = width /2 ;
 
-            // Choose the smallest ratio as inSampleSize value, this will
-            // guarantee
-            // a final image with both dimensions larger than or equal to the
-            // requested height and width.
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && ((halfWidth / inSampleSize) >= reqWidth)) {
+                inSampleSize *= 2;
+            }
         }
 
         return inSampleSize;
@@ -131,6 +152,7 @@ public class FileUtil {
     public static boolean compressBitmap(Bitmap bitmap,String compressPath,int quality) {
         FileOutputStream stream = null;
         try {
+            Log.d("response",compressPath+" ");
             stream = new FileOutputStream(new File(compressPath));
             bitmap.compress(Bitmap.CompressFormat.JPEG,quality,stream);
             Log.d("response","压缩成功");
@@ -193,6 +215,48 @@ public class FileUtil {
                 type = MIME_MapTable[i][1];
         }
         return type;
+    }
+
+    public static void openFile(Context context,File file) {
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Intent.ACTION_VIEW);
+        String type= getMIMEType(file);
+        //设置intent的data和Type属性。
+        intent.setDataAndType(Uri.fromFile(file), type);
+        //跳转
+        context.startActivity(intent);
+    }
+
+    /*
+     * 下载文件
+     */
+    public static void downloadFile(final Context context,String url,String filePath,String filename, final ProgressBar bar) {
+        OkHttpUtils.get()
+                .url(url)
+                .build()
+                .execute(new FileCallBack(filePath, filename) {
+                    @Override
+                    public void inProgress(float progress, long total) {
+                        Log.d("response", "progress" + progress);
+                        bar.setProgress((int)(progress*100));
+
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage() + " ");
+                        ErrorUtil.NetWorkToast(context);
+                    }
+
+                    @Override
+                    public void onResponse(File response) {
+                        Log.d("response", response.getAbsolutePath());
+
+                        //ToastUtil.showShort(context, "下载成功,文件保存至/sdcard/审计助理文件夹下");
+                        //FileUtil.openFile(context,response);
+                    }
+                });
     }
 
     private static final String[][] MIME_MapTable={

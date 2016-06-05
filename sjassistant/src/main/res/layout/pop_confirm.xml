@@ -13,12 +13,13 @@
         android:layout_height="16dp" />
     <TextView
         android:text="ahaha"
-        android:textSize="13sp"
+        android:textSize="14sp"
         android:textColor="@color/my_black"
-        android:layout_centerVertical="true"
+        android:layout_alignTop="@+id/iv"
         android:layout_toRightOf="@+id/iv"
         android:layout_marginLeft="5dp"
         android:id="@+id/prompt_content"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </RelativeLayout>

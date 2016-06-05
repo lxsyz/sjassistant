@@ -91,7 +91,7 @@ public class SideBar extends View {
                 if (oldChoose != c) {
                     if (c >= 0 && c < b.length) {
                         if (listener != null) {
-                            Log.d("tag", "touch222");
+
                             listener.onTouchingLetterChanged(b[c]);
                         }
                         choose = c;

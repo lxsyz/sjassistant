@@ -2,6 +2,7 @@ package com.example.administrator.sjassistant.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -11,6 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
@@ -30,6 +35,7 @@ import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.view.CHScrollView2;
+import com.example.administrator.sjassistant.view.MyPromptDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -86,11 +92,18 @@ public class BillDetailActivity extends BaseActivity {
     private String displayLevel;
     private String level;
     private int fatherId;
+    private String billType;
 
     private LayoutInflater layoutInflater;
 
+    //表格类型显示的列数行数
     private int cols;
     private int rows;
+
+    private MyPromptDialog pd;
+
+
+    private String nextType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +111,9 @@ public class BillDetailActivity extends BaseActivity {
         DisplayMetrics outMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(outMetrics);
         mScreenWidth = outMetrics.widthPixels;
+
+        pd = new MyPromptDialog(this);
+
     }
 
     @Override
@@ -108,7 +124,10 @@ public class BillDetailActivity extends BaseActivity {
 
         billId = getIntent().getIntExtra("billId", -1);
         displayLevel = getIntent().getStringExtra("displayLevel");
-        fatherId = getIntent().getIntExtra("fatherId",0);
+        fatherId = getIntent().getIntExtra("fatherId", 0);
+        billType = getIntent().getStringExtra("billType");
+
+        nextType = getIntent().getStringExtra("nextType");
         if (TextUtils.isEmpty(displayLevel)) {
             displayLevel = "1";
         }
@@ -120,6 +139,7 @@ public class BillDetailActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (pd != null) pd.createDialog().show();
 
         getData(displayLevel);
 
@@ -141,6 +161,7 @@ public class BillDetailActivity extends BaseActivity {
                 .addParams("displayLevel",displayLevel)
                 .addParams("billId",String.valueOf(billId))
                 .addParams("fatherId",String.valueOf(fatherId))
+                .addParams("billType",billType)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -160,6 +181,7 @@ public class BillDetailActivity extends BaseActivity {
                                 JSONObject data = object.optJSONObject("data");
                                 level = data.optString("displayLevel");
                                 String billShowType = data.optString("billShowType");
+                                nextType = data.optString("nextType");
                                 Gson gson = new Gson();
                                 if (billShowType.equals("1")) {
                                     JSONArray list = data.optJSONArray("list");
@@ -245,12 +267,24 @@ public class BillDetailActivity extends BaseActivity {
                                             showData(adapter);
                                         }
                                     }
+                                } else if (billShowType.equals("5")) {
+                                    String url = data.optString("list");
+
+                                    showData(url);
                                 }
+//                                else if (billShowType.equals("4")) {
+//                                    String list = data.optString("list");
+//                                    if (list != null) {
+//                                        Intent intent = new Intent(BillDetailActivity.this, BillFileActivity.class);
+//                                        intent.putExtra("filename", list);
+//                                        startActivity(intent);
+//                                    }
+//                                }
                                 initItemClick();
                             } else {
                                 ToastUtil.showShort(BillDetailActivity.this, "服务器异常");
                             }
-
+                            if (pd!=null) pd.dismissDialog();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -269,11 +303,23 @@ public class BillDetailActivity extends BaseActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     BillDetailList billDetail = (BillDetailList) lv.getItemAtPosition(position);
                     if (!billDetail.getIsHref().equals("0")) {
-                        Intent intent = new Intent(BillDetailActivity.this, BillDetailActivity.class);
-                        intent.putExtra("billId", billDetail.getBillId());
-                        intent.putExtra("displayLevel", level);
-                        intent.putExtra("fatherId",billDetail.getId());
-                        startActivity(intent);
+                        if (nextType.equals("4")) {
+                            Intent intent = new Intent(BillDetailActivity.this,BillFileActivity.class);
+                            intent.putExtra("billId", billDetail.getBillId());
+                            intent.putExtra("displayLevel", level);
+                            intent.putExtra("fatherId", billDetail.getId());
+                            intent.putExtra("billType", billType);
+                            startActivity(intent);
+                        } else {
+
+                            Intent intent = new Intent(BillDetailActivity.this, BillDetailActivity.class);
+                            intent.putExtra("billId", billDetail.getBillId());
+                            intent.putExtra("displayLevel", level);
+                            intent.putExtra("fatherId", billDetail.getId());
+                            intent.putExtra("billType", billType);
+                            //intent.putExtra("nextType",nextType);
+                            startActivity(intent);
+                        }
                     }
                 }
             });
@@ -294,8 +340,14 @@ public class BillDetailActivity extends BaseActivity {
         lv.setAdapter(new CommonAdapter<BillDetailList>(BillDetailActivity.this,list,R.layout.list_item) {
             @Override
             public void convert(ViewHolder holder, BillDetailList billDetailList) {
+                if (billDetailList.getIsHref().equals("1")) {
+                    holder.getView(R.id.iv).setVisibility(View.VISIBLE);
+                } else {
+                    holder.getView(R.id.iv).setVisibility(View.GONE);
+                }
                 holder.setText(R.id.text,billDetailList.getDisplayName());
                 holder.setText(R.id.value,billDetailList.getDisplayValue());
+
             }
         });
     }
@@ -311,11 +363,27 @@ public class BillDetailActivity extends BaseActivity {
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Intent intent = new Intent(BillDetailActivity.this,BillDetailActivity.class);
-                intent.putExtra("fatherId",adapter.getmList().get(groupPosition).get("fatherId"));
-                intent.putExtra("billId",billId);
-                intent.putExtra("displayLevel",level);
-                startActivity(intent);
+                Log.d("response",adapter.getmList().get(childPosition).get("isHref")+" ");
+                if (adapter.getmList().get(childPosition).get("isHref").equals("1")) {
+
+                    if (nextType.equals("4")) {
+                        Intent intent = new Intent(BillDetailActivity.this, BillFileActivity.class);
+                        intent.putExtra("fatherId", adapter.getmList().get(groupPosition).get("fatherId"));
+                        intent.putExtra("billId", billId);
+                        intent.putExtra("displayLevel", level);
+                        intent.putExtra("billType", billType);
+                        //intent.putExtra("nextType", nextType);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(BillDetailActivity.this, BillDetailActivity.class);
+                        intent.putExtra("fatherId", adapter.getmList().get(groupPosition).get("fatherId"));
+                        intent.putExtra("billId", billId);
+                        intent.putExtra("displayLevel", level);
+                        intent.putExtra("billType", billType);
+                        //intent.putExtra("nextType", nextType);
+                        startActivity(intent);
+                    }
+                }
                 return false;
             }
         });
@@ -326,16 +394,41 @@ public class BillDetailActivity extends BaseActivity {
      * 展示行列不固定的表格形式的项目
      */
     private void showData(ScrollAdapter adapter) {
-        //setCenterView(R.layout.activity_grid_detail);
+
         setCenterView(R.layout.activity_hlistview);
         mListView = (ListView)findViewById(R.id.hlistview_scroll_list);
-//            gv = (GridView)findViewById(R.id.gv);
-//            for (int i = 0;i < 15;i++) {
-//                billList.add("成交信息");
-//            }
-//            gv.setAdapter(new ArrayAdapter(this,R.layout.grid_item,R.id.textView,
-//                    billList));
+
         mListView.setAdapter(adapter);
+
+    }
+
+    /*
+     * Html形式的展现
+     */
+    public void showData(String url) {
+        setCenterView(R.layout.activity_web_detail);
+        WebView webView = (WebView)findViewById(R.id.wv);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            webView.getSettings().setDisplayZoomControls(false);
+        }
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return super.shouldOverrideUrlLoading(view, url);
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+            }
+        });
+        url = Constant.SERVER_URL + url;
+        webView.loadUrl(url);
     }
 
     public void addHViews(final CHScrollView2 hScrollView) {
@@ -443,7 +536,6 @@ public class BillDetailActivity extends BaseActivity {
             for(int i = 0 ; i < len; i++) {
                 if (needLine) {
                     root.addView(lineView);
-
                 }
                 needLine = true;
                 ((TextView)holders[i]).setText(this.datas.get(position).get(from[i]).toString());
