@@ -30,6 +30,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 允许程序录制音频 -->
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
@@ -316,8 +317,12 @@
 
         <!-- Required  . Enable it you can get statistics data with channel -->
         <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
-        <meta-data android:name="JPUSH_APPKEY" android:value="b1c242910b3d3b6f3d15207e" />
-        
+        <meta-data android:name="JPUSH_APPKEY" android:value="c3e6d5fe2043a00ac54e9aad" />
+
+        <meta-data
+            android:name="PGYER_APPID"
+            android:value="7a81219ce1228f4a1d9b1240e4dd351a" >
+        </meta-data>
         
         
     </application>

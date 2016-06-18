@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -14,6 +15,11 @@ import com.example.administrator.sjassistant.R;
  * Created by Administrator on 2016/4/14.
  */
 public class ConfirmPopWin extends PopupWindow {
+    private LinearLayout choose_layout,add_layout;
+    private TextView item1;
+    private TextView item2;
+
+
 
     private View main;
 
@@ -28,13 +34,20 @@ public class ConfirmPopWin extends PopupWindow {
 
         prompt_content = (TextView)main.findViewById(R.id.prompt_content);
 
-        this.setContentView(main);
-        this.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        this.setHeight(height);
+        choose_layout = (LinearLayout)main.findViewById(R.id.choose);
+        add_layout = (LinearLayout)main.findViewById(R.id.add);
+        item1 =(TextView)main.findViewById(R.id.item1);
+        item2 = (TextView)main.findViewById(R.id.item2);
+
+
+
+        setContentView(main);
+        setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        setHeight(height);
 
         //main.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.EXACTLY);
         popHeight = height;
-        this.setFocusable(true);
+        //setFocusable(true);
 
         //this.setAnimationStyle(R.style.AnimBottom);
 
@@ -52,5 +65,14 @@ public class ConfirmPopWin extends PopupWindow {
 
     public int getPopHeight() {
         return popHeight;
+    }
+
+    public void setItem1Text(CharSequence str) {
+        item1.setText(str);
+    }
+
+    public void setItem2Text(CharSequence str) {
+        item2.setText(str);
+
     }
 }

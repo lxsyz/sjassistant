@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -124,6 +126,51 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
         listView.setAdapter(adapter);
         OperatorUtil.setListViewHeight(listView);
 
+        number.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                Log.d("response", "hasFocus  " + hasFocus);
+                if (hasFocus) {
+                    //最多添加八人
+                    if (adapter.getCount() >= 8) {
+                        MyDialog dialog = new MyDialog(MoreContact.this, R.style.dialog_style);
+                        dialog.show();
+                        dialog.setMain_text("多方通话最多允许添加8个人");
+                        dialog.setVisibility(View.GONE);
+                        dialog.setCenterVisibility(View.VISIBLE);
+                        return;
+                    }
+                }
+            }
+        });
+
+        number.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //最多添加八人
+                if (adapter.getCount() >= 8) {
+                    MyDialog dialog = new MyDialog(MoreContact.this, R.style.dialog_style);
+                    dialog.show();
+                    dialog.setMain_text("多方通话最多允许添加8个人");
+                    dialog.setVisibility(View.GONE);
+                    dialog.setCenterVisibility(View.VISIBLE);
+                    return;
+                }
+                number.clearFocus();
+                number.setText("");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         change_layout.setOnClickListener(this);
         iv_start.setOnClickListener(this);
         add.setOnClickListener(this);
@@ -169,6 +216,7 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
                 //create();
                 break;
             case R.id.add:
+
                 //最多添加八人
                 if (adapter.getCount() >= 8) {
                     MyDialog dialog = new MyDialog(MoreContact.this, R.style.dialog_style);
@@ -178,11 +226,12 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
                     dialog.setCenterVisibility(View.VISIBLE);
                     return;
                 }
-
-                if (!TextUtils.isEmpty(number.getText().toString())) {
-                    if (OperatorUtil.isPhoneNumber(number.getText().toString())) {
-                        if (!isExist(number.getText().toString(),datalist)) {
-                            getUser(number.getText().toString(), 0);
+                String num = number.getText().toString();
+                Log.d("response","numbertext+"+num);
+                if (!TextUtils.isEmpty(num.trim())) {
+                    if (OperatorUtil.isPhoneNumber(num)) {
+                        if (!isExist(num,datalist)) {
+                            getUser(num, 0);
                         } else {
                             ToastUtil.showShort(MoreContact.this,"该用户已经添加过了");
                         }
@@ -297,12 +346,17 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
                                     } else {
                                         if (user != null) {
                                             masterPerson = gson.fromJson(user.toString(), Person.class);
-                                            master.setText(masterPerson.getLinkPhone());
+                                            if (masterPerson.getLinkPhone()!= null)
+                                                master.setText(masterPerson.getLinkPhone());
                                         } else {
                                             //Person person = new Person();
+                                            masterPerson = new Person();
                                             masterPerson.setUserCode(" ");
-                                            masterPerson.setLinkPhone(num);
+                                            if (num != null) {
+                                                masterPerson.setLinkPhone(num);
+                                            }
                                             masterPerson.setLinkName(" ");
+                                            master.setText(masterPerson.getLinkPhone());
                                         }
                                     }
 

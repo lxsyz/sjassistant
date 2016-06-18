@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -216,7 +217,9 @@ public class GonggaoDetailActivity extends BaseActivity implements View.OnClickL
                                 }
                                 post_type.setText(temp);
                                 if (detail_text.contains(".htm")) {
-                                    String url = Constant.SERVER_URL + detail_text;
+                                    SharedPreferences sp2 = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+                                    String url = "http://"+sp2.getString("server_address",null)+":"+sp2.getString("server_port",null)+"/";
+                                    url = url + detail_text;
 
                                     wv.loadUrl(url);
                                 } else {

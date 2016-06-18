@@ -221,7 +221,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                                     messageInform.setMessagePublisher(o.getString("messagePublisher"));
                                     messageInform.setMessageTitle(o.getString("messageTitle"));
                                     messageInform.setHeadImg(o.getString("headImg"));
-                                    datalist.add(0, messageInform);
+                                    datalist.add(messageInform);
                                 }
                                 if (commonAdapter!= null) {
                                     commonAdapter.updateListView(datalist);

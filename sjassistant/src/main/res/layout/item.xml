@@ -34,11 +34,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/my_black"
+            android:maxEms="5"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:text="齐天"/>
 
         <TextView
             android:id="@+id/group"
             android:text="北京分所"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:maxEms="18"
             android:textColor="#979797"
             android:layout_marginLeft="100dp"
             android:textSize="13sp"

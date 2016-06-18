@@ -160,20 +160,19 @@ public class GroupActivity extends BaseActivity implements View.OnClickListener 
                                         prompt.setText("我可以查看的小组");
                                         datalist = gson.fromJson(list.toString(), new TypeToken<List<GroupPerson>>() {
                                         }.getType());
-
-                                        if (commonAdapter !=null) {
-                                            commonAdapter.updateListView(datalist);
-                                        } else {
-                                            commonAdapter = new CommonAdapter<GroupPerson>(GroupActivity.this, datalist, R.layout.item_choose_customer) {
-                                                @Override
-                                                public void convert(ViewHolder holder, GroupPerson cp) {
-                                                    holder.setText(R.id.customer_name, cp.getGroupName());
-                                                }
-                                            };
-                                            customer_list.setAdapter(commonAdapter);
-                                        }
                                     } else {
                                         prompt.setText("没有小组");
+                                    }
+                                    if (commonAdapter !=null) {
+                                        commonAdapter.updateListView(datalist);
+                                    } else {
+                                        commonAdapter = new CommonAdapter<GroupPerson>(GroupActivity.this, datalist, R.layout.item_choose_customer) {
+                                            @Override
+                                            public void convert(ViewHolder holder, GroupPerson cp) {
+                                                holder.setText(R.id.customer_name, cp.getGroupName());
+                                            }
+                                        };
+                                        customer_list.setAdapter(commonAdapter);
                                     }
                                 }
                             } else {

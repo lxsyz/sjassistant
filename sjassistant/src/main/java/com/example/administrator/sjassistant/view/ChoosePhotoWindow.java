@@ -195,16 +195,24 @@ public class ChoosePhotoWindow implements OnClickListener {
 	 * 转跳到相机
 	 */
 	public void toCamera() {
-		if (FileUtil.avaiableMedia()) {
-			tempPath = "file:///sdcard/"+ FileUtil.getPhotoFileName();
+		File file = new File(Environment
+				.getExternalStorageDirectory(),
+				FileUtil.getPhotoFileName());
 
-			imageUri = Uri.parse(tempPath);
+		imageUri = Uri.fromFile(file);
+		Log.d("response", "outputFileUri intent"
+				+ imageUri);
+		//if (FileUtil.avaiableMedia()) {
+		//	tempPath = "file:///sdcard/"+ FileUtil.getPhotoFileName();
+
+		//	imageUri = Uri.parse(tempPath);
 			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 			((Activity) context).startActivityForResult(intent, REQUESTCODE_CAMERA);
-		} else {
-			ToastUtil.showShort(context,"请确认插入了SD卡");
-		}
+
+		//} else {
+		//	ToastUtil.showShort(context,"请确认插入了SD卡");
+		//}
 	}
 
 	/**
@@ -216,9 +224,6 @@ public class ChoosePhotoWindow implements OnClickListener {
 		intent.setAction(Intent.ACTION_PICK);//Pick an item fromthe data
 		intent.setType("image/*");//从所有图片中进行选择
 		((Activity) context).startActivityForResult(intent, REQUESTCODE_IMAGE);
-//		Intent i = new Intent(Intent.ACTION_GET_CONTENT, null);
-//		i.setType("image/*");
-//		((Activity) context).startActivityForResult(i, REQUESTCODE_IMAGE);
 	}
 
 	/**
@@ -234,7 +239,12 @@ public class ChoosePhotoWindow implements OnClickListener {
 		if (resultCode != Activity.RESULT_OK) {
 			return;
 		}
+
+
 		if (requestCode == REQUESTCODE_IMAGE) {
+			if (data == null) {
+				return;
+			}
 			try {
 				Uri uri = data.getData();
 				path = AbsolutePathUtil.getAbsolutePath(context, uri);
@@ -261,11 +271,11 @@ public class ChoosePhotoWindow implements OnClickListener {
 //				imageUri = Uri.parse(path);
 //			}
 			//startPhotoZoom(imageUri);
-            //upload(upload);
+			//upload(upload);
 		} else if (requestCode == REQUESTCODE_CAMERA) {
 			//startPhotoZoom(imageUri);
-            //upload(upload);
-			Log.d("response","temppath->"+tempPath+" ");
+			//upload(upload);
+			Log.d("response", "temppath->" + tempPath + " ");
 			path = imageUri.getPath();
 		} else if (requestCode == CROP_IMAGE) {
 			// 调用图片剪切程序返回数据

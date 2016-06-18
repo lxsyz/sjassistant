@@ -204,6 +204,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         OkHttpUtils.post()
                 .url(url)
                 .addParams("id",String.valueOf(id))
+                .addParams("userCode",Constant.username)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -254,11 +255,9 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                                 if (departmentAdapter != null) {
                                     departmentAdapter.updateListView(departmentData);
                                 } else {
-                                    departmentAdapter = new CommonAdapter<Department>(CompanyActivity.this, departmentData, R.layout.item_company) {
+                                    departmentAdapter = new CommonAdapter<Department>(CompanyActivity.this, departmentData, R.layout.item_company_dept) {
                                         @Override
                                         public void convert(ViewHolder holder, Department department) {
-                                            holder.getView(R.id.phone).setVisibility(View.GONE);
-                                            holder.getView(R.id.group).setVisibility(View.GONE);
                                             holder.getView(R.id.right_arrow1).setVisibility(View.VISIBLE);
                                             holder.setText(R.id.name, department.getName());
                                         }

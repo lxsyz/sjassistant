@@ -194,29 +194,34 @@ public class FileUtil {
     }
 
 
-    /*
-     * 根据文件后缀名获得对应的MIME类型
+    /**
+     * 根据文件后缀名匹配MIMEType
      * @param file
+     * @return
      */
     public static String getMIMEType(File file) {
         String type ="*/*";
-        String fName = file.getName();
-        int index = fName.lastIndexOf('.');
+        String name = file.getName();
+        int index = name.lastIndexOf('.');
         if (index < 0) {
             return type;
         }
 
-        /*获取文件后缀名*/
-        String end = fName.substring(index,fName.length()).toLowerCase();
+        String end = name.substring(index,name.length()).toLowerCase();
         if (TextUtils.isEmpty(end)) return type;
 
-        for(int i=0;i<MIME_MapTable.length;i++){
-            if(end.equals(MIME_MapTable[i][0]))
+        for (int i = 0;i < MIME_MapTable.length;i++) {
+            if (end.equals(MIME_MapTable[i][0]))
                 type = MIME_MapTable[i][1];
         }
         return type;
     }
 
+    /**
+     * 打开文件
+     * @param context
+     * @param file 文件
+     */
     public static void openFile(Context context,File file) {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -224,7 +229,18 @@ public class FileUtil {
         String type= getMIMEType(file);
         //设置intent的data和Type属性。
         intent.setDataAndType(Uri.fromFile(file), type);
-        //跳转
+        context.startActivity(intent);
+    }
+
+    /**
+     * 自动安装apk文件
+     * @param context
+     * @param file
+     */
+    public static void openApk(Context context,File file) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
         context.startActivity(intent);
     }
 
@@ -260,7 +276,6 @@ public class FileUtil {
     }
 
     private static final String[][] MIME_MapTable={
-            //{后缀名， MIME类型}
             {".3gp",    "video/3gpp"},
             {".apk",    "application/vnd.android.package-archive"},
             {".asf",    "video/x-ms-asf"},

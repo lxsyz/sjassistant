@@ -24,6 +24,36 @@ public class ContactsPerson implements Serializable {
     private String linkPhone;
     private String userCode;
 
+    private String customerTypeName;
+
+    private String customerDeptName;
+
+    private String customerPostName;
+
+    public String getCustomerDeptName() {
+        return customerDeptName;
+    }
+
+    public String getCustomerPostName() {
+        return customerPostName;
+    }
+
+    public String getCustomerTypeName() {
+        return customerTypeName;
+    }
+
+    public void setCustomerDeptName(String customerDeptName) {
+        this.customerDeptName = customerDeptName;
+    }
+
+    public void setCustomerPostName(String customerPostName) {
+        this.customerPostName = customerPostName;
+    }
+
+    public void setCustomerTypeName(String customerTypeName) {
+        this.customerTypeName = customerTypeName;
+    }
+
     public String getId() {
         return id;
     }

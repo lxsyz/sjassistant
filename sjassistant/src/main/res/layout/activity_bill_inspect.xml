@@ -43,7 +43,10 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:text="Jimmy"
+                        android:text=""
+                        android:singleLine="true"
+                        android:maxEms="10"
+                        android:ellipsize="end"
                         android:id="@+id/name"
                         style="@style/text1" />
 
@@ -52,7 +55,7 @@
                         android:layout_below="@+id/name"
                         android:layout_alignStart="@+id/name"
                         android:layout_alignLeft="@+id/name"
-                        android:text="财务科"
+                        android:text=""
                         style="@style/text2" />
 
                     <TextView
@@ -71,7 +74,7 @@
                 android:layout_marginRight="12dp"
                 android:layout_marginLeft="12dp" />
 
-            <ListView
+            <com.example.administrator.sjassistant.view.MyFixList
                 android:divider="@drawable/list_item_divider"
                 android:dividerHeight="0.5dp"
                 android:id="@+id/bill_list"
@@ -81,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            </ListView>
+            </com.example.administrator.sjassistant.view.MyFixList>
 
             <View
                 android:layout_marginTop="12dp"
@@ -115,13 +118,13 @@
                 android:background="@color/background"
                 android:layout_width="match_parent"
                 android:layout_height="14dp" />
-            <ListView
+            <com.example.administrator.sjassistant.view.MyFixList
                 android:layout_weight="1"
                 android:id="@+id/inspect_list"
                 android:layout_width="match_parent"
                 android:layout_marginBottom="10dp"
                 android:layout_height="0dp">
-            </ListView>
+            </com.example.administrator.sjassistant.view.MyFixList>
         </LinearLayout>
     </ScrollView>
 

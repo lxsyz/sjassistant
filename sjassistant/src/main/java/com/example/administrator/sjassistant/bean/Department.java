@@ -14,6 +14,16 @@ public class Department implements Serializable{
 
     private boolean checkState;
 
+    private String canChoose;
+
+    public String getCanChoose() {
+        return canChoose;
+    }
+
+    public void setCanChoose(String canChoose) {
+        this.canChoose = canChoose;
+    }
+
     public void setCheckState(boolean checkState) {
         this.checkState = checkState;
     }

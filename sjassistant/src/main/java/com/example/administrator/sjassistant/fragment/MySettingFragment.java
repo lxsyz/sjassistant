@@ -26,6 +26,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.signature.StringSignature;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.activity.HelpActivity;
+import com.example.administrator.sjassistant.activity.MainActivity;
 import com.example.administrator.sjassistant.activity.SettingActivity;
 import com.example.administrator.sjassistant.util.BitmapCrop;
 import com.example.administrator.sjassistant.util.Constant;
@@ -75,11 +76,14 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
 
     private String portraitPath = Environment.getExternalStorageDirectory() + "/审计助理/portrait.jpg";
 //    private SharedPreferences sp;
+
+    private Context mContext;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("response", "oncreate");
 
+        mContext = MainActivity.instance;
         //回调函数赋值
         if (!(getActivity() instanceof BackHandlerInterface)) {
             throw new ClassCastException("activity case exception");
@@ -91,6 +95,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("response","oncreateview");
         View rootView = inflater.inflate(R.layout.fragment_mysetting,container,false);
         initView(rootView);
         initData();
@@ -124,9 +129,6 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
         iv_admin = (ImageView)rootView.findViewById(R.id.iv_admin);
         apartment_top = (TextView)rootView.findViewById(R.id.apartment_top);
         work_top = (TextView)rootView.findViewById(R.id.work_top);
-
-        choosePhotoWindow = new ChoosePhotoWindow(getActivity());
-
         btn_left.setVisibility(View.INVISIBLE);
         title.setText("我");
         btn_right.setImageResource(R.drawable.setting);
@@ -134,7 +136,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
 
 
         nickname_layout.setOnClickListener(this);
-        sex_layout.setOnClickListener(this);
+        //sex_layout.setOnClickListener(this);
         apartment_layout.setOnClickListener(this);
         work_layout.setOnClickListener(this);
         address_layout.setOnClickListener(this);
@@ -180,9 +182,9 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                 //textDialog.show();
                 break;
             case R.id.sex_layout:
-                SexDialog dialog = new SexDialog(getActivity());
-                dialog.setHandler(handler);
-                dialog.show();
+//                SexDialog dialog = new SexDialog(getActivity());
+//                dialog.setHandler(handler);
+//                dialog.show();
                 break;
             case R.id.apartment_layout:
 //                textDialog.show();
@@ -205,14 +207,14 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
 //                textDialog.show();
                 break;
             case R.id.address_layout:
-                textDialog.show();
-                textDialog.setMainTextVisibility(View.GONE);
-                textDialog.setVisibility(View.GONE);
-                textDialog.setCenterVisibility(View.VISIBLE);
-                textDialog.setContentVisibility(View.VISIBLE);
-                textDialog.setHandler(handler);
-                textDialog.setFlag(4);
-                textDialog.show();
+//                textDialog.show();
+//                textDialog.setMainTextVisibility(View.GONE);
+//                textDialog.setVisibility(View.GONE);
+//                textDialog.setCenterVisibility(View.VISIBLE);
+//                textDialog.setContentVisibility(View.VISIBLE);
+//                textDialog.setHandler(handler);
+//                textDialog.setFlag(4);
+//                textDialog.show();
                 break;
             case R.id.help_layout:
                 intent = new Intent(getActivity(),HelpActivity.class);
@@ -220,6 +222,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                 break;
             case R.id.photo_layout:
                 choosePhotoWindow.showChoosePhotoWindow2(root);
+                //((MainActivity)getActivity()).showChooseWindow();
 
                 break;
             case R.id.bt_right:
@@ -258,10 +261,20 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
         }
     };
 
-
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d("response","onDetach");
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("response","asdasd");
+        Log.d("response",choosePhotoWindow+" ");
+        //Log.d("response",getActivity()+" ");
+        //choosePhotoWindow = new ChoosePhotoWindow(mContext);
+
+
         choosePhotoWindow.onActivityResult(requestCode, resultCode, data,
                 new ChoosePhotoWindow.Upload() {
 
@@ -324,7 +337,8 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onResume() {
         super.onResume();
-
+        choosePhotoWindow = new ChoosePhotoWindow(getActivity());
+        Log.d("response","mysetting resumse");
         initUiData();
 
     }

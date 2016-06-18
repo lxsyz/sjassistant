@@ -5,8 +5,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
-
+import com.pgyersdk.crash.PgyCrashManager;
 import com.example.administrator.sjassistant.util.Constant;
+
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -15,12 +16,16 @@ import cn.jpush.android.api.JPushInterface;
  */
 public class MainApplication extends Application {
 
+    private static MainApplication instance;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        Log.d("activity", "main application create");
+        instance = this;
 
+        Log.d("activity", "main application create");
+        PgyCrashManager.register(this);
         JPushInterface.setDebugMode(true);
         JPushInterface.init(getApplicationContext());
         SharedPreferences editor = getSharedPreferences("disturb",MODE_PRIVATE);
@@ -37,7 +42,9 @@ public class MainApplication extends Application {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+    }
 
-
+    public static MainApplication getInstance() {
+        return instance;
     }
 }

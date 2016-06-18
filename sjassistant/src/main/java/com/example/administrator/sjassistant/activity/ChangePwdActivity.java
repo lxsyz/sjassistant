@@ -1,6 +1,7 @@
 package com.example.administrator.sjassistant.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -73,7 +74,7 @@ public class ChangePwdActivity extends BaseActivity implements View.OnClickListe
      * 修改密码
      */
     private void changePwd() {
-        String url = Constant.SERVER_URL + "setting/changePassword";
+        String url = Constant.SERVER_URL + "user/settings/changePassword";
 
         if (TextUtils.isEmpty(oldPassword.getText().toString())) {
             ToastUtil.showShort(ChangePwdActivity.this,"原密码不能为空");
@@ -93,6 +94,7 @@ public class ChangePwdActivity extends BaseActivity implements View.OnClickListe
 
         if (newPassword.getText().toString().length() < 6 || newPassword.getText().toString().length() > 12) {
             ToastUtil.showShort(ChangePwdActivity.this,"请输入6-12位的新密码");
+            return;
         }
 
         OkHttpUtils.post()
@@ -121,18 +123,30 @@ public class ChangePwdActivity extends BaseActivity implements View.OnClickListe
                                 dialog.setFlag(2);
                                 dialog.show();
 
-                                dialog.setContentText("密码修改完请重新登录");
+                                dialog.setContentText("密码修改成功,请重新登录");
                                 dialog.setOnDeleteClickListener(new ChangeNumberDialog.OnDeleteClickListener() {
                                     @Override
                                     public void onDelete(int i) {
                                         if (i == 1) {
-                                            AppManager.getInstance().finishAllActivity();
+                                            AppManager.getInstance().AppExit(ChangePwdActivity.this);
+                                            SharedPreferences.Editor editor = getSharedPreferences("userinfo",MODE_PRIVATE).edit();
+                                            editor.putString("phone",null);
+                                            editor.putString("password",null);
+                                            editor.putString("username",null);
+                                            editor.putString("name",null);
+                                            editor.putString("dept_id",null);
+                                            editor.putString("dept_name",null);
+                                            editor.putString("role_name",null);
+                                            //editor.putString("last_username",Constant.username);
+                                            editor.apply();
                                             Intent intent = new Intent(ChangePwdActivity.this,LoginActivity.class);
                                             startActivity(intent);
                                             ChangePwdActivity.this.finish();
                                         }
                                     }
                                 });
+                            } else if (statusCode == 2) {
+                                ToastUtil.showShort(ChangePwdActivity.this,"密码错误");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

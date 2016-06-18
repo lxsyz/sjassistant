@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -198,8 +199,9 @@ public class MessageDetailActivity extends BaseActivity implements View.OnClickL
 
                                 if (detail_text.contains(".htm")) {
 
-
-                                    String url = Constant.SERVER_URL + detail_text;
+                                    SharedPreferences sp2 = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+                                    String url = "http://"+sp2.getString("server_address",null)+":"+sp2.getString("server_port",null)+"/";
+                                    url = url + detail_text;
 
                                     wv.loadUrl(url);
                                 } else {

@@ -18,6 +18,8 @@ import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.view.ChangeNumberDialog;
+import com.example.administrator.sjassistant.view.MyDialog;
+import com.example.administrator.sjassistant.view.MyPromptDialog;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -39,6 +41,7 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
     private RecyclerAdapter adapter;
     private List<Person> datalist = new ArrayList<Person>();
 
+    private MyPromptDialog pd;
 
     //是否开启免提和静音
     private int open_flag = 0,voice_flag = 0;
@@ -64,6 +67,8 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
         if (datalist == null) {
             datalist = new ArrayList<>();
         }
+
+        pd = new MyPromptDialog(this);
 
         Log.d("response",datalist.size()+" ");
         Person add = new Person();
@@ -265,10 +270,13 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
      * 结束通话
      */
     private void end() {
+
+
         if (sessionId == null) {
             StartChattingActivity.this.finish();
             return;
         }
+        if (pd != null) pd.createDialog().show();
         Constant.isMaster = false;
         String url = Constant.SERVER_URL + "phone/end";
 
@@ -290,8 +298,9 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
                             JSONObject object = new JSONObject(response);
                             int statusCode = object.getInt("statusCode");
                             if (statusCode == 0) {
-
-                                ToastUtil.showShort(StartChattingActivity.this, "结束通话");
+                                if (pd != null)
+                                    pd.dismissDialog();
+                                ToastUtil.showShort(StartChattingActivity.this, "通话结束");
                                 StartChattingActivity.this.finish();
                             }
                         } catch (JSONException e) {
@@ -380,7 +389,7 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onBackPressed() {
         toastForExit();
-        super.onBackPressed();
+        //super.onBackPressed();
     }
 
     private long exitTime = 0;
@@ -446,7 +455,7 @@ public class StartChattingActivity extends BaseActivity implements View.OnClickL
 
     @Override
     protected void onDestroy() {
-        end();
+        //end();
         super.onDestroy();
     }
 }

@@ -65,6 +65,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     private String workDate;    //待办
     private String helperDate;  //小助理
     private int workCount;      //待办数量
+    private int waitCount;
     private int messageCount;
     private int notesCount;     //公告数量
     private int helperCount;
@@ -222,7 +223,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         String url = Constant.SERVER_URL + "message/show";
 
         //Constant.username = username;
-
+        Log.d("response","messae+ "+ Constant.username);
         OkHttpUtils.post()
                 .url(url)
                 .addParams("userCode",Constant.username)
@@ -250,6 +251,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                                 //helperContent = data.getString("helperContent");
                                 //helperCount = data.getString("helperCount");
                                 workCount = data.getInt("workCount");
+                                waitCount = data.optInt("waitCount");
                                 messageCount = data.getInt("messageCount");
                                 notesCount = data.getInt("notesCount");
 
@@ -264,24 +266,30 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                                 unfinished_time.setText(workDate+" ");
                                 message_time.setText(messageDate);
 
-                                if (notesCount == 0) {
-                                    gonggao_text.setText("暂时没有新公告");
-                                } else {
+//                                if (notesCount == 0) {
+//                                    gonggao_text.setText("暂时没有新公告");
+//                                } else {
                                     gonggao_text.setText(gonggaoContent);
-                                }
+//                                }
                                 if (workCount == 0) {
                                     num_unfinish.setVisibility(View.GONE);
-                                    unfinished_text.setText("暂时没有待办工作");
                                 } else {
                                     num_unfinish.setVisibility(View.VISIBLE);
                                     num_unfinish.setText(String.valueOf(workCount));
-                                    unfinished_text.setText(workCount + "个待审批单据暂未处理");
+
                                 }
-                                if (messageCount == 0) {
-                                    message_text.setText("暂时没有新的消息、通知");
+
+                                if (waitCount == 0) {
+                                    unfinished_text.setText("暂时没有待办工作");
                                 } else {
-                                    message_text.setText(messageContent);
+                                    unfinished_text.setText(waitCount + "个待审批单据暂未处理");
                                 }
+
+//                                if (messageCount == 0) {
+//                                    message_text.setText("暂时没有新的消息、通知");
+//                                } else {
+                                    message_text.setText(messageContent);
+//                                }
 
                             } else {
                                 ToastUtil.show(getActivity(), "服务器异常");
@@ -318,6 +326,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
             //printBundle(bundle);
             Log.d("response","我的推送");
             notifier.noti();
+            Log.d("response", MainActivity.isForeground + " ");
             if (JPushInterface.ACTION_REGISTRATION_ID
                     .equals(intent.getAction())) {
                 String regId = bundle
@@ -344,9 +353,11 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                     .getAction())) {
                 Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
                 // 打开自定义的Activity
+
                 if (MainActivity.isForeground) {
                     showMessage();
                 } else {
+                    Log.d("response", "[MyReceiver] 用户点击打开了通知");
                     Intent i = new Intent(context, MainActivity.class);
                     i.putExtras(bundle);
                     //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

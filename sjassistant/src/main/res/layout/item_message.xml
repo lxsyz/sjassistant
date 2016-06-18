@@ -26,6 +26,8 @@
 
             <TextView
                 android:text="@string/message"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:id="@+id/username"
                 style="@style/text1" />
 

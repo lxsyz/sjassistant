@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ExampleUtil;
 import com.example.administrator.sjassistant.util.ServerConfigUtil;
+import com.example.administrator.sjassistant.view.ChoosePhotoWindow;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,23 +97,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         initWindow();
         initView();
 
-        registerMessageReceiver();
+        //registerMessageReceiver();
 
         tags.add(String.valueOf(dept_id));
-        JPushInterface.setTags(this, tags, new TagAliasCallback() {
-            @Override
-            public void gotResult(int i, String s, Set<String> set) {
 
-            }
-        });
-        JPushInterface.setAlias(this, Constant.username,
-                new TagAliasCallback() {
-                    @Override
-                    public void gotResult(int i, String s, Set<String> set) {
-
-                    }
-                });
-
+         JPushInterface.setAliasAndTags(this, Constant.username, tags, new TagAliasCallback() {
+             @Override
+             public void gotResult(int i, String s, Set<String> set) {
+                 Log.d("response",s+" ");
+             }
+         });
 //        phoneReceiver = new PhoneReceiver();
 //        IntentFilter filter = new IntentFilter();
 //        filter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
@@ -122,9 +117,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
     private void initView() {
-        //super.initView();
-        //setCenterView(R.layout.activity_main);
-        //setTopText();
+        root = (LinearLayout)findViewById(R.id.root);
         viewPager = (ViewPager)findViewById(R.id.id_pager);
         message_layout = (RelativeLayout)findViewById(R.id.message_layout);
         myapplication_layout = (RelativeLayout)findViewById(R.id.myappication_layout);
@@ -138,6 +131,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mysetting_tv = (TextView)findViewById(R.id.mysetting_text);
         myapplication_tv = (TextView)findViewById(R.id.myappication_text);
         contacts_tv = (TextView)findViewById(R.id.contacts_text);
+        choosePhotoWindow = new ChoosePhotoWindow(this);
 
         message_layout.setOnClickListener(this);
         myapplication_layout.setOnClickListener(this);
@@ -287,6 +281,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onPause() {
         isForeground = false;
+        Log.d("response","activity onpause");
         super.onPause();
     }
 
@@ -344,10 +339,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        settingFragment = (MySettingFragment) fragmentList.get(3);
-        Log.d("tag",data+" ");
-        settingFragment.onActivityResult(requestCode,resultCode,data);
 
+
+
+        settingFragment = (MySettingFragment) fragmentList.get(3);
+
+        settingFragment.onActivityResult(requestCode, resultCode, data);
+
+
+
+//        choosePhotoWindow.onActivityResult(requestCode,resultCode,data,new ChoosePhotoWindow.Upload() {
+//
+//            @Override
+//            public void upload(String path) {
+//
+//            }
+//        });
     }
 
 
@@ -359,8 +366,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     protected void onDestroy() {
-        Log.d("activity"," main destroy");
-        unregisterReceiver(mMessageReceiver);
+        Log.d("activity", " main destroy");
+        //unregisterReceiver(mMessageReceiver);
         //unregisterReceiver(phoneReceiver);
         super.onDestroy();
     }
@@ -384,5 +391,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //            transaction.hide(from).show(to).commit();
 //        }
 //    }
+
+    private ChoosePhotoWindow choosePhotoWindow;
+    private LinearLayout root;
+    public void showChooseWindow() {
+        choosePhotoWindow.showChoosePhotoWindow2(root);
+    }
 
 }

@@ -223,19 +223,19 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
                                         datalist = gson.fromJson(list.toString(), new TypeToken<List<ContactsPerson>>() {
                                         }.getType());
 
-                                        if (commonAdapter != null) {
-                                            commonAdapter.updateListView(datalist);
-                                        } else {
-                                            commonAdapter = new CommonAdapter<ContactsPerson>(CustomerContactsActivity.this, datalist, R.layout.item_choose_customer) {
-                                                @Override
-                                                public void convert(ViewHolder holder, ContactsPerson cp) {
-                                                    holder.setText(R.id.customer_name, cp.getCustomerName());
-                                                }
-                                            };
-                                            customer_list.setAdapter(commonAdapter);
-                                        }
                                     } else {
                                         text.setText("没有客户");
+                                    }
+                                    if (commonAdapter != null) {
+                                        commonAdapter.updateListView(datalist);
+                                    } else {
+                                        commonAdapter = new CommonAdapter<ContactsPerson>(CustomerContactsActivity.this, datalist, R.layout.item_choose_customer) {
+                                            @Override
+                                            public void convert(ViewHolder holder, ContactsPerson cp) {
+                                                holder.setText(R.id.customer_name, cp.getCustomerName());
+                                            }
+                                        };
+                                        customer_list.setAdapter(commonAdapter);
                                     }
                                 }
                             } else {
@@ -341,17 +341,17 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
         customer_list.setVisibility(View.VISIBLE);
         search_list.setVisibility(View.GONE);
         List<ContactsPerson> filterList = new ArrayList<>();
-
+        text.setText("选择客户");
         if (TextUtils.isEmpty(tex)) {
             filterList = datalist;
-            text.setText("选择客户");
+
         } else {
             filterList.clear();
-//            for (ContactsPerson person:datalist) {
-//                if (person.getCustomerName().contains(tex)) {
-//                    filterList.add(person);
-//                }
-//            }
+            for (ContactsPerson person:datalist) {
+                if (person.getCustomerName().contains(tex)) {
+                    filterList.add(person);
+                }
+            }
         }
         commonAdapter.updateListView(filterList);
     }

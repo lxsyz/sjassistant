@@ -76,7 +76,7 @@ public class InspectActivity extends FragmentActivity implements View.OnClickLis
 
         if (TextUtils.isEmpty(sp.getString("server_address", null))) {
             Constant.SERVER_URL = Constant.TEST_SERVER_URL;
-            ServerConfigUtil.setServerConfig("219.234.5.13", "8080");
+            //ServerConfigUtil.setServerConfig(this,"219.234.5.13", "8080");
         } else {
             ServerConfigUtil.setServerConfig(this);
         }

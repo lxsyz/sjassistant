@@ -27,6 +27,8 @@
             android:background="@drawable/border"
             android:ellipsize="end"
             android:singleLine="true"
+            android:textColor="@color/my_black"
+            android:text=""
             android:layout_width="0dp"
             android:layout_weight="1"
             android:focusable="false"

@@ -13,14 +13,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.sjassistant.util.AppManager;
+import com.example.administrator.sjassistant.util.AppUtil;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.DataCleanManager;
 import com.example.administrator.sjassistant.util.ErrorUtil;
 import com.example.administrator.sjassistant.view.ChangeNumberDialog;
 import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.R;
+import com.pgyersdk.update.PgyUpdateManager;
+import com.pgyersdk.update.UpdateManagerListener;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
@@ -34,7 +40,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private RelativeLayout changeEmail,changePwd,changeServer,clearCache,update,noDisturb,prompt;
     private Button quit;
 
-    private TextView cache_size,changeEmail_text;
+    private TextView cache_size,changeEmail_text,version;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +64,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
         cache_size = (TextView)findViewById(R.id.cache_size);
         changeEmail_text = (TextView)findViewById(R.id.changeEmail_text);
+        version = (TextView)findViewById(R.id.version);
 
+
+        version.setText("V"+Constant.version);
         SharedPreferences sp = getSharedPreferences("userinfo",MODE_PRIVATE);
         String email = sp.getString("email",null);
         if (email != null) {
@@ -79,8 +88,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        MyDialog dialog = new MyDialog(SettingActivity.this,R.style.dialog_style);
-        ChangeNumberDialog dialog2 = new ChangeNumberDialog(SettingActivity.this,R.style.dialog_style);
+        final MyDialog dialog = new MyDialog(SettingActivity.this,R.style.dialog_style);
+        final ChangeNumberDialog dialog2 = new ChangeNumberDialog(SettingActivity.this,R.style.dialog_style);
         Intent intent = null;
         switch (v.getId()) {
             case R.id.changeEmail:
@@ -121,12 +130,50 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 //                dialog.show();
                 break;
             case R.id.update:
-//                dialog =
-                dialog.show();
-                dialog.setMain_text("当前版本已是最新版本");
-                dialog.setVisibility(View.GONE);
-                dialog.setCenterVisibility(View.VISIBLE);
-                dialog.show();
+
+                PgyUpdateManager.register(SettingActivity.this,new UpdateManagerListener() {
+                    @Override
+                    public void onNoUpdateAvailable() {
+                        // TODO Auto-generated method stub
+                        //Toast.makeText(SettingActivity.this, "已经是最新的版本", Toast.LENGTH_SHORT).show();
+
+                        dialog.show();
+                        dialog.setMain_text("当前版本已是最新版本");
+                        dialog.setVisibility(View.GONE);
+                        dialog.setCenterVisibility(View.VISIBLE);
+                        dialog.show();
+                    }
+
+                    @Override
+                    public void onUpdateAvailable(final String s) {
+                        Log.d("response",s);
+
+                        dialog2.setFlag(3);
+                        dialog2.show();
+
+                        dialog2.setContentText("检测到有新的版本,是否立即下载？");
+                        dialog2.setOnDeleteClickListener(new ChangeNumberDialog.OnDeleteClickListener() {
+                            @Override
+                            public void onDelete(int i) {
+                                if (i == 1) {
+                                    JSONObject object = null;
+                                    try {
+                                        object = new JSONObject(s);
+                                        JSONObject data = object.optJSONObject("data");
+                                        String downloadUrl = data.optString("downloadURL");
+
+                                        AppUtil.startDownload(getApplicationContext(), downloadUrl, "用友审计助理.apk");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        });
+
+
+                    }
+                });
+
                 break;
             case R.id.noDisturb:
                 intent = new Intent(SettingActivity.this,NoDisturbActivity.class);
@@ -154,7 +201,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                             editor.putString("dept_id",null);
                             editor.putString("dept_name",null);
                             editor.putString("role_name",null);
-                            editor.putString("last_username",Constant.username);
+                            //editor.putString("last_username",Constant.username);
                             editor.apply();
 
                             AppManager.getInstance().AppExit(SettingActivity.this);
@@ -188,9 +235,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /*
-         * 检测新版本
-         */
+    /**
+     * 检测新版本
+     */
     private void checkNewVersion () {
         String url = Constant.SERVER_URL + "";
 

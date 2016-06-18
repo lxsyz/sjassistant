@@ -2,6 +2,7 @@ package com.example.administrator.sjassistant.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,36 +41,51 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        if (getItemCount() == 10) {
-            holder.iv.setVisibility(View.GONE);
-        } else {
-            holder.iv.setVisibility(View.VISIBLE);
-        }
+
+        holder.iv.setVisibility(View.VISIBLE);
+        holder.tv.setVisibility(View.VISIBLE);
 
         if (position == getItemCount() - 1) {
-            holder.iv.setImageResource(R.drawable.add02);
-            holder.tv.setText("添加人员");
-            holder.itemView.setTag("add");
 
-        } else {
-            if (position == 0) {
-                String imgUrl =  Constant.SERVER_URL + "images/" + mDatas.get(0).getUserCode() + ".jpg";
-                Glide.with(mContext).load(imgUrl)
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .error(R.drawable.customer_de).into(holder.iv);
-            } else if (mDatas.get(position).getUserCode() != null) {
-                String imgUrl = Constant.SERVER_URL + "images/" + mDatas.get(position).getUserCode() + ".jpg";
-                Glide.with(mContext).load(imgUrl)
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .error(R.drawable.customer_de).into(holder.iv);
+            if (getItemCount() == 10) {
+                holder.iv.setVisibility(View.GONE);
+                holder.tv.setVisibility(View.GONE);
+                holder.itemView.setTag("add");
             } else {
-                holder.iv.setImageResource(R.drawable.customer_de);
+                holder.iv.setVisibility(View.VISIBLE);
+                holder.tv.setVisibility(View.VISIBLE);
+                holder.iv.setImageResource(R.drawable.add02);
+                holder.tv.setText("添加人员");
+                holder.itemView.setTag("add");
             }
+        } else {
+            String imgUrl = Constant.SERVER_URL + "images/" + mDatas.get(position).getUserCode() + ".jpg";
+            Glide.with(mContext).load(imgUrl)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .error(R.drawable.customer_de).into(holder.iv);
+//            if (position == 0) {
+//                String imgUrl =  Constant.SERVER_URL + "images/" + mDatas.get(0).getUserCode() + ".jpg";
+//                Glide.with(mContext).load(imgUrl)
+//                        .skipMemoryCache(true)
+//                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                        .error(R.drawable.customer_de).into(holder.iv);
+//            } else {
+//
+//                String imgUrl = Constant.SERVER_URL + "images/" + mDatas.get(position).getUserCode() + ".jpg";
+//                Glide.with(mContext).load(imgUrl)
+//                        .skipMemoryCache(true)
+//                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                        .error(R.drawable.customer_de).into(holder.iv);
+//            }
 
-            holder.tv.setText(mDatas.get(position).getLinkName());
+            if (TextUtils.isEmpty(mDatas.get(position).getLinkName().trim())) {
+                holder.tv.setText(mDatas.get(position).getLinkPhone());
+            } else {
+                holder.tv.setText(mDatas.get(position).getLinkName());
+            }
             Log.d("position",position+" ");
+
             holder.itemView.setTag(mDatas.get(position));
         }
 
@@ -118,7 +134,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         for (int i = 0;i < mDatas.size() - 1;i++) {
             if (mDatas.get(i).equals(person)) {
                 mDatas.remove(i);
-                notifyItemRemoved(i);
+                //notifyItemRemoved(i);
+                notifyDataSetChanged();
                 break;
             }
         }

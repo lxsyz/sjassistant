@@ -215,10 +215,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                     String dept_name = data.optString("dept_name");
                                     String role_name = data.optString("role_name");
                                     String name = data.optString("userName");
+                                    String userCode = data.optString("userCode");
                                     SharedPreferences sp = getSharedPreferences("userinfo", MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sp.edit();
-                                    Constant.username = et_username.getText().toString();
-                                    editor.putString("username", et_username.getText().toString());
+                                    Constant.username = userCode;
+                                    editor.putString("username", userCode);
                                     editor.putString("last_username",et_username.getText().toString());
                                     editor.putString("name",name);
                                     editor.putString("password", et_password.getText().toString());

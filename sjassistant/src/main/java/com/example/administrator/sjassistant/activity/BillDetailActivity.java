@@ -538,7 +538,11 @@ public class BillDetailActivity extends BaseActivity {
                     root.addView(lineView);
                 }
                 needLine = true;
-                ((TextView)holders[i]).setText(this.datas.get(position).get(from[i]).toString());
+                if (this.datas.get(position).get(from[i]) != null) {
+                    ((TextView) holders[i]).setText(this.datas.get(position).get(from[i]).toString());
+                } else {
+                    ((TextView) holders[i]).setText("");
+                }
                 //((TextView)holders[i]).setTag(position+" "+i);
                 root.addView(holders[i]);
             }

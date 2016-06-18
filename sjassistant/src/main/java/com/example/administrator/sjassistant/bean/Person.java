@@ -102,7 +102,7 @@ public class Person implements Serializable{
 
     private String linkName;
 
-    private String linkPhone;
+    private String linkPhone = "";
 
     private String userCode;
 

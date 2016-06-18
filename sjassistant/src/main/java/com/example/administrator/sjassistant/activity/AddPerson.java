@@ -10,9 +10,11 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,6 +36,8 @@ import com.example.administrator.sjassistant.util.ServerConfigUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.view.MyDialog;
 import com.example.administrator.sjassistant.view.MyPromptDialog;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -60,6 +64,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
     private String name;
     private ListView apartment_list;
     private ListView contact_list;
+    private ListView search_list;
     private TextView text_add_person;
     private View v;
     /*
@@ -72,6 +77,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
     private List<Department> departmentData = new ArrayList<Department>();
     private CommonAdapter<MyContacts> contactAdapter;
     private CommonAdapter<Department> departmentAdapter;
+    private CommonAdapter<MyContacts> searchAdapter;
 
     /*
      * 已添加的成员数目
@@ -137,6 +143,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
 
         apartment_list = (ListView)findViewById(R.id.apartment_list);
         contact_list = (ListView)findViewById(R.id.manager_list);
+        search_list = (ListView)findViewById(R.id.search_list);
 
         tv_center.setText("添加联系人");
         bt_left = (TextView) findViewById(R.id.bt_left2);
@@ -185,6 +192,32 @@ public class AddPerson extends Activity implements View.OnClickListener {
             }
         });
 
+        search_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MyContacts m = (MyContacts) search_list.getItemAtPosition(position);
+                ImageView iv = (ImageView) view.findViewById(R.id.iv_checked);
+
+                if (m.isCheckState()) {
+                    m.setCheckState(false);
+                    iv.setImageResource(R.drawable.radio_unchecked);
+                    count--;
+                    result.remove(m);
+                } else {
+                    m.setCheckState(true);
+                    iv.setImageResource(R.drawable.radio_checked);
+                    count++;
+                    result.add(m);
+                }
+                searchAdapter.notifyDataSetChanged();
+                if (count != 0) {
+                    bt_right.setText("确定(" + count + ")");
+                } else {
+                    bt_right.setText("确定");
+                }
+            }
+        });
+
         apartment_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -221,6 +254,21 @@ public class AddPerson extends Activity implements View.OnClickListener {
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+
+        ed_name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || actionId == EditorInfo.IME_ACTION_GO) {
+
+                    //queryUserByType(ed_name.getText().toString());
+                    queryPerson(ed_name.getText().toString());
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -285,9 +333,11 @@ public class AddPerson extends Activity implements View.OnClickListener {
                                     }
                                     text_add_person.setText("选择部门");
                                 } else if (lenU != 0) {
+                                    isDividerShow = false;
                                     v.setVisibility(View.GONE);
                                     text_add_person.setText("选择联系人");
                                 } else {
+                                    isDividerShow = false;
                                     v.setVisibility(View.GONE);
                                     text_add_person.setText("没有更多的联系人了");
                                 }
@@ -338,7 +388,23 @@ public class AddPerson extends Activity implements View.OnClickListener {
 
         if (TextUtils.isEmpty(text)) {
             filterList = contactData;
+
+            //控制部门与联系人之间分割区域的显示
+            if (isDividerShow) {
+                text_add_person.setText("选择部门");
+                v.setVisibility(View.VISIBLE);
+            } else {
+                text_add_person.setText("选择联系人");
+                v.setVisibility(View.GONE);
+            }
+            search_list.setVisibility(View.GONE);
+            apartment_list.setVisibility(View.VISIBLE);
+            contact_list.setVisibility(View.VISIBLE);
         } else {
+            text_add_person.setText("选择联系人");
+            apartment_list.setVisibility(View.GONE);
+            v.setVisibility(View.GONE);
+            contact_list.setVisibility(View.VISIBLE);
             filterList.clear();
             for (MyContacts contacts:contactData) {
                 if (contacts.getTrueName() != null) {
@@ -389,37 +455,37 @@ public class AddPerson extends Activity implements View.OnClickListener {
                     //AddPersonManager.getInstance().finishAllActivity();
                 } else {
                     //已废弃
-                    if (count > 8) {
-                        MyDialog dialog = new MyDialog(AddPerson.this, R.style.dialog_style);
-                        dialog.show();
-                        dialog.setMain_text("多方通话最多允许添加8个人");
-                        dialog.setVisibility(View.GONE);
-                        dialog.setCenterVisibility(View.VISIBLE);
-                    } else {
-                        List<Person> personList = new ArrayList<>();
-                        for (MyContacts m : result) {
-                            Person person = new Person();
-                            person.setLinkPhone(m.getPhone());
-                            person.setLinkName(m.getTrueName());
-                            person.setUserCode(m.getUserCode());
-                            personList.add(person);
-                        }
-                        Intent intent = null;
-                        if (from == 2) {
-                            intent = new Intent(AddPerson.this,StartChattingActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("personList",(ArrayList)personList);
-                            bundle.putInt("add",1);
-                            intent.putExtras(bundle);
-                        } else {
-                            intent = new Intent(AddPerson.this,MoreContact.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("personList",(ArrayList)personList);
-                            intent.putExtras(bundle);
-                        }
-
-                        startActivity(intent);
-                    }
+//                    if (count > 8) {
+//                        MyDialog dialog = new MyDialog(AddPerson.this, R.style.dialog_style);
+//                        dialog.show();
+//                        dialog.setMain_text("多方通话最多允许添加8个人");
+//                        dialog.setVisibility(View.GONE);
+//                        dialog.setCenterVisibility(View.VISIBLE);
+//                    } else {
+//                        List<Person> personList = new ArrayList<>();
+//                        for (MyContacts m : result) {
+//                            Person person = new Person();
+//                            person.setLinkPhone(m.getPhone());
+//                            person.setLinkName(m.getTrueName());
+//                            person.setUserCode(m.getUserCode());
+//                            personList.add(person);
+//                        }
+//                        Intent intent = null;
+//                        if (from == 2) {
+//                            intent = new Intent(AddPerson.this,StartChattingActivity.class);
+//                            Bundle bundle = new Bundle();
+//                            bundle.putSerializable("personList",(ArrayList)personList);
+//                            bundle.putInt("add",1);
+//                            intent.putExtras(bundle);
+//                        } else {
+//                            intent = new Intent(AddPerson.this,MoreContact.class);
+//                            Bundle bundle = new Bundle();
+//                            bundle.putSerializable("personList",(ArrayList)personList);
+//                            intent.putExtras(bundle);
+//                        }
+//
+//                        startActivity(intent);
+//                    }
                 }
                 break;
         }
@@ -457,4 +523,77 @@ public class AddPerson extends Activity implements View.OnClickListener {
         super.onBackPressed();
         //AddPersonManager.getInstance().finishActivity();
     }
+
+    /**
+     * 搜索人员
+     */
+    private void queryPerson(String name) {
+        String url = Constant.SERVER_URL + "message/queryPerson";
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("id", String.valueOf(id))
+                .addParams("userCode",Constant.username)
+                .addParams("personName",name)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        Log.d("error", e.getMessage() + " ");
+                        ErrorUtil.NetWorkToast(AddPerson.this);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response + " ");
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            int statusCode = object.getInt("statusCode");
+                            Log.d("statusCode", statusCode + " ");
+                            if (statusCode == 0) {
+                                JSONObject data = object.getJSONObject("data");
+
+                                Gson gson = new Gson();
+                                if (data != null && data.length() != 0) {
+
+                                    JSONArray list = data.optJSONArray("listu");
+                                    if (list.length() != 0) {
+                                        v.setVisibility(View.GONE);
+                                        search_list.setVisibility(View.VISIBLE);
+                                        apartment_list.setVisibility(View.GONE);
+                                        contact_list.setVisibility(View.GONE);
+                                        text_add_person.setText("搜索结果");
+                                        List<MyContacts> contactData = gson.fromJson(list.toString(), new TypeToken<List<MyContacts>>() {
+                                        }.getType());
+
+                                        if (searchAdapter != null) {
+                                            searchAdapter.updateListView(contactData);
+                                        } else {
+                                            searchAdapter = new CommonAdapter<MyContacts>(AddPerson.this, contactData, R.layout.item_add_person) {
+                                                @Override
+                                                public void convert(final ViewHolder holder, final MyContacts contact) {
+                                                    holder.getView(R.id.right_arrow1).setVisibility(View.INVISIBLE);
+                                                    holder.setText(R.id.group, contact.getRoleName());
+                                                    holder.setText(R.id.name, contact.getTrueName());
+                                                }
+                                            };
+                                            search_list.setAdapter(searchAdapter);
+                                        }
+                                    } else {
+                                        search_list.setVisibility(View.GONE);
+                                        text_add_person.setText("无搜索结果");
+                                    }
+                                }
+                            } else {
+                                ToastUtil.show(AddPerson.this, "服务器异常");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private boolean isDividerShow = true;
 }

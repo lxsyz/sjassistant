@@ -30,6 +30,16 @@ public class Bill implements Serializable{
 
     private String billTypeChina;
 
+    private String username;
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
     private boolean deal = false;
 
     public boolean isDeal() {

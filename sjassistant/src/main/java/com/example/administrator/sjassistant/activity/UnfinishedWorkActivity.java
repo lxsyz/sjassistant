@@ -170,18 +170,9 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
                                 int len = list.length();
                                 Gson gson = new Gson();
                                 if (len != 0 ) {
-                                    //for (int i = 0;i < len;i++) {
-//                                        Bill bill = new Bill();
-//                                        JSONObject o = list.getJSONObject(i);
-//                                        bill.setId(o.getInt("id"));
-//                                        bill.setBillId(o.getInt("billId"));
-//                                        bill.setBillType(o.getString("billType"));
-//                                        bill.setUserCode(o.getString("userCode"));
-//                                        bill.setDealTime(o.getString("dealTime"));
-//                                        bill.setDealResult(o.getString("dealResult"));
-                                        //datalist.add(bill);
-                                        datalist = gson.fromJson(list.toString(),new TypeToken<List<Bill>>(){}.getType());
-                                    //}
+
+                                    datalist = gson.fromJson(list.toString(),new TypeToken<List<Bill>>(){}.getType());
+
                                 }
 
 

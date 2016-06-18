@@ -25,7 +25,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:text="jimmy的单据需要你审批"
+            android:ellipsize="end"
+            android:maxEms="11"
+            android:text="E李测试01044的单据需要你审批"
             android:textColor="@color/my_black"
             android:textSize="16sp" />
 

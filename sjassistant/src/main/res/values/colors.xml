@@ -19,7 +19,7 @@
 
     <color name="change">#f7f7f7</color>
     <color name="unread">#ff7676</color>
-    <color name="read">#D8EFE5</color>
+    <color name="read">#2DB68E</color>
 
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="background_tab">#38b994</color>

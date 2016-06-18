@@ -2,15 +2,21 @@ package com.example.administrator.sjassistant.util;
 
 import android.util.SparseArray;
 
+import com.example.administrator.sjassistant.bean.Department;
 import com.example.administrator.sjassistant.bean.DownloadHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Administrator on 2016/3/28.
  */
 public class Constant {
+    public static final String APPID = "1f03e6208426181ecd28b08ebb2c2a73";
+
+
     public static int gender = 1;
     public static String work;      //职务
     public static String apartment; //部门
@@ -43,4 +49,8 @@ public class Constant {
 
     //判断是否是主持人
     public static boolean isMaster = false;
+
+    //存储添加部门时的部门
+    public static List<Department> result = new ArrayList<>();
+    public static int count = 0;
 }

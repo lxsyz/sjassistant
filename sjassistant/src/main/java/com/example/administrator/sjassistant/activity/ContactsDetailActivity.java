@@ -135,23 +135,27 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
 
 
 
-//        sortListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Log.d("position", position + " ");
-//                Person person = new Person();
-//                Intent intent = new Intent(ContactsDetailActivity.this, PersonDetail.class);
-//                Bundle bundle = new Bundle();
-//                person.setLinkName(datalist.get(position).getName());
-//                person.setLinkPhone(datalist.get(position).getPhoneNumber());
+        sortListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("position", position + " ");
+                Person person = new Person();
+                Intent intent = new Intent(ContactsDetailActivity.this, PersonDetail.class);
+                Bundle bundle = new Bundle();
+                person.setLinkName(datalist.get(position).getName());
+                person.setLinkPhone(datalist.get(position).getPhoneNumber());
 //                person.setCustomerType(datalist.get(position).getCustomerType());
 //                person.setCustomerDept(datalist.get(position).getCustomerDept());
 //                person.setCustomerPost(datalist.get(position).getCustomerPost());
-//                bundle.putSerializable("person", person);
-//                intent.putExtras(bundle);
-//                startActivity(intent);
-//            }
-//        });
+                person.setCustomerTypeName(datalist.get(position).getCustomerTypeName());
+                person.setCustomerName(datalist.get(position).getGroup());
+                person.setDeptName(datalist.get(position).getCustomerDeptName());
+                person.setPostName(datalist.get(position).getCustomerPostName());
+                bundle.putSerializable("person", person);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -354,6 +358,9 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
             sortModel.setPhoneNumber(data.get(i).getPhone());
             sortModel.setGroup(data.get(i).getDeptName());
             sortModel.setUserCode(data.get(i).getUserCode());
+            sortModel.setCustomerTypeName(data.get(i).getCustomerTypeName());
+            sortModel.setCustomerDeptName(data.get(i).getCustomerDeptName());
+            sortModel.setCustomerPostName(data.get(i).getCustomerPostName());
             //sortModel.setCustomerDept(data.get(i).get);
             //汉字转换成拼音
             String pinyin = OperatorUtil.getFirstChar(name);
@@ -383,9 +390,13 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
             sortModel.setName(name);
             sortModel.setPhoneNumber(data.get(i).getLinkPhone());
             sortModel.setGroup(data.get(i).getCustomerName());
-            sortModel.setCustomerDept(data.get(i).getCustomerDept());
-            sortModel.setCustomerPost(data.get(i).getCustomerPost());
-            sortModel.setCustomerType(data.get(i).getCustomerType());
+//            sortModel.setCustomerDept(data.get(i).);
+//            sortModel.setCustomerPost(data.get(i).getCustomerPost());
+//            sortModel.setCustomerType(data.get(i).getCustomerType());
+
+            sortModel.setCustomerTypeName(data.get(i).getCustomerTypeName());
+            sortModel.setCustomerDeptName(data.get(i).getCustomerDeptName());
+            sortModel.setCustomerPostName(data.get(i).getCustomerPostName());
             sortModel.setUserCode(data.get(i).getUserCode());
             //汉字转换成拼音
             String pinyin = OperatorUtil.getFirstChar(name);
