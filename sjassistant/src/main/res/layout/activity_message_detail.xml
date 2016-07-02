@@ -41,6 +41,9 @@
                 android:textColor="@color/my_light_gray"
                 android:textSize="12sp"
                 android:text="发布人:   张三"
+                android:maxEms="12"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

@@ -50,6 +50,8 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
     private MyPromptDialog pd;
 
     private List<MyContacts> readerList = new ArrayList<>();
+
+    private String data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,23 +108,26 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
     @Override
     protected void onNewIntent(Intent intent) {
         readerList.clear();
-        readerList = (ArrayList<MyContacts>)intent.getSerializableExtra("result");
-
-        StringBuilder sb = new StringBuilder();
-
-        if (readerList.size() > 0) {
-            boolean need = false;
-
-            for (MyContacts i : readerList) {
-                if (need) {
-                    sb.append(",");
-                }
-                sb.append(i.getTrueName());
-                need = true;
-            }
+        //readerList = (ArrayList<MyContacts>)intent.getSerializableExtra("result");
+        String str = intent.getStringExtra("result");
+        data = intent.getStringExtra("data");
+        Log.d("response",data+" ");
+//        StringBuilder sb = new StringBuilder();
+//
+//        if (readerList.size() > 0) {
+//            boolean need = false;
+//
+//            for (MyContacts i : readerList) {
+//                if (need) {
+//                    sb.append(",");
+//                }
+//                sb.append(i.getTrueName());
+//                need = true;
+//            }
+//        }
+        if (str != null) {
+            message_reader.setText(str);
         }
-
-        message_reader.setText(sb.toString());
         message_reader.setSelection(message_reader.getText().length());
 
         super.onNewIntent(intent);
@@ -131,6 +136,8 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
     @Override
     protected void onResume() {
         super.onResume();
+        Constant.contactResult.clear();
+        Constant.contactCount = 0;
     }
 
     @Override
@@ -195,10 +202,10 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
 
         OkHttpUtils.post()
                 .url(url)
-                .addParams("messagePublisher",Constant.username)
-                .addParams("messageTitle",message_title.getText().toString())
+                .addParams("messagePublisher", Constant.username)
+                .addParams("messageTitle", message_title.getText().toString())
                 .addParams("messageDetail",message_content.getText().toString())
-                .addParams("messageReader",getReader())
+                .addParams("messageReader",data)
                 .build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
@@ -212,12 +219,12 @@ public class PostMessageActivity extends Activity implements View.OnClickListene
                 try {
                     JSONObject object = new JSONObject(response);
                     int statusCode = object.getInt("statusCode");
-                    Log.d("statusCode",statusCode+" ");
+                    Log.d("statusCode", statusCode + " ");
                     if (statusCode == 0) {
-                        ToastUtil.showShort(PostMessageActivity.this,"发布成功");
+                        ToastUtil.showShort(PostMessageActivity.this, "发布成功");
                         PostMessageActivity.this.finish();
                     } else {
-                        ToastUtil.showShort(PostMessageActivity.this,"服务器异常");
+                        ToastUtil.showShort(PostMessageActivity.this, "服务器异常");
                     }
 
                 } catch (JSONException e) {

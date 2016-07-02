@@ -1,16 +1,21 @@
 package com.example.administrator.sjassistant.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,6 +54,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import okhttp3.Call;
 
@@ -74,7 +81,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
 
     private String imgPath;
 
-    private String portraitPath = Environment.getExternalStorageDirectory() + "/审计助理/portrait.jpg";
+    private String portraitPath = Environment.getExternalStorageDirectory() + "/" + FileUtil.getPhotoFileName();
 //    private SharedPreferences sp;
 
     private Context mContext;
@@ -172,13 +179,13 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
 
         switch (v.getId()) {
             case R.id.nickname_layout:
-                textDialog.show();
-                textDialog.setMainTextVisibility(View.GONE);
-                textDialog.setVisibility(View.GONE);
-                textDialog.setCenterVisibility(View.VISIBLE);
-                textDialog.setContentVisibility(View.VISIBLE);
-                textDialog.setHandler(handler);
-                textDialog.setFlag(1);
+//                textDialog.show();
+//                textDialog.setMainTextVisibility(View.GONE);
+//                textDialog.setVisibility(View.GONE);
+//                textDialog.setCenterVisibility(View.VISIBLE);
+//                textDialog.setContentVisibility(View.VISIBLE);
+//                textDialog.setHandler(handler);
+//                textDialog.setFlag(1);
                 //textDialog.show();
                 break;
             case R.id.sex_layout:
@@ -221,6 +228,8 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                 startActivity(intent);
                 break;
             case R.id.photo_layout:
+                if (Build.VERSION.SDK_INT > 21)
+                    requestPermission();
                 choosePhotoWindow.showChoosePhotoWindow2(root);
                 //((MainActivity)getActivity()).showChooseWindow();
 
@@ -280,27 +289,26 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
 
                     @Override
                     public void upload(String path) {
-                        // TODO Auto-generated method stub
-                        Log.d("response", "path=" + path);
 
-                        if (path != null) {
-
-                            Bitmap bitmap1 = FileUtil.getSmallBitmap(path, 200, 200);
-                            bitmap1 = BitmapCrop.SquareCrop(bitmap1,false);
+                        //if (path != null) {
+                            Bitmap bitmap1 = FileUtil.getSmallBitmap(Constant.imgPath, 200, 200);
+                        Log.d("response",bitmap1+" ");
+                        bitmap1 = BitmapCrop.SquareCrop(bitmap1, false);
+                            Log.d("response",bitmap1+" ");
                             if (bitmap1 == null) {
-                                Toast.makeText(getActivity(), "头像文件不存在", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getActivity(), "头像文件不存在", Toast.LENGTH_SHORT).show();
                                 user_photo.setImageResource(R.drawable.customer_de);
                             } else {
 
                                 //压缩后的临时图片文件
                                 File f = new File(portraitPath);
-                                if (!f.exists()) {
-                                    try {
-                                        f.createNewFile();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
+//                                if (!f.exists()) {
+//                                    try {
+//                                        f.createNewFile();
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
                                 try {
 
                                     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
@@ -327,7 +335,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                         }
 
 
-                    }
+                    //}
 
                 });
 
@@ -338,7 +346,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
     public void onResume() {
         super.onResume();
         choosePhotoWindow = new ChoosePhotoWindow(getActivity());
-        Log.d("response","mysetting resumse");
+        Log.d("response", "mysetting resumse");
         initUiData();
 
     }
@@ -348,11 +356,17 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
      */
     private void uploadImg(final File file) {
         String url = Constant.SERVER_URL + "user/settings/changePortrait";
+        String usercode = "";
+        try {
+            usercode = URLEncoder.encode(Constant.username,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         OkHttpUtils.post()
                 .url(url)
                 .addParams("userCode", Constant.username)
-                .addFile("image", Constant.username+".jpg", file)
+                .addFile("image", usercode+".jpg", file)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -376,7 +390,7 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
         //sp = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         //imgPath = sp.getString("imgPath", null);
         getUserImg();
-
+        //getImg();
 
         //获取用户信息
         getUserData();
@@ -384,21 +398,57 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
 
     }
 
-    /*
+    /**
      *
      */
     private void getUserImg() {
-        String url = Constant.SERVER_URL + "images/"+Constant.username+".jpg";
-        Log.d("response",url);
-        Glide.with(getActivity()).load(url)
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                //.placeholder(R.drawable.customer_de)
-                .error(R.drawable.customer_de)
-                .into(user_photo);
-
-
+        try {
+            String usercode = URLEncoder.encode(Constant.username, "utf-8");
+            String url = Constant.SERVER_URL + "images/"+usercode+".jpg";
+            Log.d("response",url);
+            Glide.with(getActivity()).load(url)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            //.placeholder(R.drawable.customer_de)
+                    .error(R.drawable.customer_de)
+                    .into(user_photo);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
+
+    private void getImg() {
+        try {
+            String usercode = URLEncoder.encode(Constant.username, "utf-8");
+            String url = Constant.SERVER_URL + "user/getPortrait";
+            Log.d("response",url);
+
+            OkHttpUtils.get()
+                    .url(url)
+                    .addParams("userCode",usercode+".jpg")
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("response",response);
+                        }
+                    });
+//            Glide.with(getActivity()).load(url)
+//                    .skipMemoryCache(true)
+//                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                            //.placeholder(R.drawable.customer_de)
+//                    .error(R.drawable.customer_de)
+//                    .into(user_photo);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
     /*
      * 获取用户信息
      */
@@ -432,9 +482,10 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
                                 String address = data.optString("address");
                                 String email = data.optString("email");
                                 SharedPreferences.Editor editor = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE).edit();
-                                editor.putString("email",email);
+                                if (email != null)
+                                    editor.putString("email",email);
 
-                                editor.commit();
+                                editor.apply();
                                 if (!TextUtils.isEmpty(user)) {
                                     nickname_text.setText(user);
                                     username.setText(user);
@@ -529,5 +580,34 @@ public class MySettingFragment extends Fragment implements View.OnClickListener 
     public void onStart() {
         super.onStart();
         backHandlerInterface.setSelectedFragment(this);
+    }
+
+
+    public void requestPermission() {
+        if((ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+                || (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED))
+
+        {
+            ActivityCompat.requestPermissions
+                    (getActivity(), new String[]{
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    }, 123);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == 123) {
+            if (grantResults[0] ==  PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+                choosePhotoWindow.closeChoosePhotoWindow();
+                Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

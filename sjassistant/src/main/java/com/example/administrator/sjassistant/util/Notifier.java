@@ -47,7 +47,6 @@ public class Notifier {
             }
 
             if (isNotificationVibrateEnabled()) {
-                Log.d("tag","vibrate true");
                 builder.notificationDefaults |= Notification.DEFAULT_VIBRATE;
             }
             //JPushInterface.setPushNotificationBuilder(1,builder);

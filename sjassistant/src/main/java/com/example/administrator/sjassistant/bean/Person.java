@@ -106,34 +106,38 @@ public class Person implements Serializable{
 
     private String userCode;
 
-    private String postName;
+    private String customerPostName;
 
-    private String deptName;
+    private String customerDeptName;
 
     private String customerTypeName;
+
+    public void setCustomerPostName(String customerPostName) {
+        this.customerPostName = customerPostName;
+    }
+
+
+    public void setCustomerDeptName(String customerDeptName) {
+        this.customerDeptName = customerDeptName;
+    }
+
+    public String getCustomerPostName() {
+        return customerPostName;
+    }
+
+    public String getCustomerDeptName() {
+        return customerDeptName;
+    }
 
     public String getCustomerTypeName() {
         return customerTypeName;
     }
 
-    public String getDeptName() {
-        return deptName;
-    }
 
-    public String getPostName() {
-        return postName;
-    }
 
     public void setCustomerTypeName(String customerTypeName) {
         this.customerTypeName = customerTypeName;
     }
 
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
-    }
-
-    public void setPostName(String postName) {
-        this.postName = postName;
-    }
 }
 

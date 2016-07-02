@@ -123,11 +123,7 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
             name.setText(bill.getUsername());
             time.setText(bill.getDealTime());
 
-            String url = Constant.SERVER_URL + "images/" + bill.getUserCode()+".jpg";
-            Glide.with(BillInspectActivity.this).load(url)
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .error(R.drawable.customer_de).into(iv_person);
+
         }
 
         popWindowInit();
@@ -262,6 +258,13 @@ public class BillInspectActivity extends BaseActivity implements View.OnClickLis
             confirmPopWin.dismiss();
         }
         Log.d("response", "resume");
+        if (bill != null) {
+            String url = Constant.SERVER_URL + "images/" + bill.getUserCode() + ".jpg";
+            Glide.with(BillInspectActivity.this).load(url)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .error(R.drawable.customer_de).into(iv_person);
+        }
         getBillDetail();
     }
 

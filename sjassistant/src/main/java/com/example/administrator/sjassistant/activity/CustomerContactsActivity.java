@@ -2,6 +2,7 @@ package com.example.administrator.sjassistant.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -59,6 +60,8 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
     private List<ContactsPerson> datalist = new ArrayList<>();
 
     private TextView text;
+
+    private SwipeRefreshLayout refreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,7 +131,21 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
                 return false;
             }
         });
+
+//        refreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe);
+//        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                refresh();
+//            }
+//        });
     }
+
+    private void refresh() {
+        refreshLayout.setRefreshing(false);
+        getCompany();
+    }
+
 
 
     @Override
@@ -168,8 +185,8 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
         }
 
 
-
-        getCompany();
+        if (ed_name != null &&ed_name.getText().toString().trim().length() == 0)
+            getCompany();
 
         ed_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -285,6 +302,7 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
                                     JSONArray list = data.optJSONArray("list");
                                     if (list.length() != 0) {
                                         text.setText("选择客户");
+
                                         search_list.setVisibility(View.VISIBLE);
                                         List<ContactsPerson> searchlist = gson.fromJson(list.toString(), new TypeToken<List<ContactsPerson>>() {
                                         }.getType());
@@ -316,6 +334,7 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
                                                     });
                                                 }
                                             };
+                                            Log.d("response","visi->"+search_list.getVisibility()+"  "+searchAdapter.getCount());
                                             search_list.setAdapter(searchAdapter);
                                         }
                                     } else {
@@ -338,14 +357,16 @@ public class CustomerContactsActivity extends BaseActivity implements View.OnCli
      * 搜索
      */
     private void filterData(String tex) {
-        customer_list.setVisibility(View.VISIBLE);
-        search_list.setVisibility(View.GONE);
+
         List<ContactsPerson> filterList = new ArrayList<>();
         text.setText("选择客户");
         if (TextUtils.isEmpty(tex)) {
             filterList = datalist;
+            search_list.setVisibility(View.GONE);
+            customer_list.setVisibility(View.VISIBLE);
 
         } else {
+            customer_list.setVisibility(View.VISIBLE);
             filterList.clear();
             for (ContactsPerson person:datalist) {
                 if (person.getCustomerName().contains(tex)) {

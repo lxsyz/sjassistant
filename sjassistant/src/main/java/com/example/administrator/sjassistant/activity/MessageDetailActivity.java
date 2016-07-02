@@ -228,7 +228,7 @@ public class MessageDetailActivity extends BaseActivity implements View.OnClickL
     /*
     * 下载文件
     */
-    public void downloadFile(String url,String filename) {
+    public void downloadFile(String url, final String filename) {
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.mipmap.ic_launcher);
@@ -240,13 +240,13 @@ public class MessageDetailActivity extends BaseActivity implements View.OnClickL
         //取消右上角的时间显示
         builder.setShowWhen(false);
 
-        OkHttpUtils.get()
+        OkHttpUtils.post()
                 .url(url)
                 .build()
                 .execute(new FileCallBack(file.getAbsolutePath(), filename) {
                     @Override
                     public void inProgress(float progress, long total) {
-                        Log.d("response", "progress" + progress);
+                        //Log.d("response", "progress" + progress);
                         builder.setContentTitle(name+" 下载中...");
 
                         builder.setProgress(100, (int) (progress * 100), false);
@@ -262,7 +262,7 @@ public class MessageDetailActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void onError(Call call, Exception e) {
                         Log.d("error", e.getMessage() + " ");
-                        ErrorUtil.NetWorkToast(MessageDetailActivity.this);
+                        ErrorUtil.FileToast(MessageDetailActivity.this, filename);
                     }
 
                     @Override
@@ -281,7 +281,7 @@ public class MessageDetailActivity extends BaseActivity implements View.OnClickL
             case R.id.bt_right:
                 //单个附件下载
                 if (!isMulti) {
-                    final String url = "http://219.234.5.13:8080/app/message/download/aa?name="
+                    final String url = Constant.SERVER_URL+"message/download/aa?name="
                             + datalist.get(0).getFilePath()
                             + "&id="
                             + id

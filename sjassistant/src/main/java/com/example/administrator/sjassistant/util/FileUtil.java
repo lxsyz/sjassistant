@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -87,6 +88,7 @@ public class FileUtil {
     public static Bitmap getSmallBitmap(String filePath, int reqWidth, int reqHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
+
         BitmapFactory.decodeFile(filePath, options);
 
         // Calculate inSampleSize
@@ -95,9 +97,7 @@ public class FileUtil {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
 
-        //if (BitmapFactory.decodeFile(filePath,options) == null) {
-        //    return null;
-        //}
+
         return BitmapFactory.decodeFile(filePath, options);
     }
 

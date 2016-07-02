@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -57,7 +58,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
     private List<MessageInform> datalist = new ArrayList<MessageInform>();
 
     private CommonAdapter<MessageInform> commonAdapter;
-
+    private SwipeRefreshLayout refreshLayout;
 
     private MyPromptDialog pd;
     @Override
@@ -99,6 +100,19 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         message_list = (SwipeMenuListView)findViewById(R.id.message_list);
 
         pd = new MyPromptDialog(this);
+
+        refreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+    }
+
+    private void refresh() {
+        getMessage();
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -221,10 +235,12 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                                     messageInform.setMessagePublisher(o.getString("messagePublisher"));
                                     messageInform.setMessageTitle(o.getString("messageTitle"));
                                     messageInform.setHeadImg(o.getString("headImg"));
+                                    messageInform.setUserCode(o.optString("userCode"));
                                     datalist.add(messageInform);
                                 }
                                 if (commonAdapter!= null) {
                                     commonAdapter.updateListView(datalist);
+                                    //commonAdapter.notifyDataSetChanged();
                                 } else {
                                     commonAdapter = new CommonAdapter<MessageInform>(MessageActivity.this, datalist, R.layout.item_message) {
                                         @Override
@@ -237,29 +253,14 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                                             if (TextUtils.isEmpty(message.getHeadImg())) {
                                                 holder.setImageResource(R.id.user_photo, R.drawable.customer_de);
                                             } else {
-                                                String imgurl = Constant.SERVER_URL + "images/" + message.getMessagePublisher() + ".jpg";
+                                                String imgurl = Constant.SERVER_URL + "images/" + message.getUserCode() + ".jpg";
                                                 Glide.with(MessageActivity.this)
                                                         .load(imgurl)
                                                         .skipMemoryCache(true)
                                                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                                                         .error(R.drawable.customer_de)
                                                         .into((CircleImageView) holder.getView(R.id.user_photo));
-                                                //holder.setImageResource(R.id.user_photo, R.drawable.customer_de);
-//                                                OkHttpUtils.get()
-//                                                        .url()
-//                                                        .build().execute(new BitmapCallback() {
-//                                                    @Override
-//                                                    public void onError(Call call, Exception e) {
-//                                                        ErrorUtil.NetWorkToast(MessageActivity.this);
-//                                                    }
-//
-//                                                    @Override
-//                                                    public void onResponse(Bitmap response) {
-//                                                        holder.setImageBitmap(R.id.user_photo, response);
-//                                                    }
-//                                                });
-//                                            }
-//                                        }
+
                                             }
                                         }
                                     };

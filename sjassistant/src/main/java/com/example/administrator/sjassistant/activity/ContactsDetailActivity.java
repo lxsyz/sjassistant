@@ -149,8 +149,8 @@ public class ContactsDetailActivity extends BaseActivity implements View.OnClick
 //                person.setCustomerPost(datalist.get(position).getCustomerPost());
                 person.setCustomerTypeName(datalist.get(position).getCustomerTypeName());
                 person.setCustomerName(datalist.get(position).getGroup());
-                person.setDeptName(datalist.get(position).getCustomerDeptName());
-                person.setPostName(datalist.get(position).getCustomerPostName());
+                person.setCustomerDeptName(datalist.get(position).getCustomerDeptName());
+                person.setCustomerPostName(datalist.get(position).getCustomerPostName());
                 bundle.putSerializable("person", person);
                 intent.putExtras(bundle);
                 startActivity(intent);

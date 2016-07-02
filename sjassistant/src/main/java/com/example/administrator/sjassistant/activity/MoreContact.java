@@ -67,6 +67,8 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
     SortModel sortPerson;
 
     Person masterPerson;
+
+    private MyDialog dialog_my;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +76,10 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
         resultPerson = (Person) getIntent().getSerializableExtra("person");
         sortPerson = (SortModel)getIntent().getSerializableExtra("sortPerson");
         personList = (ArrayList<Person>)getIntent().getSerializableExtra("personlist");
+
+
+        dialog_my = new MyDialog(MoreContact.this);
+
         if (resultPerson != null) {
             datalist.add(resultPerson);
             adapter.addView(datalist);
@@ -126,50 +132,31 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
         listView.setAdapter(adapter);
         OperatorUtil.setListViewHeight(listView);
 
-        number.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Log.d("response", "hasFocus  " + hasFocus);
-                if (hasFocus) {
-                    //最多添加八人
-                    if (adapter.getCount() >= 8) {
-                        MyDialog dialog = new MyDialog(MoreContact.this, R.style.dialog_style);
-                        dialog.show();
-                        dialog.setMain_text("多方通话最多允许添加8个人");
-                        dialog.setVisibility(View.GONE);
-                        dialog.setCenterVisibility(View.VISIBLE);
-                        return;
-                    }
-                }
-            }
-        });
-
-        number.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //最多添加八人
-                if (adapter.getCount() >= 8) {
-                    MyDialog dialog = new MyDialog(MoreContact.this, R.style.dialog_style);
-                    dialog.show();
-                    dialog.setMain_text("多方通话最多允许添加8个人");
-                    dialog.setVisibility(View.GONE);
-                    dialog.setCenterVisibility(View.VISIBLE);
-                    return;
-                }
-                number.clearFocus();
-                number.setText("");
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+//        number.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                Log.d("response","s->"+s.toString());
+//                //最多添加八人
+//                if (adapter.getCount() >= 8 && s.length() != 0) {
+//                    dialog_my.show();
+//                    dialog_my.setMain_text("多方通话最多允许添加8个人");
+//                    dialog_my.setVisibility(View.GONE);
+//                    dialog_my.setCenterVisibility(View.VISIBLE);
+//
+//                    return;
+//                }
+//            }
+//        });
 
         change_layout.setOnClickListener(this);
         iv_start.setOnClickListener(this);
@@ -227,7 +214,6 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
                     return;
                 }
                 String num = number.getText().toString();
-                Log.d("response","numbertext+"+num);
                 if (!TextUtils.isEmpty(num.trim())) {
                     if (OperatorUtil.isPhoneNumber(num)) {
                         if (!isExist(num,datalist)) {
@@ -343,10 +329,20 @@ public class MoreContact extends BaseActivity implements View.OnClickListener {
                                             OperatorUtil.setListViewHeight(listView);
                                             number.setText("");
                                         }
+
+                                        if (adapter.getCount() == 8) {
+                                            MyDialog dialog = new MyDialog(MoreContact.this, R.style.dialog_style);
+                                            dialog.show();
+                                            dialog.setMain_text("多方通话最多允许添加8个人");
+                                            dialog.setVisibility(View.GONE);
+                                            dialog.setCenterVisibility(View.VISIBLE);
+                                            //number.setEnabled(false);
+                                        }
+
                                     } else {
                                         if (user != null) {
                                             masterPerson = gson.fromJson(user.toString(), Person.class);
-                                            if (masterPerson.getLinkPhone()!= null)
+                                            if (masterPerson.getLinkPhone() != null)
                                                 master.setText(masterPerson.getLinkPhone());
                                         } else {
                                             //Person person = new Person();

@@ -126,10 +126,10 @@ public class TimeAxisAdapter extends BaseAdapter {
 		}
 
         //String userImg = list.get(position).getUserImg();
-        if (TextUtils.isEmpty(list.get(position).getDealPerson())) {
+        if (TextUtils.isEmpty(list.get(position).getUserCode())) {
             viewHolder.iv_person.setImageResource(R.drawable.customer_de);
         } else {
-			String url = Constant.SERVER_URL + "images/" + list.get(position).getDealPerson()+".jpg";
+			String url = Constant.SERVER_URL + "images/" + list.get(position).getUserCode()+".jpg";
 			Log.d("response",url);
 			if (context != null) {
 				Glide.with(context).load(url)

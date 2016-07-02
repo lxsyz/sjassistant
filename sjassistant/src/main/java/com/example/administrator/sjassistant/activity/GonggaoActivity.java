@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -53,6 +54,8 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
     private CommonAdapter<GongGao> commonAdapter;
 
     private MyPromptDialog pd;
+
+    private SwipeRefreshLayout refreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +78,7 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
         });
 
         pd = new MyPromptDialog(this);
+
     }
 
     @Override
@@ -94,7 +98,18 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
 
         GongGao_list = (SwipeMenuListView)findViewById(R.id.gonggao_list);
 
+        refreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+    }
 
+    private void refresh() {
+        refreshLayout.setRefreshing(false);
+        showNotes();
     }
 
     @Override
@@ -218,16 +233,19 @@ public class GonggaoActivity extends BaseActivity implements View.OnClickListene
                                     GongGao.setNotePublishtime(o.getString("notePublishtime"));
                                     datalist.add(GongGao);
                                 }
+                                if (commonAdapter != null) {
+                                    commonAdapter.updateListView(datalist);
+                                } else {
+                                    commonAdapter = new CommonAdapter<GongGao>(GonggaoActivity.this, datalist, R.layout.item_gonggao) {
+                                        @Override
+                                        public void convert(ViewHolder holder, GongGao GongGao) {
+                                            holder.setText(R.id.gonggao_title, GongGao.getNoteTitle());
+                                            holder.setText(R.id.gonggao_time, GongGao.getNotePublishtime());
+                                        }
+                                    };
 
-                                commonAdapter = new CommonAdapter<GongGao>(GonggaoActivity.this, datalist, R.layout.item_gonggao) {
-                                    @Override
-                                    public void convert(ViewHolder holder, GongGao GongGao) {
-                                        holder.setText(R.id.gonggao_title, GongGao.getNoteTitle());
-                                        holder.setText(R.id.gonggao_time, GongGao.getNotePublishtime());
-                                    }
-                                };
-
-                                GongGao_list.setAdapter(commonAdapter);
+                                    GongGao_list.setAdapter(commonAdapter);
+                                }
                             } else {
                                 ToastUtil.show(GonggaoActivity.this, "服务器异常");
                             }

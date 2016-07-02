@@ -155,7 +155,7 @@ public class BillDetailActivity extends BaseActivity {
         billDetailLists.clear();
 
         String url = Constant.SERVER_URL + "bill/showDetail";
-
+        Log.d("response","fatherId->"+fatherId+" ");
         OkHttpUtils.post()
                 .url(url)
                 .addParams("displayLevel",displayLevel)
@@ -206,43 +206,48 @@ public class BillDetailActivity extends BaseActivity {
                                                 JSONArray sublist = new JSONArray(list.optString(i));
                                                 //cols = 12;
                                                 cols = sublist.length();
-                                                items = new int[cols];
+                                                if (i == 0) {
+                                                    items = new int[cols];
+                                                }
+
                                                 colDatas = new String[cols];
-                                                Map<String, String> map = new HashMap<String, String>();
+
+
+                                                Map<String, String> map = new HashMap<>();
 
                                                 for (int j = 0; j < cols; j++) {
                                                     map.put("data" + j, sublist.optString(j));
                                                     colDatas[j] = "data" + j;
 //                                                    items[j] = R.id.item_datav1;
+                                                    gridData.add(map);
 
                                                 }
-                                                gridData.add(map);
                                             }
 
 
                                             ScrollAdapter adapter = new ScrollAdapter(BillDetailActivity.this, gridData, R.layout.common_item_hlistview,
                                                     colDatas, items
-                                                    );
+                                            );
                                             showData(adapter);
                                         }
                                     }
                                 } else if (billShowType.equals("3")) {
                                     JSONArray list = data.optJSONArray("list");
-                                    List<Map<String,String>> expandData = new ArrayList<Map<String, String>>();
+                                    List<Map<String, String>> expandData = new ArrayList<Map<String, String>>();
                                     if (list != null) {
                                         int groupCount = list.length();
                                         if (groupCount != 0) {
-                                            for (int i = 0;i < groupCount;i++) {
+                                            for (int i = 0; i < groupCount; i++) {
                                                 JSONArray group = new JSONArray(list.optString(i));
-
+                                                Log.d("response","group-<"+group.length()+"groupCount->"+groupCount);
                                                 int childCount = group.optJSONArray(1).length();
-                                                Log.d("response","billId"+billId+"displayLevel"+level+"childCount "+childCount);
+                                                Log.d("response", "billId" + billId + "displayLevel" + level + "childCount " + childCount);
                                                 if (childCount != 0) {
-                                                    Map<String,String> map = new HashMap<String, String>();
-                                                    map.put("title",new JSONArray(group.optString(0)).optString(0));
-                                                    map.put("value",new JSONArray(group.optString(0)).optString(1));
-                                                    map.put("fatherId",new JSONArray(group.optString(0)).optString(2));
-                                                    map.put("isHref",new JSONArray(group.optString(0)).optString(3));
+                                                    Map<String, String> map = new HashMap<String, String>();
+                                                    map.put("title", new JSONArray(group.optString(0)).optString(0));
+                                                    map.put("value", new JSONArray(group.optString(0)).optString(1));
+                                                    map.put("fatherId", new JSONArray(group.optString(0)).optString(2));
+                                                    map.put("isHref", new JSONArray(group.optString(0)).optString(3));
                                                     if (childCount <= 0) {
                                                         expandData.add(map);
                                                     } else {
@@ -257,13 +262,13 @@ public class BillDetailActivity extends BaseActivity {
                                                                 } else
                                                                     map.put("value" + j, str2);
                                                             }
-                                                            expandData.add(map);
                                                         }
+                                                        expandData.add(map);
                                                     }
                                                 }
                                             }
 
-                                            DetailExpandableAdapter adapter = new DetailExpandableAdapter(BillDetailActivity.this,expandData);
+                                            DetailExpandableAdapter adapter = new DetailExpandableAdapter(BillDetailActivity.this, expandData);
                                             showData(adapter);
                                         }
                                     }
@@ -284,7 +289,7 @@ public class BillDetailActivity extends BaseActivity {
                             } else {
                                 ToastUtil.showShort(BillDetailActivity.this, "服务器异常");
                             }
-                            if (pd!=null) pd.dismissDialog();
+                            if (pd != null) pd.dismissDialog();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -363,8 +368,9 @@ public class BillDetailActivity extends BaseActivity {
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Log.d("response",adapter.getmList().get(childPosition).get("isHref")+" ");
-                if (adapter.getmList().get(childPosition).get("isHref").equals("1")) {
+
+                if (adapter.getmList().get(groupPosition).get("isHref").equals("1")
+                        && adapter.getmList().get(groupPosition).size() > 4) {
 
                     if (nextType.equals("4")) {
                         Intent intent = new Intent(BillDetailActivity.this, BillFileActivity.class);
@@ -526,14 +532,15 @@ public class BillDetailActivity extends BaseActivity {
             View[] holders = (View[]) v.getTag();
 
 
-            View lineView = new View(this.context);
-            lineView.setBackgroundColor(this.context.getResources().getColor(R.color.line));
-            lineView.setLayoutParams(new ViewGroup.LayoutParams(OperatorUtil.dp2px(this.context, 1.2f),
-                    ViewGroup.LayoutParams.MATCH_PARENT));
 
             int len = holders.length;
             boolean needLine = false;
             for(int i = 0 ; i < len; i++) {
+                View lineView = new View(this.context);
+                lineView.setBackgroundColor(this.context.getResources().getColor(R.color.line));
+                lineView.setLayoutParams(new ViewGroup.LayoutParams(OperatorUtil.dp2px(this.context, 1.2f),
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+
                 if (needLine) {
                     root.addView(lineView);
                 }

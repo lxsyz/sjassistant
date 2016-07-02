@@ -225,6 +225,8 @@ public class PostInformActivity extends Activity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("activity",MainActivity.instance+" "+android.os.Process.myPid());
+        Log.d("activity", MainActivity.instance + " " + android.os.Process.myPid());
+        Constant.result.clear();
+        Constant.count = 0;
     }
 }

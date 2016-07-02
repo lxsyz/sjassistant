@@ -70,7 +70,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
     /*
      * 保存添加的结果
      */
-    private List<MyContacts> result = new ArrayList<MyContacts>();
+    //private List<MyContacts> result = new ArrayList<MyContacts>();
 
     private List<MyContacts> contactData = new ArrayList<MyContacts>();
 
@@ -82,7 +82,7 @@ public class AddPerson extends Activity implements View.OnClickListener {
     /*
      * 已添加的成员数目
      */
-    private int count = 0;
+    //private int count = 0;
 
     /*
      * from = 1表示来自于添加发送消息的联系人
@@ -118,15 +118,13 @@ public class AddPerson extends Activity implements View.OnClickListener {
 
         //获取从上一层得到的数据
         from = getIntent().getIntExtra("from", 0);
-        count = getIntent().getIntExtra("count", 0);
+        //count = getIntent().getIntExtra("count", 0);
         id = getIntent().getIntExtra("id",0);
-        result = (ArrayList<MyContacts>) getIntent().getSerializableExtra("result");
-        if (result == null) {
-            result = new ArrayList<MyContacts>();
-        }
-        if (count != 0) {
-            bt_right.setText("确定(" + count + ")");
-        } else bt_right.setText("确定");
+//        Constant.contactResult = (ArrayList<MyContacts>) getIntent().getSerializableExtra("result");
+//        if (Constant.contactResult == null) {
+//            Constant.contactResult = new ArrayList<MyContacts>();
+//        }
+
 
     }
 
@@ -175,17 +173,17 @@ public class AddPerson extends Activity implements View.OnClickListener {
                 if (m.isCheckState()) {
                     m.setCheckState(false);
                     iv.setImageResource(R.drawable.radio_unchecked);
-                    count--;
-                    result.remove(m);
+                    Constant.contactCount--;
+                    Constant.contactResult.remove(m);
                 } else {
                     m.setCheckState(true);
                     iv.setImageResource(R.drawable.radio_checked);
-                    count++;
-                    result.add(m);
+                    Constant.contactCount++;
+                    Constant.contactResult.add(m);
                 }
                 contactAdapter.notifyDataSetChanged();
-                if (count != 0) {
-                    bt_right.setText("确定(" + count + ")");
+                if (Constant.contactCount != 0) {
+                    bt_right.setText("确定(" + Constant.contactCount + ")");
                 } else {
                     bt_right.setText("确定");
                 }
@@ -201,17 +199,17 @@ public class AddPerson extends Activity implements View.OnClickListener {
                 if (m.isCheckState()) {
                     m.setCheckState(false);
                     iv.setImageResource(R.drawable.radio_unchecked);
-                    count--;
-                    result.remove(m);
+                    Constant.contactCount--;
+                    Constant.contactResult.remove(m);
                 } else {
                     m.setCheckState(true);
                     iv.setImageResource(R.drawable.radio_checked);
-                    count++;
-                    result.add(m);
+                    Constant.contactCount++;
+                    Constant.contactResult.add(m);
                 }
                 searchAdapter.notifyDataSetChanged();
-                if (count != 0) {
-                    bt_right.setText("确定(" + count + ")");
+                if (Constant.contactCount != 0) {
+                    bt_right.setText("确定(" + Constant.contactCount + ")");
                 } else {
                     bt_right.setText("确定");
                 }
@@ -226,8 +224,8 @@ public class AddPerson extends Activity implements View.OnClickListener {
                 Intent intent = new Intent(AddPerson.this, AddPerson.class);
                 intent.putExtra("id", tempId);
                 intent.putExtra("from", from);
-                intent.putExtra("count", count);
-                intent.putExtra("result", (ArrayList) result);
+                //intent.putExtra("count", count);
+                //intent.putExtra("result", (ArrayList) Constant.contactResult);
                 startActivity(intent);
             }
         });
@@ -236,6 +234,10 @@ public class AddPerson extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        if (Constant.contactCount != 0) {
+            bt_right.setText("确定(" + Constant.contactCount + ")");
+        } else bt_right.setText("确定");
+
 
         if (contactData.size() == 0 && departmentData.size() == 0)
             getData(id);
@@ -318,6 +320,12 @@ public class AddPerson extends Activity implements View.OnClickListener {
                                         contact.setTrueName(user.optString("trueName"));
                                         contact.setPhone(user.optString("phone"));
                                         contact.setUserCode(user.optString("userCode"));
+
+                                        for (MyContacts m:Constant.contactResult) {
+                                            if (m.getId() == contact.getId()) {
+                                                contact.setCheckState(true);
+                                            }
+                                        }
                                         contactData.add(contact);
                                     }
                                 }
@@ -434,23 +442,27 @@ public class AddPerson extends Activity implements View.OnClickListener {
             case R.id.bt_right:
                 if (from == 1) {
                     StringBuilder sb = new StringBuilder();
-
-                    if (result.size() > 0) {
+                    StringBuilder sb2 = new StringBuilder();
+                    if (Constant.contactResult.size() > 0) {
                         boolean need = false;
 
-                        for (MyContacts i : result) {
+                        for (MyContacts i : Constant.contactResult) {
                             if (need) {
                                 sb.append(",");
+                                sb2.append(",");
                             }
                             sb.append(i.getTrueName());
+                            sb2.append(i.getUserCode());
                             need = true;
                         }
                     }
                     Intent intent = new Intent(AddPerson.this,PostMessageActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("result",(ArrayList)result);
-                    //bundle.putString("result",sb.toString());
+                    //bundle.putSerializable("result",(ArrayList)Constant.contactResult);
+                    bundle.putString("result", sb.toString());
+                    bundle.putString("data",sb2.toString());
                     intent.putExtras(bundle);
+
                     startActivity(intent);
                     //AddPersonManager.getInstance().finishAllActivity();
                 } else {

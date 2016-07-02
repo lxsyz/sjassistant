@@ -16,10 +16,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.bean.Department;
 import com.example.administrator.sjassistant.bean.FilterCondition;
 import com.example.administrator.sjassistant.util.AppManager;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ServerConfigUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 筛选联系人
@@ -33,7 +38,7 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
 
     private TextView customer_type,person_work,person_apartment;
 
-    private int customerId;
+    private String customerId = "";
     private int deptId;
     private int postId;
     private String customerName,deptName,postName;
@@ -91,6 +96,10 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
                 onBackPressed();
                 break;
             case R.id.bt_right:
+                if (customerId == "" && postId == 0 && deptId == 0) {
+                    ToastUtil.showShort(ChooseContactsActivity.this, "筛选条件不能为空");
+                    return;
+                }
                 intent = new Intent(ChooseContactsActivity.this,SearchResultActivity.class);
                 intent.putExtra("type","筛选结果");
                 intent.putExtra("customerType",customerId);
@@ -103,18 +112,18 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
                 break;
             case R.id.customer_type_layout:
                 intent = new Intent(ChooseContactsActivity.this,EditActivity.class);
-                intent.putExtra("top","客户类型").putExtra("result",1);
+                intent.putExtra("top","客户类型").putExtra("result",1).putExtra("from", "choose");
                 startActivityForResult(intent,1);
                 break;
             case R.id.person_apartment_layout:
                 intent = new Intent(ChooseContactsActivity.this,EditActivity.class);
                 intent.putExtra("top","人员部门").putExtra("result",2);
-                startActivityForResult(intent,2);
+                startActivityForResult(intent, 2);
                 break;
             case R.id.person_work_layout:
                 intent = new Intent(ChooseContactsActivity.this,EditActivity.class);
                 intent.putExtra("top","人员职务").putExtra("result",3);
-                startActivityForResult(intent,3);
+                startActivityForResult(intent, 3);
                 break;
         }
     }
@@ -126,10 +135,32 @@ public class ChooseContactsActivity extends Activity implements View.OnClickList
         switch (resultCode) {
 
             case 1:
-                result = (FilterCondition) data.getSerializableExtra("result");
-                customerId = result.getId();
-                customerName = result.getName();
-                customer_type.setText(result.getName());
+                List<FilterCondition> res = (ArrayList<FilterCondition>)data.getSerializableExtra("result");
+                StringBuilder sb = new StringBuilder();
+                StringBuilder sb2 = new StringBuilder();
+                if (res != null && res.size() >0) {
+                    boolean need = false;
+
+                    for (FilterCondition i:res) {
+                        if (need) {
+                            sb.append(",");
+                            sb2.append(",");
+                        }
+                        sb.append(i.getName());
+                        sb2.append(i.getId());
+                        need = true;
+                    }
+                }
+                customerName = sb.toString();
+                customer_type.setText(customerName);
+                customerId = sb2.toString();
+                if (customerId == null) {
+                    customerId = "";
+                }
+//                result = (FilterCondition) data.getSerializableExtra("result");
+//                customerId = result.getId();
+//                customerName = result.getName();
+//                customer_type.setText(result.getName());
                 break;
             case 2:
                 result = (FilterCondition) data.getSerializableExtra("result");

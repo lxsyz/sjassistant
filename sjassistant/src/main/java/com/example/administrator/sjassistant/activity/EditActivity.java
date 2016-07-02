@@ -35,7 +35,7 @@ import okhttp3.Call;
 /**
  * Created by Administrator on 2016/4/2.
  */
-public class EditActivity extends BaseActivity {
+public class EditActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView iv_checked;
 
@@ -48,7 +48,11 @@ public class EditActivity extends BaseActivity {
     private String billType;
     private int billId;
 
+    //判断是否从筛选联系人进入
+    private String from;
+
     private List<FilterCondition> datalist = new ArrayList<>();
+    private List<FilterCondition> reslist = new ArrayList<>();
 
     private RelativeLayout prompt_layout;
     @Override
@@ -62,18 +66,36 @@ public class EditActivity extends BaseActivity {
         tip.setText("选择" + title);
         request = getIntent().getIntExtra("result",-1);
 
+        from = getIntent().getStringExtra("from");
+        if (from != null && from.equals("choose")) {
+            bt_right_text.setVisibility(View.VISIBLE);
+            bt_right_text.setText("确定");
+        }
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                view.findViewById(R.id.iv_checked).setVisibility(View.VISIBLE);
                 FilterCondition res = (FilterCondition) lv.getItemAtPosition(position);
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                //if (res != null)
-                bundle.putSerializable("result",res);
-                intent.putExtras(bundle);
-                setResult(request, intent);
-                EditActivity.this.finish();
+                ImageView iv_checked = (ImageView) view.findViewById(R.id.iv_checked);
+                if (from != null && from.equals("choose")) {
+                    if (res.isChecked()) {
+                        res.setChecked(false);
+                        iv_checked.setVisibility(View.GONE);
+                        reslist.remove(res);
+                    } else {
+                        res.setChecked(true);
+                        iv_checked.setVisibility(View.VISIBLE);
+                        reslist.add(res);
+                    }
+                } else {
+                    iv_checked.setVisibility(View.VISIBLE);
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("result", res);
+                    intent.putExtras(bundle);
+                    setResult(request, intent);
+                    EditActivity.this.finish();
+                }
             }
         });
     }
@@ -93,6 +115,8 @@ public class EditActivity extends BaseActivity {
         lv = (ListView)findViewById(R.id.edit_list);
         tip  = (TextView)findViewById(R.id.tip);
         prompt_layout = (RelativeLayout)findViewById(R.id.prompt_layout);
+
+        bt_right_text.setOnClickListener(this);
     }
 
     private void getData(int request) {
@@ -158,6 +182,11 @@ public class EditActivity extends BaseActivity {
                                     @Override
                                     public void convert(ViewHolder holder, FilterCondition s) {
                                         holder.setText(R.id.type_name, s.getName());
+                                        if (s.isChecked()) {
+                                            holder.getView(R.id.iv_checked).setVisibility(View.VISIBLE);
+                                        } else {
+                                            holder.getView(R.id.iv_checked).setVisibility(View.GONE);
+                                        }
                                     }
                                 });
                             }
@@ -269,5 +298,17 @@ public class EditActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.bt_right_text) {
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("result", (ArrayList)reslist);
+            intent.putExtras(bundle);
+            setResult(request, intent);
+            EditActivity.this.finish();
+        }
     }
 }

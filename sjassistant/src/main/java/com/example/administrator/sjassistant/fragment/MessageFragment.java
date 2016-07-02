@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +34,7 @@ import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.ServerConfigUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.view.AddContactsWin;
+import com.example.administrator.sjassistant.view.RefreshLinearLayout;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -45,7 +47,7 @@ import okhttp3.Call;
 /**
  * Created by Administrator on 2016/3/28.
  */
-public class MessageFragment extends Fragment implements View.OnClickListener {
+public class MessageFragment extends Fragment implements View.OnClickListener{
 
     private ImageView btn_left,btn_right;
     private TextView title;
@@ -70,6 +72,8 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     private int notesCount;     //公告数量
     private int helperCount;
 
+    private SwipeRefreshLayout refreshLayout;
+    //private RefreshLinearLayout root;
 
     private String gonggaoDate; //
     private String messageContent;
@@ -87,7 +91,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         } else {
             ServerConfigUtil.setServerConfig(getActivity());
         }
-        Log.d("activity","messag e  oncreate");
+        Log.d("activity", "message  oncreate");
         super.onCreate(savedInstanceState);
     }
 
@@ -156,7 +160,9 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         assistant_text = (TextView)rootView.findViewById(R.id.assistant_text);
         assistant_time = (TextView)rootView.findViewById(R.id.assistant_time);
 
+        //root = (RefreshLinearLayout) rootView.findViewById(R.id.root);
 
+        //root.setIRefreshListener(this);
         if (num_unfinish.getText().toString().equals("0")) {
             num_unfinish.setVisibility(View.GONE);
         }
@@ -165,6 +171,19 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         gonggao_layout.setOnClickListener(this);
         unfinishedwork_layout.setOnClickListener(this);
         assistant_layout.setOnClickListener(this);
+
+        refreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.root);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+    }
+
+    private void refresh() {
+        showMessage();
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -316,6 +335,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
 
 
 
+
     public class MainReceiver extends BroadcastReceiver {
         private static final String TAG = "JPush";
         Notifier notifier = new Notifier(getActivity());
@@ -353,7 +373,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                     .getAction())) {
                 Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
                 // 打开自定义的Activity
-
+                JPushInterface.clearAllNotifications(getActivity());
                 if (MainActivity.isForeground) {
                     showMessage();
                 } else {

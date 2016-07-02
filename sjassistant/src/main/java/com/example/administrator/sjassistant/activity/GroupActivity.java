@@ -2,6 +2,7 @@ package com.example.administrator.sjassistant.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -46,6 +47,8 @@ public class GroupActivity extends BaseActivity implements View.OnClickListener 
     private List<GroupPerson> datalist = new ArrayList<>();
 
     private TextView prompt;
+
+    private SwipeRefreshLayout refreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +83,18 @@ public class GroupActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(intent);
             }
         });
+//        refreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe);
+//        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                refresh();
+//            }
+//        });
+    }
 
+    private void refresh() {
+        refreshLayout.setRefreshing(false);
+        getGroup();
     }
 
 

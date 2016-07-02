@@ -12,6 +12,15 @@ public class MessageInform implements Serializable {
     private String messagePublisher;
     private String messageTitle;
     private String headImg;
+    private String userCode;
+
+    public String getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
 
     public int getId() {
         return id;

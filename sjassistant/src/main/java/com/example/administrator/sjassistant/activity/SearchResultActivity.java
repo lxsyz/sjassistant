@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
@@ -18,6 +19,7 @@ import com.example.administrator.sjassistant.adapter.ViewHolder;
 import com.example.administrator.sjassistant.bean.Person;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -45,7 +47,9 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
 
     private ListView lv;
     private List<Person> personList = new ArrayList<Person>();
-    private int customerType,customerDept,customerPost;
+    private String customerType = "";
+    private int customerDept;
+    private int customerPost;
     private String customerTypeName,deptName,postName;
     private CommonAdapter<Person> commonAdapter;
     @Override
@@ -68,8 +72,13 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
 
             customerDept = getIntent().getIntExtra("customerDept", 0);
             customerPost = getIntent().getIntExtra("customerPost", 0);
-            customerType = getIntent().getIntExtra("customerType", 0);
+//            customerType = getIntent().getIntExtra("customerType", 0);
+            customerType = getIntent().getStringExtra("customerType");
+            if (customerType == null) {
+                customerType = "";
+            }
             customerTypeName = getIntent().getStringExtra("customerTypeName");
+
             deptName = getIntent().getStringExtra("deptName");
             postName = getIntent().getStringExtra("postName");
             Log.d("response", customerDept + " " + customerPost + " " + customerType);
@@ -96,9 +105,9 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
 
 
                 Person p = (Person) lv.getItemAtPosition(position);
-                p.setDeptName(deptName);
-                p.setCustomerTypeName(customerTypeName);
-                p.setPostName(postName);
+//                p.setDeptName(deptName);
+//                p.setCustomerTypeName(customerTypeName);
+//                p.setPostName(postName);
                 Intent intent = new Intent(SearchResultActivity.this,PersonDetail.class);
                 Bundle mBundle = new Bundle();
                 mBundle.putSerializable("person",p);
@@ -133,9 +142,9 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
 
         OkHttpUtils.post()
                 .url(url)
-                .addParams("customerType", String.valueOf(customerType))
-                .addParams("customerDept", String.valueOf(customerDept))
-                .addParams("customerPost", String.valueOf(customerPost))
+                .addParams("customerTypeName", customerType)
+                .addParams("customerDeptName", String.valueOf(customerDept))
+                .addParams("customerPostName", String.valueOf(customerPost))
                 .build()
                 .execute(new StringCallback() {
                     @Override

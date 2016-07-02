@@ -8,24 +8,35 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
+import com.example.administrator.sjassistant.database.DBHelper;
+import com.example.administrator.sjassistant.database.Dao;
 import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.OperatorUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 import com.example.administrator.sjassistant.util.WatcherUtil;
+import com.example.administrator.sjassistant.view.LoginPop;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
@@ -34,10 +45,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private EditText et_username,et_password;
     private TextView tv_prompt,tv_serverConfig,tv_forgetPassword;
-    private ImageView iv_eye;
+    private ImageView iv_eye,arrow;
     private Button btn_login;
     private String username,password;
+    private LoginPop loginpop;
+    private List<String> datalist = new ArrayList<>();
+    private LinearLayout root;
 
+    private boolean isCheck = false;
     WatcherUtil watcherUtil;
 
     private int flag = 1;
@@ -69,8 +84,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         et_password = (EditText)findViewById(R.id.password);
         tv_prompt = (TextView)findViewById(R.id.prompt);
         iv_eye = (ImageView)findViewById(R.id.eye);
-
         btn_login = (Button)findViewById(R.id.login);
+        arrow = (ImageView)findViewById(R.id.arrow);
+        root = (LinearLayout)findViewById(R.id.root);
         tv_serverConfig = (TextView)findViewById(R.id.serverConfig);
         tv_forgetPassword = (TextView)findViewById(R.id.forgetPassword);
 
@@ -94,6 +110,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 //            }
 //        });
 
+        datalist = Dao.getInstance(getApplicationContext()).getInfos();
+
+        loginpop = new LoginPop(this,onItemClickListener,OperatorUtil.dp2px(this,300), OperatorUtil.dp2px(this,300));
+        loginpop.setData(datalist);
+
+        loginpop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                arrow.setImageResource(R.drawable.down_arrow);
+            }
+        });
+
         watcherUtil = new WatcherUtil(et_password,"password");
         //过滤中文空格
         et_password.addTextChangedListener(watcherUtil);
@@ -102,6 +130,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         tv_serverConfig.setOnClickListener(this);
         tv_forgetPassword.setOnClickListener(this);
         iv_eye.setOnClickListener(this);
+        arrow.setOnClickListener(this);
+
     }
 
 
@@ -114,7 +144,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onResume() {
         super.onResume();
-
+        if (loginpop.isShowing()) {
+            loginpop.dismiss();
+        }
     }
 
     @Override
@@ -138,10 +170,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(intent);
                 break;
             case R.id.login:
-
                 login();
-
-
                 break;
             case R.id.eye:
                 if (flag == 1) {
@@ -163,10 +192,30 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     Selection.setSelection(spanText, charSequence.length());
                 }
                 break;
+            case R.id.arrow:
+
+                if (loginpop.isShowing()) {
+                    arrow.setImageResource(R.drawable.down_arrow);
+                    loginpop.dismiss();
+                } else {
+                    arrow.setImageResource(R.drawable.up_arrow);
+                    isCheck = true;
+                    loginpop.showAsDropDown(et_username,0,1);
+                }
+                break;
+
         }
     }
 
-
+    private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //TextView tv = (TextView)view;
+            et_username.setText(datalist.get(position));
+            et_username.setSelection(et_username.getText().toString().length());
+            loginpop.dismiss();
+        }
+    };
 
     /*
      * 访问服务器登录
@@ -224,10 +273,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                     editor.putString("name",name);
                                     editor.putString("password", et_password.getText().toString());
                                     editor.putInt("dept_id", dept_id);
-                                    editor.putString("phone",phone);
-                                    editor.putString("dept_name",dept_name);
-                                    editor.putString("role_name",role_name);
+                                    editor.putString("phone", phone);
+                                    editor.putString("dept_name", dept_name);
+                                    editor.putString("role_name", role_name);
                                     editor.apply();
+
+                                    if (!datalist.contains(et_username.getText().toString())) {
+                                        Dao.getInstance(getApplicationContext()).saveInfos(et_username.getText().toString());
+                                    }
 
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                     startActivity(intent);

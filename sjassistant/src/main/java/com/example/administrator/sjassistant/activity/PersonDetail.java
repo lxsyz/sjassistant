@@ -2,12 +2,23 @@ package com.example.administrator.sjassistant.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.bean.Person;
+import com.example.administrator.sjassistant.util.Constant;
+import com.example.administrator.sjassistant.util.ErrorUtil;
+import com.example.administrator.sjassistant.util.OperatorUtil;
+import com.example.administrator.sjassistant.util.ToastUtil;
+import com.example.administrator.sjassistant.view.ChangeNumberDialog;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/4/4.
@@ -32,8 +43,8 @@ public class PersonDetail extends BaseActivity implements View.OnClickListener {
                 name.setText(p.getLinkName());
                 phone.setText(p.getLinkPhone());
                 customer_type.setText(p.getCustomerTypeName());
-                person_work.setText(p.getPostName());
-                apartment.setText(p.getDeptName());
+                person_work.setText(p.getCustomerPostName());
+                apartment.setText(p.getCustomerDeptName());
                 company_name.setText(p.getCustomerName());
             }
         } else {
@@ -48,7 +59,7 @@ public class PersonDetail extends BaseActivity implements View.OnClickListener {
     protected void initView() {
         super.initView();
         setCenterView(R.layout.activity_persondetail);
-
+        RelativeLayout phone_layout = (RelativeLayout)findViewById(R.id.phone_layout);
         name = (TextView)findViewById(R.id.name);
         phone= (TextView)findViewById(R.id.phone);
         customer_type= (TextView)findViewById(R.id.customer_type);
@@ -57,6 +68,8 @@ public class PersonDetail extends BaseActivity implements View.OnClickListener {
         company_name= (TextView)findViewById(R.id.company_name);
 
         iv_phone = (ImageView)findViewById(R.id.right_arrow2);
+
+        phone_layout.setOnClickListener(this);
     }
 
     @Override
@@ -80,7 +93,48 @@ public class PersonDetail extends BaseActivity implements View.OnClickListener {
                 startActivity(intent);
 
                 break;
+            case R.id.phone_layout:
+                ChangeNumberDialog dialog2 = new ChangeNumberDialog(this);
+                dialog2.show();
+                dialog2.setFlag(0);
+                dialog2.setOnItemClickListener(new ChangeNumberDialog.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(String str) {
+                        if (OperatorUtil.isPhoneNumber(str)) {
+                            changeNumber(str);
+                        } else {
+                            ToastUtil.showShort(PersonDetail.this, "手机号码格式不正确");
+                            phone.setText("");
+
+                        }
+                    }
+                });
+                break;
         }
+    }
+
+    private void changeNumber(final String newPhone) {
+        String url = Constant.SERVER_URL + "phoneBook/editCustomerUser";
+
+        OkHttpUtils.post()
+                .url(url)
+                .addParams("id",p.getId())
+                .addParams("linkPhone",newPhone)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        ErrorUtil.NetWorkToast(PersonDetail.this);
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response",response);
+                        phone.setText(newPhone);
+                    }
+                });
+
     }
 
     @Override

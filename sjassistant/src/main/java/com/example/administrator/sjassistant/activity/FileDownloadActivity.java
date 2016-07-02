@@ -78,7 +78,7 @@ public class FileDownloadActivity extends BaseActivity{
         datalist = (ArrayList<Attachment>)getIntent().getSerializableExtra("datalist");
         for (int i = 0;i < datalist.size();i++) {
             String filepath = datalist.get(i).getFilePath();
-            String url = "http://219.234.5.13:8080/app/message/download/aa?name="
+            String url = Constant.SERVER_URL+"message/download/aa?name="
                     + filepath
                     + "&id="
                     + datalist.get(i).getId()
@@ -219,7 +219,7 @@ public class FileDownloadActivity extends BaseActivity{
                     @Override
                     public void onError(Call call, Exception e) {
                         Log.d("error", e.getMessage() + " ");
-                        ErrorUtil.NetWorkToast(FileDownloadActivity.this);
+                        ErrorUtil.FileToast(FileDownloadActivity.this,filename);
                     }
 
                     @Override

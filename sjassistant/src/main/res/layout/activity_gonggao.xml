@@ -8,7 +8,10 @@
         android:layout_width="fill_parent"
         android:layout_height="0.8dp"
         android:background="@color/line" />
-
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
         <com.example.administrator.sjassistant.swipemenulistview.SwipeMenuListView
             android:background="@color/white"
             android:layout_width="fill_parent"
@@ -19,5 +22,5 @@
             android:dividerHeight="0.5dp"
             android:id="@+id/gonggao_list"
             />
-
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

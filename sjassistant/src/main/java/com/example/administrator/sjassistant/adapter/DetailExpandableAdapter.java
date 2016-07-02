@@ -51,13 +51,13 @@ public class DetailExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-
+        //Log.d("response","list.size->"+mList.size());
         return this.mList.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        Log.d("response",mList.get(groupPosition).size() + " ");
+        //Log.d("response",mList.get(groupPosition).size() + " ");
         return (this.mList.get(groupPosition).size() - 4) /2;
     }
 

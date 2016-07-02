@@ -3,11 +3,14 @@ package com.example.administrator.sjassistant.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.administrator.sjassistant.R;
 
 import cn.jpush.android.api.JPushInterface;
@@ -25,8 +28,14 @@ public class WelcomeActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_welcome);
 
+        setContentView(R.layout.activity_welcome);
+        ImageView iv = (ImageView)findViewById(R.id.iv);
+        Glide.with(this)
+                .load(R.drawable.welcome)
+                .fitCenter()
+                .centerCrop()
+                .into(iv);
         handler.postDelayed(runnable, 3000);
     }
 

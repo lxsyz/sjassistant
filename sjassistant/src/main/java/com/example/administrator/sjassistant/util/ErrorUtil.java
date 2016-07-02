@@ -7,7 +7,7 @@ import android.content.Context;
  */
 public class ErrorUtil {
 
-    /*
+    /**
      * 没网的提示
      */
     public static void NetWorkToast(Context context) {
@@ -15,6 +15,17 @@ public class ErrorUtil {
             ToastUtil.showShort(context, "网络不给力啊,请检查网络连接");
         } else {
             ToastUtil.showShort(context, "服务器异常,请稍后再试");
+        }
+    }
+
+    /**
+     * 文件下载失败
+     */
+    public static void FileToast(Context context,String filename) {
+        if (!OperatorUtil.isNetWorkAvailable(context)) {
+            ToastUtil.showShort(context, "网络不给力啊,请检查网络连接");
+        } else {
+            ToastUtil.showShort(context, filename+"下载失败,服务器异常");
         }
     }
 }

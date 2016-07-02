@@ -43,21 +43,24 @@
 
         </ListView>-->
 
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+        <!--android:id="@+id/swipe"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent">-->
 
-    <ListView
-        android:id="@+id/customer_list"
-        android:background="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fadingEdge="none"
-        android:listSelector="#00000000"
-        android:cacheColorHint="@android:color/transparent"
-        android:scrollbars="none"
-        android:divider="@drawable/list_item_divider"
-        android:dividerHeight="0.5dp"
-        >
-
-    </ListView>
+        <ListView
+            android:id="@+id/customer_list"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fadingEdge="none"
+            android:listSelector="#00000000"
+            android:cacheColorHint="@android:color/transparent"
+            android:scrollbars="none"
+            android:divider="@drawable/list_item_divider"
+            android:dividerHeight="0.5dp"
+            >
+        </ListView>
 
     <ListView
         android:visibility="gone"
@@ -74,5 +77,6 @@
         >
 
     </ListView>
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -56,6 +57,8 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
     private TextView read_flag;
 
     private CommonAdapter<Bill> commonAdapter;
+
+    private SwipeRefreshLayout refreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +97,18 @@ public class UnfinishedWorkActivity extends BaseActivity implements View.OnClick
                 startActivity(intent);
             }
         });
+        refreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+    }
+
+    private void refresh() {
+        refreshLayout.setRefreshing(false);
+        getUnfinishedWork();
     }
 
     @Override

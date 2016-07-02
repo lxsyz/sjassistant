@@ -1,240 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#f0f0f0"
-    android:layout_height="match_parent">
-    <!--<RelativeLayout android:id="@+id/title_layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@color/title" >-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/bt_left"-->
-            <!--android:layout_width="23dp"-->
-            <!--android:layout_height="23dp"-->
-
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:src="@drawable/back2"-->
-            <!--android:layout_marginTop="35dp"-->
-            <!--android:layout_marginLeft="12dp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/tv_center"-->
-            <!--android:paddingBottom="16dp"-->
-            <!--android:paddingTop="30dp"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:gravity="center"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:ellipsize="end"-->
-            <!--android:singleLine="true"-->
-            <!--android:maxEms="10"-->
-            <!--android:text="登录"-->
-            <!--android:textSize="20sp" />-->
-
-
-
-        <!--<ImageView-->
-            <!--android:id="@+id/bt_right"-->
-            <!--android:layout_width="23dp"-->
-            <!--android:layout_height="23dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_alignTop="@+id/bt_left"-->
-            <!--android:layout_marginRight="15dp" />-->
-
-    <!--</RelativeLayout>-->
+    android:orientation="vertical">
 
     <include
         android:id="@+id/title_layout"
         layout="@layout/top_layout" />
 
-    <LinearLayout
-        android:id="@+id/unfinishedwork_layout"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp"
-        android:background="@drawable/layout_select"
-        android:orientation="horizontal"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/root"
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/unfinishedwork_layout"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/layout_select"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="12dp">
 
-        <RelativeLayout
-            android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        
-            <ImageView
-                android:id="@+id/iv_unfinish"
-                android:src="@drawable/unfinishedword"
-                android:layout_width="46dp"
-                android:layout_height="46dp" />
-            
-            <TextView
-                android:id="@+id/num_unfinish"
-                android:layout_alignTop="@+id/iv_unfinish"
-                android:background="@drawable/red_circle"
-                android:layout_alignRight="@+id/iv_unfinish"
-                android:textSize="9sp"
-                android:textColor="@color/white"
-                android:text="0"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </RelativeLayout>
-        <RelativeLayout
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/iv_unfinish"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:src="@drawable/unfinishedword" />
+
+                <TextView
+                    android:id="@+id/num_unfinish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/iv_unfinish"
+                    android:layout_alignTop="@+id/iv_unfinish"
+                    android:background="@drawable/red_circle"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="9sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/unfinished"
+                    style="@style/text1"
+                    android:text="@string/unfinishedWork" />
+
+                <TextView
+                    android:id="@+id/unfinished_text"
+                    style="@style/text2"
+                    android:layout_alignLeft="@+id/unfinished"
+                    android:layout_alignStart="@+id/unfinished"
+                    android:layout_below="@+id/unfinished"
+                    android:text="暂时没有待办工作" />
+
+                <TextView
+                    android:id="@+id/unfinished_time"
+                    style="@style/text3"
+                    android:text="" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/message_inform_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="70dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/layout_select"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="12dp">
 
-            <TextView
-                android:text="@string/unfinishedWork"
-                android:id="@+id/unfinished"
-                style="@style/text1" />
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:src="@drawable/message" />
 
-            <TextView
-                android:id="@+id/unfinished_text"
-                android:layout_below="@+id/unfinished"
-                android:layout_alignStart="@+id/unfinished"
-                android:layout_alignLeft="@+id/unfinished"
-                android:text="暂时没有待办工作"
-                style="@style/text2" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/unfinished_time"
-                android:text=""
-                style="@style/text3"
-                />
-        </RelativeLayout>
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/message_inform"
+                    style="@style/text1"
+                    android:text="@string/message_inform" />
 
-    <LinearLayout
-        android:id="@+id/message_inform_layout"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp"
-        android:layout_marginTop="14dp"
-        android:background="@drawable/layout_select"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="70dp">
+                <TextView
+                    android:id="@+id/message_text"
+                    style="@style/text2"
+                    android:layout_alignLeft="@+id/message_inform"
+                    android:layout_alignStart="@+id/message_inform"
+                    android:layout_below="@+id/message_inform"
+                    android:text="暂时没有新的消息、通知" />
 
-        <ImageView
-            android:src="@drawable/message"
-            android:layout_width="46dp"
-            android:layout_height="46dp" />
+                <TextView
+                    android:id="@+id/message_time"
+                    style="@style/text3"
+                    android:text="" />
+            </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
-            android:layout_gravity="center_vertical"
+        <LinearLayout
+            android:id="@+id/gonggao_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="70dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/layout_select"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="12dp">
 
-            <TextView
-                android:text="@string/message_inform"
-                android:id="@+id/message_inform"
-                style="@style/text1" />
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:src="@drawable/gonggao" />
 
-            <TextView
-                android:id="@+id/message_text"
-                android:layout_below="@+id/message_inform"
-                android:layout_alignStart="@+id/message_inform"
-                android:layout_alignLeft="@+id/message_inform"
-                android:text="暂时没有新的消息、通知"
-                style="@style/text2" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/message_time"
-                android:text=""
-                style="@style/text3"
-                />
-        </RelativeLayout>
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/gonggao"
+                    style="@style/text1"
+                    android:text="@string/gonggao" />
 
-    <LinearLayout
-        android:id="@+id/gonggao_layout"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp"
-        android:layout_marginTop="14dp"
-        android:background="@drawable/layout_select"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="70dp">
+                <TextView
+                    android:id="@+id/gonggao_text"
+                    style="@style/text2"
+                    android:layout_alignLeft="@+id/gonggao"
+                    android:layout_alignStart="@+id/gonggao"
+                    android:layout_below="@+id/gonggao"
+                    android:text="暂时没有新公告" />
 
-        <ImageView
-            android:src="@drawable/gonggao"
-            android:layout_width="46dp"
-            android:layout_height="46dp" />
+                <TextView
+                    android:id="@+id/gonggao_time"
+                    style="@style/text3"
+                    android:text="" />
+            </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
-            android:layout_gravity="center_vertical"
+        <LinearLayout
+            android:id="@+id/assistant_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="70dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/layout_select"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="12dp"
+            android:visibility="gone">
 
-            <TextView
-                android:text="@string/gonggao"
-                android:id="@+id/gonggao"
-                style="@style/text1" />
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:src="@drawable/assistant" />
 
-            <TextView
-                android:id="@+id/gonggao_text"
-                android:layout_below="@+id/gonggao"
-                android:layout_alignStart="@+id/gonggao"
-                android:layout_alignLeft="@+id/gonggao"
-                android:text="暂时没有新公告"
-                style="@style/text2" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/gonggao_time"
-                android:text=""
-                style="@style/text3"
-                />
-        </RelativeLayout>
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/assistant"
+                    style="@style/text1"
+                    android:text="@string/assistant" />
 
-    <LinearLayout
-        android:id="@+id/assistant_layout"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp"
-        android:layout_marginTop="14dp"
-        android:background="@drawable/layout_select"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="70dp">
+                <TextView
+                    android:id="@+id/assistant_text"
+                    style="@style/text2"
+                    android:layout_alignLeft="@+id/assistant"
+                    android:layout_alignStart="@+id/assistant"
+                    android:layout_below="@+id/assistant"
+                    android:text="新春佳节" />
 
-        <ImageView
-            android:src="@drawable/assistant"
-            android:layout_width="46dp"
-            android:layout_height="46dp" />
-
-        <RelativeLayout
-            android:layout_gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="@string/assistant"
-                android:id="@+id/assistant"
-                style="@style/text1" />
-
-            <TextView
-                android:id="@+id/assistant_text"
-                android:layout_below="@+id/assistant"
-                android:layout_alignStart="@+id/assistant"
-                android:layout_alignLeft="@+id/assistant"
-                android:text="新春佳节"
-                style="@style/text2" />
-
-            <TextView
-                android:id="@+id/assistant_time"
-                android:text=""
-                style="@style/text3"
-                />
-        </RelativeLayout>
-    </LinearLayout>
-
+                <TextView
+                    android:id="@+id/assistant_time"
+                    style="@style/text3"
+                    android:text="" />
+            </RelativeLayout>
+        </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

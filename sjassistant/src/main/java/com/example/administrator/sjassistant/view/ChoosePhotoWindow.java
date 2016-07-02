@@ -3,15 +3,19 @@ package com.example.administrator.sjassistant.view;
 import java.io.File;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.util.AbsolutePathUtil;
+import com.example.administrator.sjassistant.util.Constant;
 import com.example.administrator.sjassistant.util.FileUtil;
 import com.example.administrator.sjassistant.util.ToastUtil;
 
@@ -206,9 +211,9 @@ public class ChoosePhotoWindow implements OnClickListener {
 		//	tempPath = "file:///sdcard/"+ FileUtil.getPhotoFileName();
 
 		//	imageUri = Uri.parse(tempPath);
-			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-			((Activity) context).startActivityForResult(intent, REQUESTCODE_CAMERA);
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+		((Activity) context).startActivityForResult(intent, REQUESTCODE_CAMERA);
 
 		//} else {
 		//	ToastUtil.showShort(context,"请确认插入了SD卡");
@@ -242,15 +247,15 @@ public class ChoosePhotoWindow implements OnClickListener {
 
 
 		if (requestCode == REQUESTCODE_IMAGE) {
-			if (data == null) {
-				return;
-			}
-			try {
-				Uri uri = data.getData();
-				path = AbsolutePathUtil.getAbsolutePath(context, uri);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+//			if (data == null) {
+//				return;
+//			}
+//			try {
+//				Uri uri = data.getData();
+//				Constant.imgPath = AbsolutePathUtil.getAbsolutePath(context, uri);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 //			if (data == null) {
 //				return;
 //			}
@@ -258,7 +263,7 @@ public class ChoosePhotoWindow implements OnClickListener {
 //			// 手机root RE 管理器
 //			String strURl = uri.toString();
 //			if (strURl.startsWith("file:///")) {
-//				path = strURl.substring(7, strURl.length());
+//				Constant.imgPath = strURl.substring(7, strURl.length());
 //			} else if (strURl.startsWith("content://")) {
 //				// 图库
 //				String[] projection = { MediaStore.Images.Media.DATA };
@@ -267,16 +272,71 @@ public class ChoosePhotoWindow implements OnClickListener {
 //				final int column_index = cursor
 //						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 //				cursor.moveToFirst();
-//				path = cursor.getString(column_index);
+//				Constant.imgPath = cursor.getString(column_index);
 //				imageUri = Uri.parse(path);
 //			}
-			//startPhotoZoom(imageUri);
-			//upload(upload);
+			if (data == null) {
+				return;
+			}
+			Uri uri = data.getData();
+			// 手机root RE 管理器
+			String strURl = uri.toString();
+			if (strURl == null) {
+				ToastUtil.showShort(context,"我是null的了");
+			} else {
+				String[] projection = { MediaStore.Images.Media.DATA };
+				Cursor cursor = context.getContentResolver().query(uri,
+						projection, null, null, null);
+				if (cursor == null) {
+					String str = uri.toString();
+					Log.d("response","cursonr null");
+					if(str.contains("file:///")){
+						str = str.substring(7);
+						Constant.imgPath = str;
+					}
+				} else {
+
+					int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+					cursor.moveToFirst();
+					Constant.imgPath = cursor.getString(column_index);
+					//imageUri = Uri.parse(path);
+					Log.d("response","cursonr not null");
+					try
+					{
+						//4.0以上的版本会自动关闭 (4.0--14;; 4.0.3--15)
+						if(Build.VERSION.SDK_INT < 14)
+						{
+							cursor.close();
+						}
+					} catch (Exception e)
+					{
+						ToastUtil.showShort(context,"cursor报错");
+					}
+				}
+
+			}
+
+//			if (strURl.startsWith("file:///")) {
+//				Constant.imgPath = strURl.substring(7, strURl.length());
+//			} else if (strURl.startsWith("content://")) {
+//				// 图库
+//				String[] projection = { MediaStore.Images.Media.DATA };
+//				final Cursor cursor = ((Activity) context).managedQuery(uri,
+//						projection, null, null, null);
+//				final int column_index = cursor
+//						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//				cursor.moveToFirst();
+//				Constant.imgPath = cursor.getString(column_index);
+//				imageUri = Uri.parse(path);
+//			}
+
+
 		} else if (requestCode == REQUESTCODE_CAMERA) {
 			//startPhotoZoom(imageUri);
 			//upload(upload);
-			Log.d("response", "temppath->" + tempPath + " ");
-			path = imageUri.getPath();
+			Log.d("response", "imageuri->" + imageUri.getPath());
+			Constant.imgPath = imageUri.getPath();
+			//path = imageUri.getPath();
 		} else if (requestCode == CROP_IMAGE) {
 			// 调用图片剪切程序返回数据
 			path = data.getStringExtra("path");
@@ -313,8 +373,11 @@ public class ChoosePhotoWindow implements OnClickListener {
 //				file.delete();
 //		}
 
-		if (path != null) {
-			upload.upload(path);
+//		if (path != null) {
+//			upload.upload(path);
+//		}
+		if (Constant.imgPath != null) {
+			upload.upload(Constant.imgPath);
 		}
 	}
 
@@ -331,4 +394,6 @@ public class ChoosePhotoWindow implements OnClickListener {
 		 */
 		public void upload(String path);
 	}
+
+
 }

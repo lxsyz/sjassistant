@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.administrator.sjassistant.R;
 import com.example.administrator.sjassistant.adapter.CommonAdapter;
 import com.example.administrator.sjassistant.adapter.ViewHolder;
@@ -66,6 +67,9 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
     private LinearLayout prompt_layout;
     private RelativeLayout next_name_layout,next_role_layout;
     private TextView next_role_text,next_name_text;
+
+    //下一环节code
+    private String code;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,12 +147,12 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
                 if (inspectPerson.isCheckState()) {
                     inspectPerson.setCheckState(false);
                     iv.setImageResource(R.drawable.radio_unchecked);
-                    resultList.remove(inspectPerson.getUsername());
+                    resultList.remove(inspectPerson.getUserCode());
                     commonAdapter.notifyDataSetChanged();
                 } else {
                     inspectPerson.setCheckState(true);
                     iv.setImageResource(R.drawable.radio_checked);
-                    resultList.add(inspectPerson.getUsername());
+                    resultList.add(inspectPerson.getUserCode());
                     commonAdapter.notifyDataSetChanged();
                 }
 
@@ -315,20 +319,23 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
      */
     private void postReason() {
         String url = Constant.SERVER_URL + "bill/commitBill";
-        Log.d("approver",getApprover()+" ");
+
+        if (code == null) {
+            code = "";
+        }
         OkHttpUtils.post()
                 .url(url)
                 .addParams("billId", String.valueOf(billId))
                 .addParams("dealOpinion",inspectReason.getText().toString())
                 .addParams("approver",getApprover())
                 .addParams("billType",billType)
-                .addParams("nextStep",next_name_text.getText().toString())
+                .addParams("nextStep",code)
                 .addParams("dealPerson",Constant.username)
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        Log.d("error",e.getMessage());
+                        Log.d("error", e.getMessage());
                         ErrorUtil.NetWorkToast(InspectReasonActivity.this);
                     }
 
@@ -336,7 +343,7 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
                     public void onResponse(String response) {
                         Log.d("response", response);
                         ToastUtil.showShort(InspectReasonActivity.this, "提交成功");
-                        Intent intent = new Intent(InspectReasonActivity.this,UnfinishedWorkActivity.class);
+                        Intent intent = new Intent(InspectReasonActivity.this, UnfinishedWorkActivity.class);
                         startActivity(intent);
                     }
                 });
@@ -377,6 +384,7 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
             case 4:
                 fc = (FilterCondition)data.getSerializableExtra("result");
                 next_name_text.setText(fc.getName());
+                code = fc.getCode();
                 break;
             case 5:
                 fc = (FilterCondition)data.getSerializableExtra("result");
@@ -435,6 +443,8 @@ public class InspectReasonActivity extends BaseActivity implements View.OnClickL
 
                                                 CircleImageView c = holder.getView(R.id.user_photo);
                                                 Glide.with(InspectReasonActivity.this).load(url)
+                                                        .skipMemoryCache(true)
+                                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                                                         .error(R.drawable.customer_de)
                                                         .into(c);
                                                 holder.setText(R.id.user_name, inspectPerson.getUsername());

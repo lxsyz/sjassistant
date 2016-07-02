@@ -29,6 +29,16 @@ public class BillDetailList implements Serializable{
 
     private String nextType;
 
+    private String userCode;
+
+    public String getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
+
     public String getNextType() {
         return nextType;
     }

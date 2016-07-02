@@ -29,6 +29,7 @@ import com.example.administrator.sjassistant.view.MyPromptDialog;
 public class BaseActivity extends Activity {
 
     private TextView tv_title;
+    protected TextView bt_right_text;
     private ImageView btn_left;
     protected ImageView btn_right,bt_right2;
     protected View layout_top;
@@ -72,7 +73,7 @@ public class BaseActivity extends Activity {
         btn_left = (ImageView)layout_top.findViewById(R.id.bt_left);
         btn_right = (ImageView)layout_top.findViewById(R.id.bt_right);
         bt_right2 = (ImageView)layout_top.findViewById(R.id.bt_right2);
-
+        bt_right_text = (TextView)layout_top.findViewById(R.id.bt_right_text);
         pd = new MyPromptDialog(this);
 
         btn_left.setOnClickListener(new View.OnClickListener() {

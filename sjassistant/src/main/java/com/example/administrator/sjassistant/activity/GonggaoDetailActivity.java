@@ -249,7 +249,7 @@ public class GonggaoDetailActivity extends BaseActivity implements View.OnClickL
             case R.id.bt_right:
                 //单个附件下载
                 if (!isMulti) {
-                    final String url = "http://219.234.5.13:8080/app/message/download/aa?name="
+                    final String url = Constant.SERVER_URL+"message/download/aa?name="
                             + datalist.get(0).getFilePath()
                             + "&id="
                             + id
@@ -350,7 +350,7 @@ public class GonggaoDetailActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void onError(Call call, Exception e) {
                         Log.d("error", e.getMessage() + " ");
-                        ErrorUtil.NetWorkToast(GonggaoDetailActivity.this);
+                        ErrorUtil.FileToast(GonggaoDetailActivity.this,filename);
                     }
 
                     @Override

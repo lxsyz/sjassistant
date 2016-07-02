@@ -134,7 +134,7 @@ public class BillFileActivity extends BaseActivity {
                                 if (list != null) {
                                     filename = list;
 
-                                    String url = "http://219.234.5.13:8080/app/message/download/aa?name="
+                                    String url = Constant.SERVER_URL+"message/download/aa?name="
                                             + filename
                                             + "&id="
                                             + 0
@@ -159,21 +159,22 @@ public class BillFileActivity extends BaseActivity {
                                             final File f = new File(file, filepath);
                                             if (f.exists()) {
                                                 btn.setText("打 开");
-                                                btn.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        FileUtil.openFile(BillFileActivity.this, f);
-                                                    }
-                                                });
                                             } else {
                                                 btn.setText("下 载");
-                                                btn.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
+                                            }
+
+                                            btn.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    Log.d("response","lallala");
+
+                                                    if (f.exists()) {
+                                                        FileUtil.openFile(BillFileActivity.this, f);
+                                                    } else {
                                                         downloadFile(position, attachment.getUrl(), filepath);
                                                     }
-                                                });
-                                            }
+                                                }
+                                            });
 
                                             DownloadHandler handler = null;
 
@@ -243,7 +244,7 @@ public class BillFileActivity extends BaseActivity {
                     @Override
                     public void onError(Call call, Exception e) {
                         Log.d("error", e.getMessage() + " ");
-                        ErrorUtil.NetWorkToast(BillFileActivity.this);
+                        ErrorUtil.FileToast(BillFileActivity.this, filename);
                     }
 
                     @Override

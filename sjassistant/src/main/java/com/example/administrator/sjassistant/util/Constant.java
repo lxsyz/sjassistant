@@ -4,6 +4,7 @@ import android.util.SparseArray;
 
 import com.example.administrator.sjassistant.bean.Department;
 import com.example.administrator.sjassistant.bean.DownloadHandler;
+import com.example.administrator.sjassistant.bean.MyContacts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class Constant {
     public static String nickname;  //昵称
     public static String address;   //地址
 
-    public static String imgPath;   //头像路径
+    public static String imgPath = "";   //头像路径
 
     public static String username = "";
 
@@ -53,4 +54,8 @@ public class Constant {
     //存储添加部门时的部门
     public static List<Department> result = new ArrayList<>();
     public static int count = 0;
+
+    public static List<MyContacts> contactResult = new ArrayList<>();
+    public static int contactCount = 0;
+    public static final String TABLE_NAME = "user";
 }

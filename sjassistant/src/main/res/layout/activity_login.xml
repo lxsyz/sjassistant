@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/root"
     android:background="@color/white"
     android:orientation="vertical"
     tools:context=".LoginActivity">
@@ -51,7 +52,12 @@
                 android:contentDescription="@string/app_name"
                  />
 
-
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:id="@+id/arrow"
+                android:src="@drawable/down_arrow"
+                android:layout_width="21dp"
+                android:layout_height="21dp" />
 
         </LinearLayout>
         <View

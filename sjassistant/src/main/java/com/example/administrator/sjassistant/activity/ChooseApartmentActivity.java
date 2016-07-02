@@ -202,6 +202,8 @@ public class ChooseApartmentActivity extends Activity implements View.OnClickLis
                 Intent intent = new Intent(ChooseApartmentActivity.this,PostInformActivity.class);
                 intent.putExtra("result",sb.toString());
                 intent.putExtra("departmentId", sb2.toString());
+                Constant.result.clear();
+                Constant.count = 0;
                 startActivity(intent);
                 this.finish();
                 break;
